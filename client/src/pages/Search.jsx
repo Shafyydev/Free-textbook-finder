@@ -60,32 +60,32 @@ export default function Search() {
         <h1>Search</h1>
         <form className="card" onSubmit={apply}>
           <div className="row">
-            <div style={{ flex: '2 1 240px' }}>
+            <div style={{ flex: '2 1 180px' }}>
               <label>Query</label>
               <input value={q} onChange={e => setQ(e.target.value)} placeholder="Title, author, description" />
             </div>
-            <div style={{ flex: '1 1 160px' }}>
+            <div style={{ flex: '1 1 110px' }}>
               <label>Subject</label>
               <select value={subject} onChange={e => setSubject(e.target.value)}>
                 <option value="">All</option>
                 {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
               </select>
             </div>
-            <div style={{ flex: '1 1 160px' }}>
+            <div style={{ flex: '1 1 110px' }}>
               <label>Course</label>
               <select value={course} onChange={e => setCourse(e.target.value)}>
                 <option value="">All</option>
                 {courses.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
             </div>
-            <div style={{ flex: '1 1 160px' }}>
+            <div style={{ flex: '1 1 110px' }}>
               <label>Source</label>
               <select value={source} onChange={e => setSource(e.target.value)}>
                 <option value="">All</option>
                 {sources.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
               </select>
             </div>
-            <div style={{ flex: '1 1 160px' }}>
+            <div style={{ flex: '1 1 110px' }}>
               <label>Category</label>
               <select value={category} onChange={e => setCategory(e.target.value)}>
                 <option value="">All</option>

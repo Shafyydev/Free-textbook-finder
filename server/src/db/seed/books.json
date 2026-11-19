@@ -29,7 +29,8 @@
         "license": "CC BY 4.0",
         "license_url": "https://creativecommons.org/licenses/by/4.0/"
       }
-    ]
+    ],
+    "featured": true
   },
   {
     "title": "Nursing Skills",
@@ -61,7 +62,8 @@
         "license": "CC BY 4.0",
         "license_url": "https://creativecommons.org/licenses/by/4.0/"
       }
-    ]
+    ],
+    "featured": true
   },
   {
     "title": "Nursing Fundamentals",
@@ -93,7 +95,8 @@
         "license": "CC BY 4.0",
         "license_url": "https://creativecommons.org/licenses/by/4.0/"
       }
-    ]
+    ],
+    "featured": true
   },
   {
     "title": "Nursing Care at the End of Life: What Every Clinician Should Know",
@@ -125,7 +128,8 @@
         "license": "CC BY-NC-SA 4.0",
         "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
       }
-    ]
+    ],
+    "featured": true
   },
   {
     "title": "Clinical Procedures for Safer Patient Care",
@@ -157,7 +161,8 @@
         "license": "CC BY 4.0",
         "license_url": "https://creativecommons.org/licenses/by/4.0/"
       }
-    ]
+    ],
+    "featured": true
   },
   {
     "title": "Anatomy and Physiology 2e",
@@ -182,7 +187,8 @@
         "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
         "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
       }
-    ]
+    ],
+    "featured": true
   },
   {
     "title": "Microbiology",
@@ -207,7 +213,8 @@
         "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
         "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
       }
-    ]
+    ],
+    "featured": true
   },
   {
     "title": "Biology 2e",
@@ -230,7 +237,8 @@
         "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
         "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
       }
-    ]
+    ],
+    "featured": false
   },
   {
     "title": "Chemistry 2e",
@@ -253,7 +261,8 @@
         "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
         "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
       }
-    ]
+    ],
+    "featured": false
   },
   {
     "title": "Nutrition for Nurses",
@@ -277,7 +286,8 @@
         "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
         "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
       }
-    ]
+    ],
+    "featured": true
   },
   {
     "title": "Psychology 2e",
@@ -301,7 +311,8 @@
         "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
         "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
       }
-    ]
+    ],
+    "featured": false
   },
   {
     "title": "Medical-Surgical Nursing",
@@ -326,7 +337,8 @@
         "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
         "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
       }
-    ]
+    ],
+    "featured": true
   },
   {
     "title": "Pharmacology for Nurses",
@@ -351,7 +363,8 @@
         "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
         "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
       }
-    ]
+    ],
+    "featured": true
   },
   {
     "title": "Maternal-Newborn Nursing",
@@ -376,7 +389,8 @@
         "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
         "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
       }
-    ]
+    ],
+    "featured": true
   },
   {
     "title": "Psychiatric-Mental Health Nursing",
@@ -401,7 +415,8 @@
         "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
         "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
       }
-    ]
+    ],
+    "featured": true
   },
   {
     "title": "Population Health for Nurses",
@@ -425,7 +440,8 @@
         "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
         "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
       }
-    ]
+    ],
+    "featured": true
   },
   {
     "title": "College Physics 2e",
@@ -449,7 +465,8 @@
         "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
         "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
       }
-    ]
+    ],
+    "featured": false
   },
   {
     "title": "University Physics Volume 1",
@@ -472,7 +489,8 @@
         "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
         "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
       }
-    ]
+    ],
+    "featured": false
   },
   {
     "title": "Concepts of Biology",
@@ -495,7 +513,8 @@
         "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
         "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
       }
-    ]
+    ],
+    "featured": false
   },
   {
     "title": "Lifespan Development",
@@ -519,6 +538,7 @@
         "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
         "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
       }
-    ]
+    ],
+    "featured": true
   }
 ]

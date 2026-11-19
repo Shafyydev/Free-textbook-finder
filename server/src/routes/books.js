@@ -21,7 +21,7 @@ router.get('/', async (req, res, next) => {
     const params = [];
     const where = [];
     let rankSelect = '0 AS rank';
-    let orderBy = 'b.created_at DESC, b.title ASC';
+    let orderBy = 'b.featured DESC, b.title ASC';
 
     if (q) {
       params.push(q);
@@ -50,7 +50,7 @@ router.get('/', async (req, res, next) => {
     const offsetIdx = `$${params.length}`;
 
     const listSql = `
-      SELECT b.id, b.title, b.authors, b.edition, b.year, b.description, b.cover_url,
+      SELECT b.id, b.title, b.authors, b.edition, b.year, b.description, b.cover_url, b.featured,
              ${rankSelect},
              COALESCE(json_agg(DISTINCT jsonb_build_object('id', s.id, 'name', s.name))
                FILTER (WHERE s.id IS NOT NULL), '[]') AS subjects,

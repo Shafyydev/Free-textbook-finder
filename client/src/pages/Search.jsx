@@ -1,118 +1,105 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { api } from '../api/client.js';
-import { BookCard, SkeletonList, PageFade, useStaggeredAnimation } from '../components/ui.jsx';
+import { BookCard, SkeletonList, SkeletonCard } from '../components/ui.jsx';
 
 export default function Search() {
   const [sp, setSp] = useSearchParams();
   const [q, setQ] = useState(sp.get('q') || '');
-  const [subject, setSubject] = useState(sp.get('subject') || '');
-  const [course, setCourse] = useState(sp.get('course') || '');
-  const [source, setSource] = useState(sp.get('source') || '');
-  const [category, setCategory] = useState(sp.get('category') || '');
-  const [subjects, setSubjects] = useState([]);
-  const [courses, setCourses] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [sources, setSources] = useState([]);
-  const [data, setData] = useState({ items: [], total: 0, page: 1, limit: 20 });
+  const [results, setResults] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [providers, setProviders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const listRef = useStaggeredAnimation(data.items?.length || 0);
 
   useEffect(() => {
-    api.getSubjects().then(setSubjects).catch(() => {});
-    api.getCourses().then(setCourses).catch(() => {});
-    api.getCategories().then(setCategories).catch(() => {});
-    api.getSources().then(setSources).catch(() => {});
-  }, []);
-
-  useEffect(() => {
-    setLoading(true);
-    setError('');
-    api.searchBooks({
-      q: sp.get('q') || '',
-      subject: sp.get('subject') || '',
-      course: sp.get('course') || '',
-      source: sp.get('source') || '',
-      category: sp.get('category') || '',
-      page: sp.get('page') || 1
-    })
-      .then(setData)
-      .catch(e => setError(e.message))
-      .finally(() => setLoading(false));
+    const query = sp.get('q') || '';
+    setQ(query);
+    if (!query) {
+      setResults([]);
+      setTotal(0);
+      setProviders([]);
+      return;
+    }
+    doSearch(query);
   }, [sp]);
 
-  function apply(e) {
-    e?.preventDefault?.();
-    const next = {};
-    if (q) next.q = q;
-    if (subject) next.subject = subject;
-    if (course) next.course = course;
-    if (source) next.source = source;
-    if (category) next.category = category;
-    next.page = '1';
-    setSp(next);
+  async function doSearch(query) {
+    setLoading(true);
+    setError('');
+    try {
+      const data = await api.searchBooks({ q: query });
+      setResults(data.results || []);
+      setTotal(data.total || 0);
+      setProviders(data.providers || []);
+    } catch (e) {
+      setError(e.message || 'Search failed');
+      setResults([]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (!q) {
+    return (
+      <div className="container">
+        <section className="hero">
+          <div className="hero-inner">
+            <h1>Free Textbook Finder</h1>
+            <p className="hero-sub">Search legally free textbooks across all subjects — science, mathematics, business, nursing, medicine, humanities, and more.</p>
+            <form className="hero-search" onSubmit={(e) => {
+              e.preventDefault();
+              const q2 = e.target.elements.q.value.trim();
+              if (q2) setSp({ q: q2 });
+            }}>
+              <label>Search textbook title, author, or subject</label>
+              <input name="q" defaultValue={q} autoFocus />
+              <button type="submit" className="btn btn-hero">Search</button>
+            </form>
+          </div>
+        </section>
+      </div>
+    );
   }
 
   return (
-    <PageFade>
-      <div>
-        <form className="card" onSubmit={apply}>
-          <h1 style={{ marginTop: 0, marginBottom: '1rem', textAlign: 'center' }}>Search</h1>
-          <div className="row">
-            <div style={{ flex: '2 1 180px' }}>
-              <label>Query</label>
-              <input value={q} onChange={e => setQ(e.target.value)} placeholder="Title, author, description" />
-            </div>
-            <div style={{ flex: '1 1 110px' }}>
-              <label>Subject</label>
-              <select value={subject} onChange={e => setSubject(e.target.value)}>
-                <option value="">All</option>
-                {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
-              </select>
-            </div>
-            <div style={{ flex: '1 1 110px' }}>
-              <label>Course</label>
-              <select value={course} onChange={e => setCourse(e.target.value)}>
-                <option value="">All</option>
-                {courses.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-              </select>
-            </div>
-            <div style={{ flex: '1 1 110px' }}>
-              <label>Source</label>
-              <select value={source} onChange={e => setSource(e.target.value)}>
-                <option value="">All</option>
-                {sources.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
-              </select>
-            </div>
-            <div style={{ flex: '1 1 110px' }}>
-              <label>Category</label>
-              <select value={category} onChange={e => setCategory(e.target.value)}>
-                <option value="">All</option>
-                {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-              </select>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'end' }}><button type="submit">Apply</button></div>
-          </div>
-        </form>
-        {error && <div className="error">{error}</div>}
-        {loading ? (
-          <SkeletonList count={6} />
-        ) : (
-          <>
-            <p className="muted small" style={{ textAlign: 'center' }}>{data.total} result(s)</p>
-            <div className="list" ref={listRef}>
-              {(data.items || []).map(b => <BookCard key={b.id} book={b} />)}
-            </div>
-            {!data.items?.length && q ? (
-              <>
-                <p className="muted" style={{ textAlign: 'center' }}>No books found. Try broader terms or clear filters.</p>
-                <p className="small" style={{ textAlign: 'center' }}><Link to={{ pathname: '/request', search: `?title=${encodeURIComponent(q)}` }}>Request this book</Link></p>
-              </>
-            ) : !data.items?.length && <p className="muted" style={{ textAlign: 'center' }}>No books found. Try broader terms or clear filters.</p>}
-          </>
-        )}
-      </div>
-    </PageFade>
+    <div className="container">
+      <nav style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '.5rem' }}>
+        <Link to="/" className="btn secondary">← New search</Link>
+        <div className="muted small">
+          {total} result{'s' !== total === 1 ? '' : 's'} for <strong>"{q}"</strong>
+          {providers.length > 0 && (
+            <span> · {providers.map(p => `${p.name}: ${p.count}`).join(', ')}</span>
+          )}
+        </div>
+      </nav>
+
+      {error && <div className="error">{error}</div>}
+
+      {loading ? (
+        <SkeletonList count={6} />
+      ) : results.length === 0 ? (
+        <div className="card" style={{ textAlign: 'center', padding: '3rem 1rem' }}>
+          <h2 style={{ color: 'var(--muted-text)', marginBottom: '.5rem' }}>No results found</h2>
+          <p className="muted" style={{ marginBottom: '1rem' }}>We couldn&rsquo;t find any legally free textbooks matching "<strong>{q}</strong>".</p>
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            const q2 = e.target.elements.q.value.trim();
+            if (q2) setSp({ q: q2 });
+          }}>
+            <label>Try a different title or author</label>
+            <input name="q" defaultValue={q} />
+            <button type="submit" className="btn">Search again</button>
+          </form>
+          <p className="small muted" style={{ marginTop: '1rem' }}>Want this book added? <Link to="/request">Request it</Link> and we&rsquo;ll look for it.</p>
+        </div>
+      ) : (
+        <div className="grid grid-2">
+          {results.map((book) => (
+            <BookCard key={book.isbn || book.title} book={book} />
+          ))}
+        </div>
+      )}
+    </div>
   );
 }

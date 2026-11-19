@@ -127,40 +127,49 @@ export function Layout({ children }) {
 }
 
 export function BookCard({ book }) {
-  const sources = book.sources || [];
-  const freeSource = sources.find(src => src.access_type === 'free');
-  const paidOnly = sources.length > 0 && !freeSource;
+  const statusBadge = {
+    free: { label: 'Free', bg: '#e7f6ea', text: '#166534', border: '#86efac' },
+    paid: { label: 'Paid', bg: '#fef2f2', text: '#991b1b', border: '#fecaca' },
+    borrow: { label: 'Borrow', bg: '#eff6ff', text: '#1d4ed8', border: '#bfdbfe' },
+    unknown: { label: 'Not found', bg: '#f3f4f6', text: '#374151', border: '#d1d5db' }
+  }[book.status] || { label: 'Unknown', bg: '#f3f4f6', text: '#374151', border: '#d1d5db' };
 
-  const pdfUrl = freeSource?.direct_file_url;
-  const viewUrl = freeSource?.official_url || (paidOnly && sources[0]?.official_url);
-
-  const authorList = book.authors ? String(book.authors).split(/,\s*/) : [];
-  const authorsShown = authorList.slice(0, 3);
-  const authorsText = authorsShown.join(', ') + (authorList.length > 3 ? ' et al.' : '');
+  const authorsText = (book.authors || []).slice(0, 3).join(', ') + ((book.authors || []).length > 3 ? ' et al.' : '');
+  const downloadOpt = book.options?.find(o => o.type === 'download');
+  const readOpt = book.options?.find(o => o.type === 'read');
+  const borrowOpt = book.options?.find(o => o.type === 'borrow');
+  const buyOpt = book.options?.find(o => o.type === 'buy');
+  const primaryOpt = downloadOpt || readOpt || borrowOpt || buyOpt || book.options?.[0];
 
   return (
-    <div className="card compact animate-on-scroll">
-      <h3 style={{ margin: '0 0 .25rem', fontSize: '1.05rem' }}>
-        <Link to={`/books/${book.id}`}>{book.title}</Link>
-      </h3>
-      <div className="meta">{[authorsText, book.edition, book.year].filter(Boolean).join(' · ')}</div>
-      {book.description && (
-        <p className="small desc-line" style={{ margin: '.3rem 0', color: 'var(--indigo-muted)' }}>
-          {String(book.description)}
-        </p>
-      )}
-      <div className="card-bottom" style={{ marginTop: '.4rem' }}>
-        <div style={{ flex: '1', display: 'flex', flexWrap: 'wrap', gap: '.25rem', alignItems: 'center' }}>
-          {(book.subjects || []).map(s => <span key={s.id} className="badge">{s.name}</span>)}
-          {(book.licenses || []).map(lic => <span key={lic} className="badge">{lic}</span>)}
-          {paidOnly && <span className="badge paid">Paid book</span>}
-          <span className="muted small">{book.source_count ?? 0} source(s)</span>
+    <div className="card compact animate-on-scroll" style={{ borderColor: statusBadge.border }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '.5rem', marginBottom: '.2rem' }}>
+        <h3 style={{ margin: '0 0 .1rem', fontSize: '1.05rem', flex: 1 }}>
+          <Link to={`/books/${book.isbn || book.title.replace(/\s+/g, '-')}`}>{book.title}</Link>
+        </h3>
+        <span className="badge" style={{ background: statusBadge.bg, color: statusBadge.text, borderColor: statusBadge.border, fontSize: '.7rem' }}>{statusBadge.label}</span>
+      </div>
+      <div className="meta">{authorsText}</div>
+      {book.license && (
+        <div className="small" style={{ color: 'var(--indigo-muted)', marginBottom: '.2rem' }}>
+          License: <strong>{book.license}</strong>
         </div>
-        <a href={pdfUrl || viewUrl} target="_blank" rel="noopener noreferrer"
-          className={pdfUrl ? 'btn' : 'btn secondary'}
-          style={{ padding: '.35rem .75rem', fontSize: '.82rem', whiteSpace: 'nowrap' }}>
-          {pdfUrl ? 'Download PDF' : 'Open book page'}
-        </a>
+      )}
+      <div className="card-bottom" style={{ marginTop: '.35rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '.5rem' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.25rem', alignItems: 'center', flex: 1 }}>
+          {(book.options || []).slice(0, 3).map((o, i) => (
+            <span key={i} className="badge" style={{ background: '#eef2f7', color: '#1f2937', borderColor: '#cbd5e0', fontSize: '.7rem' }}>
+              {o.source}
+            </span>
+          ))}
+        </div>
+        {primaryOpt ? (
+          <a href={primaryOpt.url} target="_blank" rel="noopener noreferrer"
+            className={`btn ${downloadOpt ? '' : 'secondary'}`}
+            style={{ padding: '.35rem .75rem', fontSize: '.82rem', whiteSpace: 'nowrap' }}>
+            {downloadOpt ? 'Download PDF' : readOpt ? 'Read online' : borrowOpt ? 'Borrow' : 'View'}
+          </a>
+        ) : null}
       </div>
     </div>
   );

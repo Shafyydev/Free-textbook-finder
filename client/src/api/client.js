@@ -24,7 +24,7 @@ export const api = {
     const qs = new URLSearchParams();
     Object.entries(params || {}).forEach(([k, v]) => { if (v !== undefined && v !== null && v !== '') qs.set(k, v); });
     const q = qs.toString();
-    return request(`/api/books${q ? `?${q}` : ''}`);
+    return request(`/api/search${q ? `?${q}` : ''}`);
   },
   getBook: (id) => request(`/api/books/${id}`),
   getSubjects: () => request('/api/subjects'),

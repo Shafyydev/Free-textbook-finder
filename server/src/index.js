@@ -11,6 +11,7 @@ import categoriesRouter from './routes/categories.js';
 import sourcesRouter from './routes/sources.js';
 import requestsRouter from './routes/requests.js';
 import adminRouter from './routes/admin.js';
+import searchRouter from './routes/search.js';
 import errorHandler from './middleware/errorHandler.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -30,6 +31,7 @@ app.use('/api/subjects', subjectsRouter);
 app.use('/api/courses', coursesRouter);
 app.use('/api/categories', categoriesRouter);
 app.use('/api/sources', sourcesRouter);
+app.use('/api/search', searchRouter);
 app.use('/api/requests', rateLimit({ windowMs: 15 * 60 * 1000, max: 30 }), requestsRouter);
 app.use('/api/admin', adminRouter);
 

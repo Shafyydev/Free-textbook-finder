@@ -12,7 +12,7 @@ export default function Admin() {
   const [subjects, setSubjects] = useState([]);
   const [courses, setCourses] = useState([]);
   const [bookForm, setBookForm] = useState(emptyBook);
-  const [bsForm, setBsForm] = useState({ book_id:'', source_id:'', official_url:'', direct_file_url:'', license:'', license_url:'', link_status:'unknown' });
+  const [bsForm, setBsForm] = useState({ book_id:'', source_id:'', official_url:'', direct_file_url:'', license:'', license_url:'', link_status:'unknown', access_type:'free' });
   const [msg, setMsg] = useState('');
   const [err, setErr] = useState('');
 
@@ -28,7 +28,7 @@ export default function Admin() {
   }
   async function createBook(e){ e.preventDefault(); setErr(''); try{ await api.admin.createBook(password,{...bookForm, year: bookForm.year?Number(bookForm.year):null}); setBookForm(emptyBook); await refresh(); setMsg('Book created.'); } catch(e){ setErr(e.message);} }
   async function deleteBook(id){ if(!confirm('Delete book?'))return; try{ await api.admin.deleteBook(password,id); await refresh(); }catch(e){setErr(e.message);} }
-  async function createBookSource(e){ e.preventDefault(); setErr(''); try{ await api.admin.createBookSource(password,{...bsForm, book_id:Number(bsForm.book_id), source_id:Number(bsForm.source_id)}); setBsForm({ book_id:'', source_id:'', official_url:'', direct_file_url:'', license:'', license_url:'', link_status:'unknown' }); await refresh(); setMsg('Book source added.'); }catch(e){setErr(e.message);} }
+  async function createBookSource(e){ e.preventDefault(); setErr(''); try{         await api.admin.createBookSource(password,{...bsForm, book_id:Number(bsForm.book_id), source_id:Number(bsForm.source_id)}); setBsForm({ book_id:'', source_id:'', official_url:'', direct_file_url:'', license:'', license_url:'', link_status:'unknown', access_type:'free' }); await refresh(); setMsg('Book source added.'); }catch(e){setErr(e.message);} }
   async function setReqStatus(id,status){ try{ await api.admin.updateRequest(password,id,status); await refresh(); }catch(e){setErr(e.message);} }
 
   if (!authed) return (
@@ -69,6 +69,7 @@ export default function Admin() {
           <label>Direct file URL</label><input value={bsForm.direct_file_url} onChange={e=>setBsForm({...bsForm,direct_file_url:e.target.value})} />
           <label>License *</label><input value={bsForm.license} onChange={e=>setBsForm({...bsForm,license:e.target.value})} required placeholder="e.g. CC BY 4.0" />
           <label>License URL</label><input value={bsForm.license_url} onChange={e=>setBsForm({...bsForm,license_url:e.target.value})} />
+          <label>Access type *</label><select value={bsForm.access_type} onChange={e=>setBsForm({...bsForm,access_type:e.target.value})} required><option value="free">Free</option><option value="paid">Paid</option></select>
           <div style={{marginTop:'.5rem'}}><button type="submit">Add source link</button></div>
         </form>
       </div>

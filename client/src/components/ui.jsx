@@ -140,10 +140,10 @@ export function BookCard({ book }) {
 
   return (
     <div className="card compact animate-on-scroll">
-      <h3 style={{ margin: '0 0 .25rem', fontSize: '1.05rem', textAlign: 'center' }}>
+      <h3 style={{ margin: '0 0 .25rem', fontSize: '1.05rem' }}>
         <Link to={`/books/${book.id}`}>{book.title}</Link>
       </h3>
-      <div className="meta" style={{ textAlign: 'center' }}>{[authorsText, book.edition, book.year].filter(Boolean).join(' · ')}</div>
+      <div className="meta">{[authorsText, book.edition, book.year].filter(Boolean).join(' · ')}</div>
       {book.description && (
         <p className="small desc-line" style={{ margin: '.3rem 0', color: 'var(--indigo-muted)' }}>
           {String(book.description)}

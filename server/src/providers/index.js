@@ -88,58 +88,71 @@ export async function searchBooks(query, { limit = 20, userIp } = {}) {
 }
 
 async function getCachedResults(query) {
-  const client = await pool.connect();
   try {
-    const res = await client.query(
-      `SELECT provider, data FROM provider_cache
-       WHERE query = $1 AND expires_at > NOW()`,
-      [query]
-    );
-    const cache = new Map();
-    for (const row of res.rows) {
-      cache.set(row.provider, row.data);
+    const client = await pool.connect();
+    try {
+      const res = await client.query(
+        `SELECT provider, data FROM provider_cache
+         WHERE query = $1 AND expires_at > NOW()`,
+        [query]
+      );
+      const cache = new Map();
+      for (const row of res.rows) {
+        cache.set(row.provider, row.data);
+      }
+      return cache;
+    } finally {
+      client.release();
     }
-    return cache;
-  } finally {
-    client.release();
+  } catch (err) {
+    console.warn(`Cache read failed: ${err.message}`);
+    return new Map();
   }
 }
 
 async function cacheResults(query, providerResults) {
-  const client = await pool.connect();
   try {
-    await client.query('BEGIN');
-    for (const { provider, results } of providerResults) {
-      if (!results || results.length === 0) continue;
-      await client.query(
-        `INSERT INTO provider_cache (provider, query, data, fetched_at, expires_at)
-         VALUES ($1, $2, $3, NOW(), NOW() + INTERVAL '24 hours')
-         ON CONFLICT (provider, query)
-         DO UPDATE SET data = $3, fetched_at = NOW(), expires_at = NOW() + INTERVAL '24 hours'`,
-        [provider, query, JSON.stringify(results)]
-      );
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      for (const { provider, results } of providerResults) {
+        if (!results || results.length === 0) continue;
+        await client.query(
+          `INSERT INTO provider_cache (provider, query, data, fetched_at, expires_at)
+           VALUES ($1, $2, $3, NOW(), NOW() + INTERVAL '24 hours')
+           ON CONFLICT (provider, query)
+           DO UPDATE SET data = $3, fetched_at = NOW(), expires_at = NOW() + INTERVAL '24 hours'`,
+          [provider, query, JSON.stringify(results)]
+        );
+      }
+      await client.query('COMMIT');
+    } catch (err) {
+      await client.query('ROLLBACK');
+      console.warn(`Cache write failed: ${err.message}`);
+    } finally {
+      client.release();
     }
-    await client.query('COMMIT');
   } catch (err) {
-    await client.query('ROLLBACK');
     console.warn(`Cache write failed: ${err.message}`);
-  } finally {
-    client.release();
   }
 }
 
 async function logSearch(query, hasFreeResult, resultCount) {
-  const client = await pool.connect();
   try {
-    await client.query(
-      `INSERT INTO search_query_log (query, has_free_result, result_count)
-       VALUES ($1, $2, $3)`,
-      [query, hasFreeResult, resultCount]
-    );
+    const client = await pool.connect();
+    try {
+      await client.query(
+        `INSERT INTO search_query_log (query, has_free_result, result_count)
+         VALUES ($1, $2, $3)`,
+        [query, hasFreeResult, resultCount]
+      );
+    } catch (err) {
+      console.warn(`Search log failed: ${err.message}`);
+    } finally {
+      client.release();
+    }
   } catch (err) {
     console.warn(`Search log failed: ${err.message}`);
-  } finally {
-    client.release();
   }
 }
 

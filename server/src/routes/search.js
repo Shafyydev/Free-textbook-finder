@@ -3,7 +3,7 @@ import { searchBooks } from '../providers/index.js';
 
 const router = express.Router();
 
-router.get('/', async (req, res, next) => {
+router.get('/', async (req, res) => {
   try {
     const { q, limit } = req.query;
     if (!q || !q.trim()) {
@@ -13,7 +13,8 @@ router.get('/', async (req, res, next) => {
     const result = await searchBooks(q.trim(), { limit: limit ? parseInt(limit, 10) : 20 });
     res.json(result);
   } catch (err) {
-    next(err);
+    console.error('Search error:', err.message);
+    res.status(500).json({ error: 'Search failed: ' + err.message });
   }
 });
 

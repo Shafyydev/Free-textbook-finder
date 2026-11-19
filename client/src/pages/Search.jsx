@@ -40,6 +40,18 @@ export default function Search() {
     }
   }
 
+  function handleHeroSubmit(e) {
+    e.preventDefault();
+    const q2 = e.target.elements.q.value.trim();
+    if (q2) setSp({ q: q2 });
+  }
+
+  function handleRetrySubmit(e) {
+    e.preventDefault();
+    const q2 = e.target.elements.q.value.trim();
+    if (q2) setSp({ q: q2 });
+  }
+
   if (!q) {
     return (
       <div className="container">
@@ -47,11 +59,7 @@ export default function Search() {
           <div className="hero-inner">
             <h1>Free Textbook Finder</h1>
             <p className="hero-sub">Search legally free textbooks across all subjects — science, mathematics, business, nursing, medicine, humanities, and more.</p>
-            <form className="hero-search" onSubmit={(e) => {
-              e.preventDefault();
-              const q2 = e.target.elements.q.value.trim();
-              if (q2) setSp({ q: q2 });
-            }}>
+            <form className="hero-search" onSubmit={handleHeroSubmit}>
               <label>Search textbook title, author, or subject</label>
               <input name="q" defaultValue={q} autoFocus />
               <button type="submit" className="btn btn-hero">Search</button>
@@ -82,11 +90,7 @@ export default function Search() {
         <div className="card" style={{ textAlign: 'center', padding: '3rem 1rem' }}>
           <h2 style={{ color: 'var(--muted-text)', marginBottom: '.5rem' }}>No results found</h2>
           <p className="muted" style={{ marginBottom: '1rem' }}>We couldn&rsquo;t find any legally free textbooks matching "<strong>{q}</strong>".</p>
-          <form onSubmit={(e) => {
-            e.preventDefault();
-            const q2 = e.target.elements.q.value.trim();
-            if (q2) setSp({ q: q2 });
-          }}>
+          <form onSubmit={handleRetrySubmit}>
             <label>Try a different title or author</label>
             <input name="q" defaultValue={q} />
             <button type="submit" className="btn">Search again</button>

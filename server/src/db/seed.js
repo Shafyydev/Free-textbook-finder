@@ -45,12 +45,20 @@ async function seed() {
       let bookId;
       if (existing.rowCount) {
         bookId = existing.rows[0].id;
+        // Check if categories are locked by admin - skip category changes if locked
+        const lockedCheck = await client.query(
+          'SELECT categories_locked FROM books WHERE id=$1',
+          [bookId]
+        );
+        const categoriesLocked = lockedCheck.rows[0]?.categories_locked || false;
         await client.query('UPDATE books SET authors=$2, year=$3, description=$4, cover_url=$5, updated_at=NOW() WHERE id=$1',
           [bookId, b.authors || null, b.year || null, b.description || null, b.cover_url || null]);
         await client.query('DELETE FROM book_subjects WHERE book_id=$1', [bookId]);
         await client.query('DELETE FROM book_courses WHERE book_id=$1', [bookId]);
-        await client.query('DELETE FROM book_categories WHERE book_id=$1', [bookId]);
         await client.query('DELETE FROM book_sources WHERE book_id=$1', [bookId]);
+        if (!categoriesLocked) {
+          await client.query('DELETE FROM book_categories WHERE book_id=$1', [bookId]);
+        }
       } else {
         const ins = await client.query(
           'INSERT INTO books (title, authors, edition, year, description, cover_url, featured) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING id',

@@ -77,6 +77,23 @@ router.put('/books/:id', async (req, res, next) => {
   }
 });
 
+// Toggle categories_locked on a book
+router.patch('/books/:id/categories_locked', async (req, res, next) => {
+  try {
+    const id = parseId(req.params.id);
+    if (!id) return res.status(400).json({ error: 'Invalid id' });
+    const { locked } = req.body || {};
+    if (typeof locked !== 'boolean') return res.status(400).json({ error: 'locked must be a boolean' });
+    const { rows, rowCount } = await pool.query(
+      'UPDATE books SET categories_locked=$2 WHERE id=$1 RETURNING id, title, categories_locked',
+      [id, locked]
+    );
+    if (!rowCount) return res.status(404).json({ error: 'Book not found' });
+    res.json(rows[0]);
+  } catch (err) { next(err); }
+});
+
+
 router.delete('/books/:id', async (req, res, next) => {
   try {
     const id = parseId(req.params.id);

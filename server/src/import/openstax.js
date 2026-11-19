@@ -15,6 +15,15 @@ function subjectToCategory(subjects, title) {
   const s = subjects.map(x => x.toLowerCase()).join(' ');
   const t = title.toLowerCase();
 
+  // Title-based rules for specific books (admin-verified categories)
+  if (t.includes('introduction to computer science') ||
+      t.includes('introduction to python programming') ||
+      t.includes('principles of data science') ||
+      t.includes('foundations of information systems') ||
+      t.includes('workplace software and skills')) {
+    return 'Computer Science';
+  }
+
   // Nursing: only if subject is specifically "nursing"
   if (s.includes('nursing')) {
     return 'Nursing';
@@ -235,14 +244,19 @@ async function importOpenStax() {
 
         if (existing.rowCount) {
           const bookId = existing.rows[0].id;
+          // Check if categories are locked by admin - skip category changes if locked
+          const lockedCheck = await client.query(
+            'SELECT categories_locked FROM books WHERE id=$1',
+            [bookId]
+          );
+          const categoriesLocked = lockedCheck.rows[0]?.categories_locked || false;
           // Update book metadata but preserve featured flag set by admin
           await client.query(
             'UPDATE books SET authors=COALESCE($2,authors), year=COALESCE($3,year), description=COALESCE($4,description), updated_at=NOW() WHERE id=$1',
             [bookId, authors, year, description]
           );
-          // Replace subjects, categories, and sources with verified data
+          // Replace subjects and sources with verified data
           await client.query('DELETE FROM book_subjects WHERE book_id=$1', [bookId]);
-          await client.query('DELETE FROM book_categories WHERE book_id=$1', [bookId]);
           await client.query('DELETE FROM book_sources WHERE book_id=$1', [bookId]);
 
           const sourceId = await ensureSource(client, 'OpenStax', 'https://openstax.org', null);
@@ -255,8 +269,12 @@ async function importOpenStax() {
             const sid = await ensureSubject(client, s);
             await client.query('INSERT INTO book_subjects (book_id, subject_id) VALUES ($1,$2) ON CONFLICT DO NOTHING', [bookId, sid]);
           }
-          const catId = await ensureCategory(client, category);
-          await client.query('INSERT INTO book_categories (book_id, category_id) VALUES ($1,$2) ON CONFLICT DO NOTHING', [bookId, catId]);
+          // Only update categories if not locked by admin
+          if (!categoriesLocked) {
+            await client.query('DELETE FROM book_categories WHERE book_id=$1', [bookId]);
+            const catId = await ensureCategory(client, category);
+            await client.query('INSERT INTO book_categories (book_id, category_id) VALUES ($1,$2) ON CONFLICT DO NOTHING', [bookId, catId]);
+          }
           await client.query('SELECT refresh_book_search_vector($1)', [bookId]);
           updated++;
         } else {

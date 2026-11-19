@@ -7,11 +7,14 @@ async function request(path, options = {}) {
     ...options
   });
   const text = await res.text();
-  let data = null;
-  try { data = text ? JSON.parse(text) : null; } catch { data = text; }
   if (!res.ok) {
-    const msg = data && data.error ? data.error : `Request failed (${res.status})`;
+    let msg = `Request failed (${res.status})`;
+    try { const d = JSON.parse(text); if (d && d.error) msg = d.error; } catch {}
     throw new Error(msg);
+  }
+  let data;
+  try { data = text ? JSON.parse(text) : null; } catch {
+    throw new Error(`Server returned invalid JSON (${res.status})`);
   }
   return data;
 }

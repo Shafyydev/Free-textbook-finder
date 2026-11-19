@@ -10,12 +10,13 @@ export default function Home() {
   const [subjects, setSubjects] = useState([]);
   const [courses, setCourses] = useState([]);
   const [featured, setFeatured] = useState([]);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
-    api.getSubjects().then(setSubjects).catch(()=>{});
-    api.getCourses().then(setCourses).catch(()=>{});
-    api.searchBooks({ limit: 6 }).then(d => setFeatured(d.items || [])).catch(()=>{});
+    api.getSubjects().then(setSubjects).catch(()=>setError('Failed to load subjects'));
+    api.getCourses().then(setCourses).catch(()=>setError('Failed to load courses'));
+    api.searchBooks({ limit: 6 }).then(d => setFeatured(d.items || [])).catch(()=>setError('Failed to load featured books'));
   }, []);
 
   function submit(e) {
@@ -29,6 +30,7 @@ export default function Home() {
 
   return (
     <div>
+      {error && <div className="error">{error}</div>}
       <section className="hero">
         <h1>Find legally free textbooks</h1>
         <p className="muted">Search open and public-domain textbooks with links to official sources and clear license info.</p>

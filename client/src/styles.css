@@ -234,6 +234,7 @@ form.card:hover, .section.card:hover {
 
 /* ===== FORMS ===== */
 .row { display: flex; gap: .75rem; flex-wrap: wrap; align-items: end; }
+.row label { text-align: center; }
 label { display: block; font-size: .85rem; color: var(--muted-text); margin-bottom: .3rem; font-weight: 500; }
 input, select, textarea {
   width: 100%;

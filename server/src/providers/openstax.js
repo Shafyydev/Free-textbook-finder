@@ -86,7 +86,7 @@ export async function search(query, { limit = 10 } = {}) {
       // Add site metadata for UI rendering
       result.site_type = 'open_repository';
       result.favicon = 'https://openstax.org/favicon.ico';
-      result.snippet = description || `OpenStax textbook: "${title}" by ${authors.join(', ')}`;
+      result.snippet = description || `OpenStax textbook: "${title}" by ${Array.isArray(authors) ? authors.join(', ') : authors || ''}`;
 
       results.push(result);
     } catch (err) {

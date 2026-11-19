@@ -51,12 +51,17 @@ export function normalizeTitle(title) {
   return title.toLowerCase().replace(/[^\w\s]/g, '').replace(/\s+/g, ' ').trim();
 }
 
+export function normalizeAuthorList(authors) {
+  if (!Array.isArray(authors)) return [authors || ''];
+  return authors.filter(a => a);
+}
+
 export function mergeResults(results) {
   const byIsbn = new Map();
   const byTitleAuthor = new Map();
 
   for (const result of results) {
-    const key = result.isbn ? `isbn:${result.isbn}` : `title:${normalizeTitle(result.title)}|author:${result.authors.join('|').toLowerCase()}`;
+    const key = result.isbn ? `isbn:${result.isbn}` : `title:${normalizeTitle(result.title)}|author:${normalizeAuthorList(result.authors).join('|').toLowerCase()}`;
 
     const existing = byIsbn.get(key) || byTitleAuthor.get(key);
     if (existing) {
@@ -85,7 +90,7 @@ export function mergeResults(results) {
   const seen = new Set();
   const merged = [];
   for (const result of results) {
-    const key = result.isbn ? `isbn:${result.isbn}` : `title:${normalizeTitle(result.title)}|author:${result.authors.join('|').toLowerCase()}`;
+    const key = result.isbn ? `isbn:${result.isbn}` : `title:${normalizeTitle(result.title)}|author:${normalizeAuthorList(result.authors).join('|').toLowerCase()}`;
     if (!seen.has(key)) {
       seen.add(key);
       // Find the merged version

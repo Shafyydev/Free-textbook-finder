@@ -14,10 +14,10 @@ const CC_BY_NC_SA_URL = 'https://creativecommons.org/licenses/by-nc-sa/4.0/';
 function subjectToCategory(subjects) {
   const s = subjects.map(x => x.toLowerCase()).join(' ');
   if (s.includes('nursing') || s.includes('pharmacology') || s.includes('anatomy') || s.includes('physiology') || s.includes('health') || s.includes('medical') || s.includes('palliative') || s.includes('maternal') || s.includes('newborn') || s.includes('psychiatric') || s.includes('population') || s.includes('nutrition')) {
-    return 'Medicine and Health';
+    return 'Nursing';
   }
-  if (s.includes('mathematics') || s.includes('algebra') || s.includes('precalculus') || s.includes('statistics') || s.includes('calculus') || s.includes('math')) {
-    return 'Mathematics';
+  if (s.includes('computer') || s.includes('programming') || s.includes('software') || s.includes('data science') || s.includes('information systems')) {
+    return 'Computer Science';
   }
   if (s.includes('biology') || s.includes('chemistry') || s.includes('physics') || s.includes('astronomy')) {
     return 'Science';

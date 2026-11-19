@@ -14,7 +14,9 @@
       "Nursing",
       "MBBS Year 1"
     ],
-    "category": "Medicine and Health",
+    "categories": [
+      "Nursing"
+    ],
     "featured": true,
     "sources": [
       {
@@ -50,7 +52,9 @@
       "Nursing",
       "MBBS Year 1"
     ],
-    "category": "Nursing",
+    "categories": [
+      "Nursing"
+    ],
     "featured": true,
     "sources": [
       {
@@ -86,7 +90,9 @@
       "Nursing",
       "MBBS Year 1"
     ],
-    "category": "Nursing",
+    "categories": [
+      "Nursing"
+    ],
     "featured": true,
     "sources": [
       {
@@ -122,7 +128,9 @@
       "Nursing",
       "MBBS Year 2"
     ],
-    "category": "Medicine and Health",
+    "categories": [
+      "Nursing"
+    ],
     "featured": true,
     "sources": [
       {
@@ -158,7 +166,9 @@
       "Nursing",
       "MBBS Year 1"
     ],
-    "category": "Medicine and Health",
+    "categories": [
+      "Nursing"
+    ],
     "featured": true,
     "sources": [
       {
@@ -194,8 +204,10 @@
       "MBBS Year 1",
       "Physiotherapy"
     ],
-    "category": "Medicine and Health",
-    "featured": false,
+    "categories": [
+      "Medicine and Health"
+    ],
+    "featured": true,
     "sources": [
       {
         "source_name": "OpenStax",
@@ -223,8 +235,10 @@
       "Nursing",
       "MBBS Year 1"
     ],
-    "category": "Medicine and Health",
-    "featured": false,
+    "categories": [
+      "Nursing"
+    ],
+    "featured": true,
     "sources": [
       {
         "source_name": "OpenStax",
@@ -250,7 +264,9 @@
     "courses": [
       "MBBS Year 1"
     ],
-    "category": "Science",
+    "categories": [
+      "Science"
+    ],
     "featured": false,
     "sources": [
       {
@@ -277,7 +293,9 @@
     "courses": [
       "MBBS Year 1"
     ],
-    "category": "Science",
+    "categories": [
+      "Science"
+    ],
     "featured": false,
     "sources": [
       {
@@ -305,8 +323,10 @@
     "courses": [
       "Nursing"
     ],
-    "category": "Medicine and Health",
-    "featured": false,
+    "categories": [
+      "Nursing"
+    ],
+    "featured": true,
     "sources": [
       {
         "source_name": "OpenStax",
@@ -333,7 +353,9 @@
       "Nursing",
       "MBBS Year 1"
     ],
-    "category": "Social Sciences",
+    "categories": [
+      "Social Sciences"
+    ],
     "featured": false,
     "sources": [
       {
@@ -362,8 +384,10 @@
       "Nursing",
       "MBBS Year 2"
     ],
-    "category": "Medicine and Health",
-    "featured": false,
+    "categories": [
+      "Nursing"
+    ],
+    "featured": true,
     "sources": [
       {
         "source_name": "OpenStax",
@@ -391,8 +415,10 @@
       "Nursing",
       "MBBS Year 1"
     ],
-    "category": "Medicine and Health",
-    "featured": false,
+    "categories": [
+      "Nursing"
+    ],
+    "featured": true,
     "sources": [
       {
         "source_name": "OpenStax",
@@ -420,8 +446,10 @@
       "Nursing",
       "MBBS Year 2"
     ],
-    "category": "Medicine and Health",
-    "featured": false,
+    "categories": [
+      "Nursing"
+    ],
+    "featured": true,
     "sources": [
       {
         "source_name": "OpenStax",
@@ -449,8 +477,10 @@
       "Nursing",
       "MBBS Year 2"
     ],
-    "category": "Medicine and Health",
-    "featured": false,
+    "categories": [
+      "Nursing"
+    ],
+    "featured": true,
     "sources": [
       {
         "source_name": "OpenStax",
@@ -477,8 +507,10 @@
     "courses": [
       "Nursing"
     ],
-    "category": "Medicine and Health",
-    "featured": false,
+    "categories": [
+      "Nursing"
+    ],
+    "featured": true,
     "sources": [
       {
         "source_name": "OpenStax",
@@ -505,7 +537,9 @@
       "MBBS Year 1",
       "Physiotherapy"
     ],
-    "category": "Science",
+    "categories": [
+      "Science"
+    ],
     "featured": false,
     "sources": [
       {
@@ -532,7 +566,9 @@
     "courses": [
       "MBBS Year 1"
     ],
-    "category": "Science",
+    "categories": [
+      "Science"
+    ],
     "featured": false,
     "sources": [
       {
@@ -559,7 +595,9 @@
     "courses": [
       "MBBS Year 1"
     ],
-    "category": "Science",
+    "categories": [
+      "Science"
+    ],
     "featured": false,
     "sources": [
       {
@@ -587,7 +625,9 @@
     "courses": [
       "Nursing"
     ],
-    "category": "Social Sciences",
+    "categories": [
+      "Social Sciences"
+    ],
     "featured": false,
     "sources": [
       {
@@ -614,7 +654,9 @@
     "courses": [
       "MBBS Year 1"
     ],
-    "category": "Mathematics",
+    "categories": [
+      "Mathematics"
+    ],
     "featured": false,
     "sources": [
       {
@@ -641,7 +683,9 @@
     "courses": [
       "MBBS Year 1"
     ],
-    "category": "Mathematics",
+    "categories": [
+      "Mathematics"
+    ],
     "featured": false,
     "sources": [
       {
@@ -668,7 +712,9 @@
     "courses": [
       "MBBS Year 1"
     ],
-    "category": "Business",
+    "categories": [
+      "Business"
+    ],
     "featured": false,
     "sources": [
       {
@@ -695,7 +741,9 @@
     "courses": [
       "MBBS Year 1"
     ],
-    "category": "Business",
+    "categories": [
+      "Business"
+    ],
     "featured": false,
     "sources": [
       {
@@ -722,7 +770,9 @@
     "courses": [
       "MBBS Year 1"
     ],
-    "category": "Business",
+    "categories": [
+      "Business"
+    ],
     "featured": false,
     "sources": [
       {
@@ -749,7 +799,9 @@
     "courses": [
       "MBBS Year 1"
     ],
-    "category": "Business",
+    "categories": [
+      "Business"
+    ],
     "featured": false,
     "sources": [
       {
@@ -776,7 +828,9 @@
     "courses": [
       "MBBS Year 1"
     ],
-    "category": "Social Sciences",
+    "categories": [
+      "Social Sciences"
+    ],
     "featured": false,
     "sources": [
       {
@@ -803,7 +857,9 @@
     "courses": [
       "MBBS Year 1"
     ],
-    "category": "Humanities",
+    "categories": [
+      "Humanities"
+    ],
     "featured": false,
     "sources": [
       {
@@ -830,7 +886,9 @@
     "courses": [
       "MBBS Year 1"
     ],
-    "category": "Humanities",
+    "categories": [
+      "Humanities"
+    ],
     "featured": false,
     "sources": [
       {
@@ -857,7 +915,9 @@
     "courses": [
       "MBBS Year 1"
     ],
-    "category": "Social Sciences",
+    "categories": [
+      "Social Sciences"
+    ],
     "featured": false,
     "sources": [
       {
@@ -885,7 +945,9 @@
     "courses": [
       "MBBS Year 1"
     ],
-    "category": "Business",
+    "categories": [
+      "Business"
+    ],
     "featured": false,
     "sources": [
       {
@@ -912,7 +974,9 @@
     "courses": [
       "MBBS Year 1"
     ],
-    "category": "Mathematics",
+    "categories": [
+      "Mathematics"
+    ],
     "featured": false,
     "sources": [
       {
@@ -939,7 +1003,9 @@
     "courses": [
       "MBBS Year 1"
     ],
-    "category": "Mathematics",
+    "categories": [
+      "Mathematics"
+    ],
     "featured": false,
     "sources": [
       {
@@ -966,7 +1032,9 @@
     "courses": [
       "MBBS Year 1"
     ],
-    "category": "Social Sciences",
+    "categories": [
+      "Social Sciences"
+    ],
     "featured": false,
     "sources": [
       {

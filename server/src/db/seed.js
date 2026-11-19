@@ -63,8 +63,8 @@ async function seed() {
       let bookId;
       if (existing.rowCount) {
         bookId = existing.rows[0].id;
-        await client.query('UPDATE books SET authors=$2, year=$3, description=$4, cover_url=$5, featured=$6, updated_at=NOW() WHERE id=$1',
-          [bookId, b.authors || null, b.year || null, b.description || null, b.cover_url || null, b.featured || false]);
+        await client.query('UPDATE books SET authors=$2, year=$3, description=$4, cover_url=$5, updated_at=NOW() WHERE id=$1',
+          [bookId, b.authors || null, b.year || null, b.description || null, b.cover_url || null]);
         await client.query('DELETE FROM book_subjects WHERE book_id=$1', [bookId]);
         await client.query('DELETE FROM book_courses WHERE book_id=$1', [bookId]);
         await client.query('DELETE FROM book_sources WHERE book_id=$1', [bookId]);
@@ -83,9 +83,11 @@ async function seed() {
         const cid = await ensureCourse(client, c);
         await client.query('INSERT INTO book_courses (book_id, course_id) VALUES ($1,$2) ON CONFLICT DO NOTHING', [bookId, cid]);
       }
-      if (b.category) {
-        const catId = await ensureCategory(client, b.category);
-        await client.query('INSERT INTO book_categories (book_id, category_id) VALUES ($1,$2) ON CONFLICT DO NOTHING', [bookId, catId]);
+      if (b.categories) {
+        for (const catName of b.categories) {
+          const catId = await ensureCategory(client, catName);
+          await client.query('INSERT INTO book_categories (book_id, category_id) VALUES ($1,$2) ON CONFLICT DO NOTHING', [bookId, catId]);
+        }
       }
       for (const src of b.sources || []) {
         const sourceId = await ensureSource(client, src.source_name, src.base_url || null, src.notes || null);

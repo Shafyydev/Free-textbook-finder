@@ -31,7 +31,7 @@ export default function Search() {
     try {
       const data = await api.searchBooks({ q: query });
       let results = data.results || [];
-      // Group results: free first, then paid, then borrow, then unknown (limited)
+      // Group results: free first, then paid, then borrow, then unknown
       const free = results.filter(r => r.status === 'free');
       const paid = results.filter(r => r.status === 'paid');
       const borrow = results.filter(r => r.status === 'borrow');
@@ -104,9 +104,12 @@ export default function Search() {
               <span> · </span>
               {providers.map(p => {
                 const st = providerStatusIcon(p.status || 'ok');
+                const afterText = p.afterRelevance !== undefined && p.afterRelevance !== p.count
+                  ? ` → ${p.afterRelevance} relevant`
+                  : '';
                 return (
                   <span key={p.name} style={{ marginLeft: '.35rem', color: st.color, fontSize: '.8rem', fontWeight: '600' }}>
-                    {p.name}: {p.count} ({st.label})
+                    {p.name}: {p.count}{afterText} ({st.label})
                   </span>
                 );
               })}
@@ -121,14 +124,19 @@ export default function Search() {
         <SkeletonList count={6} />
       ) : results.length === 0 ? (
         <div className="card" style={{ textAlign: 'center', padding: '3rem 1rem' }}>
-          <h2 style={{ color: 'var(--muted-text)', marginBottom: '.5rem' }}>No results found</h2>
-          <p className="muted" style={{ marginBottom: '1rem' }}>We couldn&rsquo;t find any legally free textbooks matching "<strong>{q}</strong>".</p>
+          <h2 style={{ color: 'var(--muted-text)', marginBottom: '.5rem' }}>Not found</h2>
+          <p className="muted" style={{ marginBottom: '.5rem' }}>We couldn&rsquo;t find a legal free copy or a clear listing for <strong>"{q}"</strong>.</p>
           <form onSubmit={handleRetrySubmit}>
             <label>Try a different title or author</label>
             <input name="q" defaultValue={q} />
             <button type="submit" className="btn">Search again</button>
           </form>
           <p className="small muted" style={{ marginTop: '1rem' }}>Want this book added? <Link to="/request">Request it</Link> and we&rsquo;ll look for it.</p>
+          <p className="small muted" style={{ marginTop: '.5rem' }}>
+            Or search the publisher&rsquo;s site:&nbsp;
+            <a href={`https://www.google.com/search?q=${encodeURIComponent(q + ' publisher')}`} target="_blank" rel="noopener noreferrer">Publisher site</a>&nbsp;|&nbsp;
+            <a href={`https://books.google.com/books?q=${encodeURIComponent(q)}`} target="_blank" rel="noopener noreferrer">Google Books</a>
+          </p>
         </div>
       ) : (
         <div className="grid grid-2">

@@ -1,5 +1,6 @@
 import pool from '../db/pool.js';
 import { SearchResult, OPTION_TYPE, mergeResults, withTimeout } from './types.js';
+import { extractQueryWords, scoreResult, passesRelevance } from './relevance.js';
 import { search as localSearch, PROVIDER_NAME as LOCAL_NAME } from './local.js';
 import { search as googleBooksSearch, PROVIDER_NAME as GOOGLE_NAME } from './google-books.js';
 import { search as openstaxSearch, PROVIDER_NAME as OPENAX_NAME } from './openstax.js';
@@ -27,6 +28,7 @@ export async function searchBooks(query, { limit = 20, userIp } = {}) {
   }
 
   const trimmedQuery = query.trim();
+  const queryWords = extractQueryWords(trimmedQuery);
 
   // Check cache for each provider
   const cachedResults = await getCachedResults(trimmedQuery);
@@ -50,11 +52,19 @@ export async function searchBooks(query, { limit = 20, userIp } = {}) {
 
   const providerResults = await Promise.all(fetchPromises);
 
-  // Build provider status info for the client
+  // Build provider status info with before/after relevance counts
   const providerStatus = providerResults.map(p => {
-    if (p.error) return { name: p.provider, count: p.results.length, status: 'failed' };
-    if (p.results.length === 0) return { name: p.provider, count: 0, status: 'empty' };
-    return { name: p.provider, count: p.results.length, status: 'ok' };
+    if (p.error) return { name: p.provider, count: p.results.length, status: 'failed', afterRelevance: 0 };
+    if (p.results.length === 0) return { name: p.provider, count: 0, status: 'empty', afterRelevance: 0 };
+
+    // Count how many pass relevance
+    const passing = p.results.filter(r => passesRelevance(queryWords, r.title, r.authors).pass).length;
+    return {
+      name: p.provider,
+      count: p.results.length,
+      status: p.results.length > 0 ? 'ok' : 'empty',
+      afterRelevance: passing
+    };
   });
 
   // Cache the results
@@ -79,9 +89,20 @@ export async function searchBooks(query, { limit = 20, userIp } = {}) {
     options: r.options
   })));
 
-  // Apply admin overrides (categories_locked etc. - not applicable here, but keep structure)
+  // Apply relevance filtering: keep only results where >= 70% of important
+  // query words appear in title or authors
+  const withScores = merged.map(r => {
+    const score = scoreResult(queryWords, r.title, r.authors);
+    return { ...r, _relevanceScore: score.score, _relevancePass: score.score >= 0.7 };
+  });
+
+  const relevant = withScores.filter(r => r._relevancePass);
+
+  // Sort by relevance score (best first)
+  relevant.sort((a, b) => b._relevanceScore - a._relevanceScore);
+
   // Limit results
-  const limited = merged.slice(0, limit);
+  const limited = relevant.slice(0, limit);
 
   // Log the search
   const hasFreeResult = limited.some(r => r.status === 'free');
@@ -89,7 +110,7 @@ export async function searchBooks(query, { limit = 20, userIp } = {}) {
 
   return {
     results: limited,
-    total: merged.length,
+    total: relevant.length,
     providers: providerStatus
   };
 }

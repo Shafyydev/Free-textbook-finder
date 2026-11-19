@@ -172,12 +172,11 @@ function CardInner({ book }) {
 
   const authorsText = (book.authors || []).slice(0, 3).join(', ') + ((book.authors || []).length > 3 ? ' et al.' : '');
   const isFree = book.status === 'free';
+  const isPaid = book.status === 'paid';
   const downloadOpt = isFree && book.options?.find(o => o.type === 'download');
   const readOpt = book.options?.find(o => o.type === 'read');
   const borrowOpt = book.options?.find(o => o.type === 'borrow');
   const buyOpt = book.options?.find(o => o.type === 'buy');
-  const primaryOpt = downloadOpt || readOpt || borrowOpt || buyOpt || book.options?.[0];
-  const officialOpt = book.options?.find(o => o.type === 'read' || o.type === 'download') || book.options?.[0];
 
   return (
     <div className="card compact animate-on-scroll" style={{ borderColor: statusBadge.border }}>
@@ -193,6 +192,11 @@ function CardInner({ book }) {
           License: <strong>{book.license}</strong>
         </div>
       )}
+      {book.options && book.options.some(o => o.price) && (
+        <div className="small" style={{ color: 'var(--indigo-muted)', marginBottom: '.2rem' }}>
+          Price: <strong>{book.options.find(o => o.price)!.price}</strong>
+        </div>
+      )}
       <div className="card-bottom" style={{ marginTop: '.35rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '.5rem' }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.25rem', alignItems: 'center', flex: 1 }}>
           {(book.options || []).slice(0, 3).map((o, i) => (
@@ -201,22 +205,32 @@ function CardInner({ book }) {
             </span>
           ))}
         </div>
-        {primaryOpt ? (
-          <a href={primaryOpt.url} target="_blank" rel="noopener noreferrer"
-            className={`btn ${downloadOpt ? '' : 'secondary'}`}
-            style={{ padding: '.35rem .75rem', fontSize: '.82rem', whiteSpace: 'nowrap' }}>
-            {downloadOpt ? 'Download PDF' : readOpt ? 'Read online' : borrowOpt ? 'Borrow' : 'View'}
-          </a>
-        ) : (
-          // Fallback: always show a link even if no typed option
-          officialOpt ? (
-            <a href={officialOpt.url} target="_blank" rel="noopener noreferrer"
-              className="btn secondary"
+        <div style={{ display: 'flex', gap: '.35rem', flexWrap: 'wrap' }}>
+          {isPaid ? (
+            <>
+              {buyOpt ? (
+                <a href={buyOpt.url} target="_blank" rel="noopener noreferrer"
+                  className="btn"
+                  style={{ padding: '.35rem .75rem', fontSize: '.82rem', whiteSpace: 'nowrap' }}>
+                  Buy on Google Play Books
+                </a>
+              ) : null}
+              {readOpt ? (
+                <a href={readOpt.url} target="_blank" rel="noopener noreferrer"
+                  className="btn secondary"
+                  style={{ padding: '.35rem .75rem', fontSize: '.82rem', whiteSpace: 'nowrap' }}>
+                  View on Google Books
+                </a>
+              ) : null}
+            </>
+          ) : (
+            <a href={downloadOpt ? downloadOpt.url : readOpt ? readOpt.url : borrowOpt ? borrowOpt.url : officialOpt?.url} target="_blank" rel="noopener noreferrer"
+              className={`btn ${downloadOpt ? '' : 'secondary'}`}
               style={{ padding: '.35rem .75rem', fontSize: '.82rem', whiteSpace: 'nowrap' }}>
-              Check official page
+              {downloadOpt ? 'Download PDF' : readOpt ? 'Read online' : borrowOpt ? 'Borrow' : 'Check official page'}
             </a>
-          ) : null
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

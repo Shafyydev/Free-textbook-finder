@@ -5,8 +5,32 @@ export const PROVIDER_NAME = 'google-books';
 const BASE_URL = 'https://www.googleapis.com/books/v1/volumes';
 
 export async function search(query, { limit = 10, apiKey } = {}) {
+  const variants = buildQueryVariants(query);
+  const allResults = [];
+  const variantStats = [];
+
+  for (const variant of variants) {
+    try {
+      const results = await searchSingleVariant(variant.q, {
+        limit: Math.ceil(limit / Math.max(variants.length, 1)),
+        apiKey
+      });
+      variantStats.push({ query: variant.q, count: results.length });
+      results.forEach(r => allResults.push(r));
+    } catch (err) {
+      console.warn(`Google Books variant "${variant.q}" failed: ${err.message}`);
+      variantStats.push({ query: variant.q, count: 0, error: err.message });
+    }
+  }
+
+  console.log(`Google Books variant results: ${JSON.stringify(variantStats)}`);
+
+  return allResults;
+}
+
+async function searchSingleVariant(q, { limit = 10, apiKey } = {}) {
   const params = new URLSearchParams({
-    q: query,
+    q: q,
     maxResults: String(Math.min(limit, 40)),
     ...(apiKey ? { key: apiKey } : {})
   });
@@ -38,6 +62,9 @@ export async function search(query, { limit = 10, apiKey } = {}) {
     const authors = vi.authors || [];
     const isbn = extractIsbn(vi.industryIdentifiers);
     const coverUrl = vi.imageLinks?.thumbnail || vi.imageLinks?.smallThumbnail || null;
+    const infoLink = vi.infoLink || '';
+    const canonicalLink = vi.canonicalVolumeLink || vi.infoLink || '';
+    const buyLink = si.buyLink || '';
 
     const result = new SearchResult({ title, authors, isbn, cover_url: coverUrl });
 
@@ -53,7 +80,7 @@ export async function search(query, { limit = 10, apiKey } = {}) {
       result.addOption({
         source: 'Google Books',
         type: OPTION_TYPE.READ,
-        url: vi.infoLink || '',
+        url: infoLink,
         license: 'Public domain',
         price: null
       });
@@ -61,7 +88,7 @@ export async function search(query, { limit = 10, apiKey } = {}) {
         result.addOption({
           source: 'Google Books',
           type: OPTION_TYPE.DOWNLOAD,
-          url: ai.pdf.acsTokenLink || vi.infoLink || '',
+          url: ai.pdf.acsTokenLink || infoLink,
           license: 'Public domain',
           price: null
         });
@@ -70,17 +97,28 @@ export async function search(query, { limit = 10, apiKey } = {}) {
         result.addOption({
           source: 'Google Books',
           type: OPTION_TYPE.DOWNLOAD,
-          url: ai.epub.acsTokenLink || vi.infoLink || '',
+          url: ai.epub.acsTokenLink || infoLink,
           license: 'Public domain',
           price: null
         });
       }
     } else if (saleability === 'FOR_SALE') {
       result.status = 'paid';
+      // "Buy on Google Play Books" using buyLink
+      if (buyLink) {
+        result.addOption({
+          source: 'Google Books',
+          type: OPTION_TYPE.BUY,
+          url: buyLink,
+          license: 'Paid - commercial',
+          price: listPrice ? `${listPrice.amount} ${listPrice.currencyCode}` : null
+        });
+      }
+      // "View on Google Books" using infoLink or canonicalVolumeLink
       result.addOption({
         source: 'Google Books',
-        type: OPTION_TYPE.BUY,
-        url: vi.infoLink || '',
+        type: OPTION_TYPE.READ,
+        url: canonicalLink,
         license: 'Paid - commercial',
         price: listPrice ? `${listPrice.amount} ${listPrice.currencyCode}` : null
       });
@@ -90,7 +128,7 @@ export async function search(query, { limit = 10, apiKey } = {}) {
       result.addOption({
         source: 'Google Books',
         type: OPTION_TYPE.READ,
-        url: vi.infoLink || '',
+        url: infoLink,
         license: 'Limited preview - not free',
         price: null
       });
@@ -99,7 +137,7 @@ export async function search(query, { limit = 10, apiKey } = {}) {
       result.addOption({
         source: 'Google Books',
         type: OPTION_TYPE.READ,
-        url: vi.infoLink || '',
+        url: infoLink,
         license: 'Unknown',
         price: null
       });
@@ -109,6 +147,25 @@ export async function search(query, { limit = 10, apiKey } = {}) {
   }
 
   return results;
+}
+
+function buildQueryVariants(query) {
+  const variants = [{ q: query }];
+
+  // intitle: variant - all important words in title
+  const words = query.split(/\s+/).filter(w => w.length > 0);
+  const intitleQuery = words.map(w => `intitle:${w}`).join(' ');
+  if (intitleQuery !== query) {
+    variants.push({ q: intitleQuery });
+  }
+
+  // ISBN variant if query looks like an ISBN
+  const isbnMatch = query.match(/\b\d{9}[\dX]|\d{13}\b/);
+  if (isbnMatch) {
+    variants.push({ q: `isbn:${isbnMatch[0]}` });
+  }
+
+  return variants;
 }
 
 function extractIsbn(industryIdentifiers) {

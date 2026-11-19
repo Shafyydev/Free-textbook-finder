@@ -79,7 +79,6 @@ export default function Search() {
     const st = book.site_type || 'unknown';
     const license = book.license || '';
     const saleability = book.options?.[0]?.license || '';
-    const viewability = book.options?.[0]?.license || '';
 
     // Retailers show Paid
     if (st === 'retailer') return { label: 'Paid', color: '#b42318', bg: '#fef2f2' };
@@ -112,6 +111,21 @@ export default function Search() {
         const badge = badgeFor(r);
         return badge.label.toLowerCase() === filter.toLowerCase();
       });
+
+  // Search elsewhere panel - external site search links
+  const searchElsewhereLinks = [
+    { name: 'Amazon.in', url: `https://www.amazon.in/s?k=${encodeURIComponent(q)}` },
+    { name: 'Flipkart', url: `https://www.flipkart.com/search?q=${encodeURIComponent(q)}` },
+    { name: 'Google Books', url: `https://books.google.com/books?q=${encodeURIComponent(q)}` },
+    { name: 'Scribd', url: `https://www.scribd.com/search?query=${encodeURIComponent(q)}` },
+    { name: 'Open Library', url: `https://openlibrary.org/search?q=${encodeURIComponent(q)}` },
+    { name: 'Internet Archive', url: `https://archive.org/search?query=${encodeURIComponent(q)}` },
+    { name: 'WorldCat', url: `https://search.worldcat.org/search?q=${encodeURIComponent(q)}` },
+    { name: 'DOAB', url: `https://directory.doabooks.org/search?query=${encodeURIComponent(q)}` },
+    { name: 'OAPEN', url: `https://library.oapen.org/search?query=${encodeURIComponent(q)}` },
+    { name: 'OpenStax', url: `https://openstax.org/search?q=${encodeURIComponent(q)}` },
+    { name: 'NCBI Bookshelf', url: `https://www.ncbi.nlm.nih.gov/books/?term=${encodeURIComponent(q)}` }
+  ];
 
   if (!q) {
     return (
@@ -202,11 +216,33 @@ export default function Search() {
           </p>
         </div>
       ) : (
-        <div className="list">
-          {filteredResults.map((book) => (
-            <BookCard key={book.isbn || book.title} book={book} />
-          ))}
-        </div>
+        <>
+          <div className="list">
+            {filteredResults.map((book) => (
+              <BookCard key={book.isbn || book.title} book={book} />
+            ))}
+          </div>
+
+          {/* Search elsewhere panel */}
+          <section className="section card" style={{ marginTop: '1.5rem' }}>
+            <h3 style={{ marginTop: 0, marginBottom: '.75rem' }}>Search elsewhere</h3>
+            <p className="muted small" style={{ marginBottom: '.5rem' }}>Search for this title on other sites:</p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.5rem' }}>
+              {searchElsewhereLinks.map(link => (
+                <a
+                  key={link.name}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn secondary"
+                  style={{ padding: '.35rem .75rem', fontSize: '.85rem', textDecoration: 'none' }}
+                >
+                  Search on {link.name}
+                </a>
+              ))}
+            </div>
+          </section>
+        </>
       )}
     </div>
   );

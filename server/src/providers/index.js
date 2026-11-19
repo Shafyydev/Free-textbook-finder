@@ -9,6 +9,8 @@ import { search as doabSearch, PROVIDER_NAME as DOAB_NAME } from './doab.js';
 import { search as openLibrarySearch, PROVIDER_NAME as OPEN_LIBRARY_NAME } from './open-library.js';
 import { search as gutenbergSearch, PROVIDER_NAME as GUTENBERG_NAME } from './gutenberg.js';
 import { search as ncbiSearch, PROVIDER_NAME as NCBI_NAME } from './ncbi.js';
+import { search as internetArchiveSearch, PROVIDER_NAME as INTERNET_ARCHIVE_NAME } from './internet-archive.js';
+import { search as hathitrustSearch, PROVIDER_NAME as HATHITRUST_NAME } from './hathitrust.js';
 
 const PROVIDERS = [
   { name: LOCAL_NAME, search: localSearch },
@@ -17,7 +19,9 @@ const PROVIDERS = [
   { name: DOAB_NAME, search: doabSearch },
   { name: OPEN_LIBRARY_NAME, search: openLibrarySearch },
   { name: GUTENBERG_NAME, search: gutenbergSearch },
-  { name: NCBI_NAME, search: ncbiSearch }
+  { name: NCBI_NAME, search: ncbiSearch },
+  { name: INTERNET_ARCHIVE_NAME, search: internetArchiveSearch },
+  { name: HATHITRUST_NAME, search: hathitrustSearch }
 ];
 
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours

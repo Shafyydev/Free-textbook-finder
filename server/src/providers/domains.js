@@ -19,7 +19,6 @@ export const BLOCKED_DOMAINS = [
   { domain: 'libgen.is', reason: 'Shadow-library / copyright-infringing host' },
   { domain: 'library.lol', reason: 'Shadow-library / copyright-infringing host' },
   { domain: 'booksc.xyz', reason: 'Shadow-library / copyright-infringing host' },
-  { domain: 'scribd.com', reason: 'User-uploaded document hosting (subscription-gated)' },
   { domain: 'slideplayer.com', reason: 'User-uploaded presentation hosting' },
   { domain: 'studylib.net', reason: 'User-uploaded document hosting' },
   { domain: 'coursehero.com', reason: 'User-uploaded document hosting (subscription-gated)' },
@@ -39,6 +38,11 @@ export function classifyDomain(urlOrHost) {
     .replace(/^www\./, '')
     .split('/')[0]
     .toLowerCase();
+
+  // Scribd is a subscription-based document hosting service
+  if (host.includes('scribd.com')) {
+    return { badge: 'Subscription', color: '#6b21a8', bg: '#faf5ff' };
+  }
 
   // Retailers (commercial bookstores)
   const retailers = [

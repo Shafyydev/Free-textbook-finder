@@ -54,7 +54,8 @@ router.get('/', async (req, res, next) => {
              ${rankSelect},
              COALESCE(json_agg(DISTINCT jsonb_build_object('id', s.id, 'name', s.name))
                FILTER (WHERE s.id IS NOT NULL), '[]') AS subjects,
-             COUNT(DISTINCT bsrc.id)::int AS source_count
+             COUNT(DISTINCT bsrc.id)::int AS source_count,
+             COALESCE(json_agg(DISTINCT bsrc.license) FILTER (WHERE bsrc.license IS NOT NULL), '[]') AS licenses
       FROM books b
       LEFT JOIN book_subjects bs ON bs.book_id = b.id
       LEFT JOIN subjects s ON s.id = bs.subject_id

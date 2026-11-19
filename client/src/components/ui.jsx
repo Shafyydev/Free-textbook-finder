@@ -27,6 +27,7 @@ export function BookCard({ book }) {
       <div className="meta">{[book.authors, book.edition, book.year].filter(Boolean).join(' · ')}</div>
       {book.description && <p className="small" style={{margin:'.4rem 0'}}>{String(book.description).slice(0, 220)}{String(book.description).length>220?'…':''}</p>}
       <div>{(book.subjects || []).map(s => <span key={s.id} className="badge">{s.name}</span>)}</div>
+      {(book.licenses || []).map(lic => <span key={lic} className="badge" style={{background:'#f0f4f8',color:'#4a5568',borderColor:'#cbd5e0'}}>{lic}</span>)}
       <div className="muted small" style={{marginTop:'.35rem'}}>{book.source_count ?? 0} source(s)</div>
     </div>
   );

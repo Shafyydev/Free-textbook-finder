@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Layout } from './components/ui.jsx';
 import Home from './pages/Home.jsx';

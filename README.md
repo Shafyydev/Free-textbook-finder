@@ -1,4 +1,4 @@
-﻿# Free Textbook Finder
+# Free Textbook Finder
 
 Prototype web app to help students find textbooks that are legally free (public domain, openly licensed, or officially published open-access). This app stores metadata and links only and does not host book files.
 

@@ -1,4 +1,4 @@
-﻿-- 001_init.sql
+-- 001_init.sql
 CREATE TABLE IF NOT EXISTS books (
   id SERIAL PRIMARY KEY,
   title TEXT NOT NULL,

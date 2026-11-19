@@ -1,4 +1,4 @@
-﻿Free Textbook Finder - Prototype Spec
+Free Textbook Finder - Prototype Spec
 This document is the single source of truth for the prototype. Read all of it before writing any code. If something is not specified here, ask instead of guessing.
 1. Project summary
 Free Textbook Finder is a web app that helps students, mainly medical and allied health students (MBBS, physiotherapy, nursing), find textbooks that are legally free. Many of these students do not know which websites distribute open-access or openly licensed books. The student types a book name, subject or author, sees which legal free sources have it, and opens the book's page or file in as few clicks as possible.

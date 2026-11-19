@@ -30,6 +30,9 @@ export default function BookDetail() {
         <div style={{marginTop:'.25rem'}}>
           <strong>Courses:</strong> {(book.courses||[]).map(c=> <span key={c.id} className="badge">{c.name}</span>)}{!(book.courses||[]).length && <span className="muted"> None</span>}
         </div>
+        <div style={{marginTop:'.25rem'}}>
+          <strong>Category:</strong> {(book.categories||[]).map(c=> <span key={c.id} className="badge">{c.name}</span>)}{!(book.categories||[]).length && <span className="muted"> None</span>}
+        </div>
       </div>
       <section className="section">
         <h2>Official sources</h2>

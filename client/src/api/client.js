@@ -29,11 +29,13 @@ export const api = {
   getBook: (id) => request(`/api/books/${id}`),
   getSubjects: () => request('/api/subjects'),
   getCourses: () => request('/api/courses'),
+  getCategories: () => request('/api/categories'),
   getSources: () => request('/api/sources'),
   createRequest: (body) => request('/api/requests', { method: 'POST', body: JSON.stringify(body) }),
   admin: {
     headers: (password) => ({ 'x-admin-password': password }),
     listBooks: (password) => request('/api/books?limit=100', { headers: { 'x-admin-password': password } }),
+    getCategories: (password) => request('/api/categories', { headers: { 'x-admin-password': password } }),
     createBook: (password, body) => request('/api/admin/books', { method: 'POST', headers: { 'x-admin-password': password }, body: JSON.stringify(body) }),
     updateBook: (password, id, body) => request(`/api/admin/books/${id}`, { method: 'PUT', headers: { 'x-admin-password': password }, body: JSON.stringify(body) }),
     deleteBook: (password, id) => request(`/api/admin/books/${id}`, { method: 'DELETE', headers: { 'x-admin-password': password } }),

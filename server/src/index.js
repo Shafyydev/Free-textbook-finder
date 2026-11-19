@@ -14,6 +14,7 @@ import errorHandler from './middleware/errorHandler.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 const app = express();
 const port = process.env.PORT || 3001;

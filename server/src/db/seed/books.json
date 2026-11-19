@@ -1,0 +1,132 @@
+﻿[
+  {
+    "title": "Nursing Pharmacology",
+    "authors": "Chippewa Valley Technical College",
+    "edition": null,
+    "year": 2020,
+    "description": "Open access nursing pharmacology textbook for entry-level undergraduate nursing students explaining basic pharmacology concepts and common medication classes.",
+    "cover_url": null,
+    "subjects": ["Pharmacology", "Nursing"],
+    "courses": ["Nursing", "MBBS Year 1"],
+    "sources": [
+      {
+        "source_name": "Open Textbook Library",
+        "base_url": "https://open.umn.edu/opentextbooks",
+        "official_url": "https://open.umn.edu/opentextbooks/textbooks/nursing-pharmacology",
+        "license": "CC BY 4.0",
+        "license_url": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      {
+        "source_name": "WisTech Open (Pressbooks)",
+        "base_url": "https://wtcs.pressbooks.pub",
+        "official_url": "https://wtcs.pressbooks.pub/pharmacology/",
+        "license": "CC BY 4.0",
+        "license_url": "https://creativecommons.org/licenses/by/4.0/"
+      }
+    ]
+  },
+  {
+    "title": "Nursing Skills",
+    "authors": "Kimberly Ernstmeyer, Elizabeth Christman",
+    "edition": null,
+    "year": 2021,
+    "description": "Open access nursing skills textbook covering physical assessments and basic nursing skills for entry-level nursing students.",
+    "cover_url": null,
+    "subjects": ["Nursing", "Clinical Skills"],
+    "courses": ["Nursing", "MBBS Year 1"],
+    "sources": [
+      {
+        "source_name": "Open Textbook Library",
+        "base_url": "https://open.umn.edu/opentextbooks",
+        "official_url": "https://open.umn.edu/opentextbooks/textbooks/nursing-skills",
+        "license": "CC BY 4.0",
+        "license_url": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      {
+        "source_name": "WisTech Open (Pressbooks)",
+        "base_url": "https://wtcs.pressbooks.pub",
+        "official_url": "https://wtcs.pressbooks.pub/nursingskills/",
+        "license": "CC BY 4.0",
+        "license_url": "https://creativecommons.org/licenses/by/4.0/"
+      }
+    ]
+  },
+  {
+    "title": "Nursing Fundamentals",
+    "authors": "Kimberly Ernstmeyer, Elizabeth Christman",
+    "edition": "2e",
+    "year": 2024,
+    "description": "Foundational nursing practice textbook covering communication, safety, and core nursing concepts using the nursing process.",
+    "cover_url": null,
+    "subjects": ["Nursing", "Fundamentals of Nursing"],
+    "courses": ["Nursing", "MBBS Year 1"],
+    "sources": [
+      {
+        "source_name": "Open Textbook Library",
+        "base_url": "https://open.umn.edu/opentextbooks",
+        "official_url": "https://open.umn.edu/opentextbooks/textbooks/nursing-fundamentals",
+        "license": "CC BY 4.0",
+        "license_url": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      {
+        "source_name": "WisTech Open (Pressbooks)",
+        "base_url": "https://wtcs.pressbooks.pub",
+        "official_url": "https://wtcs.pressbooks.pub/nursingfundamentals/",
+        "license": "CC BY 4.0",
+        "license_url": "https://creativecommons.org/licenses/by/4.0/"
+      }
+    ]
+  },
+  {
+    "title": "Nursing Care at the End of Life: What Every Clinician Should Know",
+    "authors": "Susan E. Lowey",
+    "edition": null,
+    "year": 2015,
+    "description": "Textbook on end-of-life nursing care covering palliative care, communication, symptom management, ethics, and bereavement.",
+    "cover_url": null,
+    "subjects": ["Nursing", "Palliative Care"],
+    "courses": ["Nursing", "MBBS Year 2"],
+    "sources": [
+      {
+        "source_name": "Open Textbook Library",
+        "base_url": "https://open.umn.edu/opentextbooks",
+        "official_url": "https://open.umn.edu/opentextbooks/textbooks/nursing-care-at-the-end-of-life-what-every-clinician-should-know",
+        "license": "CC BY-NC-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+      },
+      {
+        "source_name": "Milne Open Textbooks (Open SUNY)",
+        "base_url": "https://milneopentextbooks.org",
+        "official_url": "https://milneopentextbooks.org/nursing-care-at-the-end-of-life/",
+        "license": "CC BY-NC-SA 4.0",
+        "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+      }
+    ]
+  },
+  {
+    "title": "Clinical Procedures for Safer Patient Care",
+    "authors": "Glynda Rees Doyle, Jodie Anita McCutcheon",
+    "edition": null,
+    "year": 2015,
+    "description": "Checklist-based textbook covering standardized clinical nursing procedures to support safe patient care.",
+    "cover_url": null,
+    "subjects": ["Nursing", "Clinical Skills"],
+    "courses": ["Nursing", "MBBS Year 1"],
+    "sources": [
+      {
+        "source_name": "Open Textbook Library",
+        "base_url": "https://open.umn.edu/opentextbooks",
+        "official_url": "https://open.umn.edu/opentextbooks/textbooks/clinical-procedures-for-safer-patient-care",
+        "license": "CC BY 4.0",
+        "license_url": "https://creativecommons.org/licenses/by/4.0/"
+      },
+      {
+        "source_name": "BCcampus Open Publishing",
+        "base_url": "https://opentextbc.ca",
+        "official_url": "https://opentextbc.ca/clinicalskills/",
+        "license": "CC BY 4.0",
+        "license_url": "https://creativecommons.org/licenses/by/4.0/"
+      }
+    ]
+  }
+]

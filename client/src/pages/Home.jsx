@@ -1,15 +1,15 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BookCard } from '../components/ui.jsx';
 
 export default function Home() {
+  const navigate = useNavigate();
+
   function handleSubmit(e) {
     e.preventDefault();
     const q = e.target.elements.q.value.trim();
     if (q) {
-      const sp = new URLSearchParams(window.location.search);
-      sp.set('q', q);
-      window.location.search = sp.toString();
+      navigate(`/search?q=${encodeURIComponent(q)}`);
     }
   }
 

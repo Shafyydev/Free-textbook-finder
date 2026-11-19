@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { BookCard, SkeletonList, SkeletonCard } from '../components/ui.jsx';
 
 export default function Search() {
   const [sp, setSp] = useSearchParams();
+  const navigate = useNavigate();
   const [q, setQ] = useState(sp.get('q') || '');
   const [results, setResults] = useState([]);
   const [total, setTotal] = useState(0);
@@ -43,13 +44,13 @@ export default function Search() {
   function handleHeroSubmit(e) {
     e.preventDefault();
     const q2 = e.target.elements.q.value.trim();
-    if (q2) setSp({ q: q2 });
+    if (q2) navigate(`/search?q=${encodeURIComponent(q2)}`);
   }
 
   function handleRetrySubmit(e) {
     e.preventDefault();
     const q2 = e.target.elements.q.value.trim();
-    if (q2) setSp({ q: q2 });
+    if (q2) navigate(`/search?q=${encodeURIComponent(q2)}`);
   }
 
   if (!q) {

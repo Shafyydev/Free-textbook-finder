@@ -14,6 +14,7 @@ router.get('/', async (req, res, next) => {
     const subject = req.query.subject ? parsePositiveInt(req.query.subject, null) : null;
     const course = req.query.course ? parsePositiveInt(req.query.course, null) : null;
     const source = req.query.source ? parsePositiveInt(req.query.source, null) : null;
+    const category = req.query.category ? parsePositiveInt(req.query.category, null) : null;
     const page = Math.max(1, parsePositiveInt(req.query.page, 1));
     const limit = Math.min(50, Math.max(1, parsePositiveInt(req.query.limit, 20)));
     const offset = (page - 1) * limit;
@@ -42,6 +43,10 @@ router.get('/', async (req, res, next) => {
       params.push(source);
       where.push(`EXISTS (SELECT 1 FROM book_sources bsrc WHERE bsrc.book_id = b.id AND bsrc.source_id = $${params.length})`);
     }
+    if (category) {
+      params.push(category);
+      where.push(`EXISTS (SELECT 1 FROM book_categories bc WHERE bc.book_id = b.id AND bc.category_id = $${params.length})`);
+    }
 
     const whereSql = where.length ? `WHERE ${where.join(' AND ')}` : '';
     params.push(limit);
@@ -57,6 +62,9 @@ router.get('/', async (req, res, next) => {
              COUNT(DISTINCT bsrc.id)::int AS source_count,
              COALESCE(json_agg(DISTINCT bsrc.license) FILTER (WHERE bsrc.license IS NOT NULL), '[]') AS licenses,
              COALESCE(json_agg(DISTINCT jsonb_build_object(
+               'id', c.id, 'name', c.name
+             )) FILTER (WHERE c.id IS NOT NULL), '[]') AS categories,
+             COALESCE(json_agg(DISTINCT jsonb_build_object(
                'id', bsrc.id, 'source_id', src.id, 'source_name', src.name,
                'official_url', bsrc.official_url, 'direct_file_url', bsrc.direct_file_url,
                'license', bsrc.license, 'access_type', bsrc.access_type
@@ -66,6 +74,8 @@ router.get('/', async (req, res, next) => {
       LEFT JOIN subjects subj ON subj.id = bs.subject_id
       LEFT JOIN book_sources bsrc ON bsrc.book_id = b.id
       LEFT JOIN sources src ON src.id = bsrc.source_id
+      LEFT JOIN book_categories bcat ON bcat.book_id = b.id
+      LEFT JOIN categories c ON c.id = bcat.category_id
       ${whereSql}
       GROUP BY b.id
       ORDER BY ${orderBy}

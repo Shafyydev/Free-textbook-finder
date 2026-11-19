@@ -26,6 +26,13 @@ async function ensureCourse(client, name) {
   return rows[0].id;
 }
 
+async function ensureCategory(client, name) {
+  const { rows } = await client.query(
+    `INSERT INTO categories (name) VALUES ($1) ON CONFLICT (name) DO UPDATE SET name=EXCLUDED.name RETURNING id`, [name]
+  );
+  return rows[0].id;
+}
+
 async function seed() {
   const seedPath = path.join(__dirname, 'seed', 'books.json');
   const books = JSON.parse(fs.readFileSync(seedPath, 'utf8'));
@@ -76,6 +83,10 @@ async function seed() {
         const cid = await ensureCourse(client, c);
         await client.query('INSERT INTO book_courses (book_id, course_id) VALUES ($1,$2) ON CONFLICT DO NOTHING', [bookId, cid]);
       }
+      if (b.category) {
+        const catId = await ensureCategory(client, b.category);
+        await client.query('INSERT INTO book_categories (book_id, category_id) VALUES ($1,$2) ON CONFLICT DO NOTHING', [bookId, catId]);
+      }
       for (const src of b.sources || []) {
         const sourceId = await ensureSource(client, src.source_name, src.base_url || null, src.notes || null);
         await client.query(
@@ -87,9 +98,10 @@ async function seed() {
       await client.query('SELECT refresh_book_search_vector($1)', [bookId]);
     }
 
-    // Clean up orphaned subjects, courses, sources
+    // Clean up orphaned subjects, courses, categories, sources
     await client.query(`DELETE FROM subjects WHERE NOT EXISTS (SELECT 1 FROM book_subjects bs WHERE bs.subject_id = subjects.id)`);
     await client.query(`DELETE FROM courses WHERE NOT EXISTS (SELECT 1 FROM book_courses bc WHERE bc.course_id = courses.id)`);
+    await client.query(`DELETE FROM categories WHERE NOT EXISTS (SELECT 1 FROM book_categories bc WHERE bc.category_id = categories.id)`);
     await client.query(`DELETE FROM sources WHERE NOT EXISTS (SELECT 1 FROM book_sources bsrc WHERE bsrc.source_id = sources.id)`);
 
     await client.query('COMMIT');

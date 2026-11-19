@@ -12,6 +12,11 @@ export default function BookDetail() {
   if (error) return <div className="error">{error} <Link to="/search">Back to search</Link></div>;
   if (!book) return <p className="muted">Loading...</p>;
 
+  const sources = book.sources || [];
+  const freeSource = sources.find(src => src.access_type === 'free');
+  const pdfUrl = freeSource?.direct_file_url;
+  const viewUrl = freeSource?.official_url || (sources[0]?.official_url);
+
   return (
     <div>
       <p className="small"><Link to="/search">← Back to search</Link></p>
@@ -29,6 +34,13 @@ export default function BookDetail() {
       <section className="section">
         <h2>Official sources</h2>
         <p className="small muted">License is shown for each source. Links open the official provider in a new tab.</p>
+        <div style={{marginBottom:'.75rem'}}>
+          {pdfUrl ? (
+            <a href={pdfUrl} target="_blank" rel="noopener noreferrer" style={{display:'inline-block',background:'#0b6efd',color:'#fff',padding:'.5rem .8rem',borderRadius:'6px',textDecoration:'none',fontSize:'1rem',fontWeight:'600'}}>Download PDF</a>
+          ) : (
+            <a href={viewUrl} target="_blank" rel="noopener noreferrer" style={{display:'inline-block',background:'#eef2f7',color:'#1f2937',padding:'.5rem .8rem',borderRadius:'6px',textDecoration:'none',fontSize:'1rem',fontWeight:'600'}}>Open book page</a>
+          )}
+        </div>
         <SourceList sources={book.sources} />
       </section>
     </div>

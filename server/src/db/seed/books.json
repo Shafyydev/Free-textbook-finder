@@ -1,569 +1,584 @@
 [
-  {
-    "title": "Nursing Pharmacology",
-    "authors": "Chippewa Valley Technical College",
-    "edition": null,
-    "year": 2020,
-    "description": "Open access nursing pharmacology textbook for entry-level undergraduate nursing students explaining basic pharmacology concepts and common medication classes.",
-    "cover_url": null,
-    "subjects": [
-      "Pharmacology",
-      "Nursing"
-    ],
-    "courses": [
-      "Nursing",
-      "MBBS Year 1"
-    ],
-    "sources": [
-      {
-        "source_name": "Open Textbook Library",
-        "base_url": "https://open.umn.edu/opentextbooks",
-        "official_url": "https://open.umn.edu/opentextbooks/textbooks/nursing-pharmacology",
-        "license": "CC BY 4.0",
-        "license_url": "https://creativecommons.org/licenses/by/4.0/",
-        "access_type": "free"
-      },
-      {
-        "source_name": "WisTech Open (Pressbooks)",
-        "base_url": "https://wtcs.pressbooks.pub",
-        "official_url": "https://wtcs.pressbooks.pub/pharmacology/",
-        "license": "CC BY 4.0",
-        "license_url": "https://creativecommons.org/licenses/by/4.0/",
-        "access_type": "free"
-      }
-    ],
-    "featured": true
-  },
-  {
-    "title": "Nursing Skills",
-    "authors": "Kimberly Ernstmeyer, Elizabeth Christman",
-    "edition": null,
-    "year": 2021,
-    "description": "Open access nursing skills textbook covering physical assessments and basic nursing skills for entry-level nursing students.",
-    "cover_url": null,
-    "subjects": [
-      "Nursing",
-      "Clinical Skills"
-    ],
-    "courses": [
-      "Nursing",
-      "MBBS Year 1"
-    ],
-    "sources": [
-      {
-        "source_name": "Open Textbook Library",
-        "base_url": "https://open.umn.edu/opentextbooks",
-        "official_url": "https://open.umn.edu/opentextbooks/textbooks/nursing-skills",
-        "license": "CC BY 4.0",
-        "license_url": "https://creativecommons.org/licenses/by/4.0/",
-        "access_type": "free"
-      },
-      {
-        "source_name": "WisTech Open (Pressbooks)",
-        "base_url": "https://wtcs.pressbooks.pub",
-        "official_url": "https://wtcs.pressbooks.pub/nursingskills/",
-        "license": "CC BY 4.0",
-        "license_url": "https://creativecommons.org/licenses/by/4.0/",
-        "access_type": "free"
-      }
-    ],
-    "featured": true
-  },
-  {
-    "title": "Nursing Fundamentals",
-    "authors": "Kimberly Ernstmeyer, Elizabeth Christman",
-    "edition": "2e",
-    "year": 2024,
-    "description": "Foundational nursing practice textbook covering communication, safety, and core nursing concepts using the nursing process.",
-    "cover_url": null,
-    "subjects": [
-      "Nursing",
-      "Fundamentals of Nursing"
-    ],
-    "courses": [
-      "Nursing",
-      "MBBS Year 1"
-    ],
-    "sources": [
-      {
-        "source_name": "Open Textbook Library",
-        "base_url": "https://open.umn.edu/opentextbooks",
-        "official_url": "https://open.umn.edu/opentextbooks/textbooks/nursing-fundamentals",
-        "license": "CC BY 4.0",
-        "license_url": "https://creativecommons.org/licenses/by/4.0/",
-        "access_type": "free"
-      },
-      {
-        "source_name": "WisTech Open (Pressbooks)",
-        "base_url": "https://wtcs.pressbooks.pub",
-        "official_url": "https://wtcs.pressbooks.pub/nursingfundamentals/",
-        "license": "CC BY 4.0",
-        "license_url": "https://creativecommons.org/licenses/by/4.0/",
-        "access_type": "free"
-      }
-    ],
-    "featured": true
-  },
-  {
-    "title": "Nursing Care at the End of Life: What Every Clinician Should Know",
-    "authors": "Susan E. Lowey",
-    "edition": null,
-    "year": 2015,
-    "description": "Textbook on end-of-life nursing care covering palliative care, communication, symptom management, ethics, and bereavement.",
-    "cover_url": null,
-    "subjects": [
-      "Nursing",
-      "Palliative Care"
-    ],
-    "courses": [
-      "Nursing",
-      "MBBS Year 2"
-    ],
-    "sources": [
-      {
-        "source_name": "Open Textbook Library",
-        "base_url": "https://open.umn.edu/opentextbooks",
-        "official_url": "https://open.umn.edu/opentextbooks/textbooks/nursing-care-at-the-end-of-life-what-every-clinician-should-know",
-        "license": "CC BY-NC-SA 4.0",
-        "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
-        "access_type": "free"
-      },
-      {
-        "source_name": "Milne Open Textbooks (Open SUNY)",
-        "base_url": "https://milneopentextbooks.org",
-        "official_url": "https://milneopentextbooks.org/nursing-care-at-the-end-of-life/",
-        "license": "CC BY-NC-SA 4.0",
-        "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
-        "access_type": "free"
-      }
-    ],
-    "featured": true
-  },
-  {
-    "title": "Clinical Procedures for Safer Patient Care",
-    "authors": "Glynda Rees Doyle, Jodie Anita McCutcheon",
-    "edition": null,
-    "year": 2015,
-    "description": "Checklist-based textbook covering standardized clinical nursing procedures to support safe patient care.",
-    "cover_url": null,
-    "subjects": [
-      "Nursing",
-      "Clinical Skills"
-    ],
-    "courses": [
-      "Nursing",
-      "MBBS Year 1"
-    ],
-    "sources": [
-      {
-        "source_name": "Open Textbook Library",
-        "base_url": "https://open.umn.edu/opentextbooks",
-        "official_url": "https://open.umn.edu/opentextbooks/textbooks/clinical-procedures-for-safer-patient-care",
-        "license": "CC BY 4.0",
-        "license_url": "https://creativecommons.org/licenses/by/4.0/",
-        "access_type": "free"
-      },
-      {
-        "source_name": "BCcampus Open Publishing",
-        "base_url": "https://opentextbc.ca",
-        "official_url": "https://opentextbc.ca/clinicalskills/",
-        "license": "CC BY 4.0",
-        "license_url": "https://creativecommons.org/licenses/by/4.0/",
-        "access_type": "free"
-      }
-    ],
-    "featured": true
-  },
-  {
-    "title": "Anatomy and Physiology 2e",
-    "authors": "J. Gordon Betts, Kelly A. Young, James A. Wise, et al.",
-    "edition": "2e",
-    "year": 2022,
-    "description": "Comprehensive two-semester human anatomy and physiology textbook from OpenStax.",
-    "cover_url": null,
-    "subjects": [
-      "Anatomy",
-      "Physiology"
-    ],
-    "courses": [
-      "MBBS Year 1",
-      "Physiotherapy"
-    ],
-    "sources": [
-      {
-        "source_name": "OpenStax",
-        "base_url": "https://openstax.org",
-        "official_url": "https://openstax.org/details/books/anatomy-and-physiology-2e",
-        "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
-        "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
-        "access_type": "free"
-      }
-    ],
-    "featured": true
-  },
-  {
-    "title": "Microbiology",
-    "authors": "Nina Parker, Mark Schneegurt, Anh-Hue Thi Tu, et al.",
-    "edition": null,
-    "year": 2016,
-    "description": "Microbiology textbook for allied health and nursing students.",
-    "cover_url": null,
-    "subjects": [
-      "Microbiology",
-      "Nursing"
-    ],
-    "courses": [
-      "Nursing",
-      "MBBS Year 1"
-    ],
-    "sources": [
-      {
-        "source_name": "OpenStax",
-        "base_url": "https://openstax.org",
-        "official_url": "https://openstax.org/details/books/microbiology",
-        "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
-        "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
-        "access_type": "free"
-      }
-    ],
-    "featured": true
-  },
-  {
-    "title": "Biology 2e",
-    "authors": "Mary Ann Clark, Matthew Douglas, Jung Choi",
-    "edition": "2e",
-    "year": 2018,
-    "description": "Two-semester biology textbook for science majors.",
-    "cover_url": null,
-    "subjects": [
-      "Biology"
-    ],
-    "courses": [
-      "MBBS Year 1"
-    ],
-    "sources": [
-      {
-        "source_name": "OpenStax",
-        "base_url": "https://openstax.org",
-        "official_url": "https://openstax.org/details/books/biology-2e",
-        "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
-        "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
-        "access_type": "free"
-      }
-    ],
-    "featured": false
-  },
-  {
-    "title": "Chemistry 2e",
-    "authors": "Paul Flowers, Klaus Theopold, Richard Langley, et al.",
-    "edition": "2e",
-    "year": 2019,
-    "description": "Two-semester chemistry textbook.",
-    "cover_url": null,
-    "subjects": [
-      "Chemistry"
-    ],
-    "courses": [
-      "MBBS Year 1"
-    ],
-    "sources": [
-      {
-        "source_name": "OpenStax",
-        "base_url": "https://openstax.org",
-        "official_url": "https://openstax.org/details/books/chemistry-2e",
-        "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
-        "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
-        "access_type": "free"
-      }
-    ],
-    "featured": false
-  },
-  {
-    "title": "Nutrition for Nurses",
-    "authors": "OpenStax",
-    "edition": null,
-    "year": 2024,
-    "description": "Nutrition textbook tailored for nursing students.",
-    "cover_url": null,
-    "subjects": [
-      "Nutrition",
-      "Nursing"
-    ],
-    "courses": [
-      "Nursing"
-    ],
-    "sources": [
-      {
-        "source_name": "OpenStax",
-        "base_url": "https://openstax.org",
-        "official_url": "https://openstax.org/details/books/nutrition",
-        "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
-        "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
-        "access_type": "free"
-      }
-    ],
-    "featured": true
-  },
-  {
-    "title": "Psychology 2e",
-    "authors": "Rose M. Spielman, William J. Jenkins, Marilyn D. Lovett",
-    "edition": "2e",
-    "year": 2020,
-    "description": "Introductory psychology textbook.",
-    "cover_url": null,
-    "subjects": [
-      "Psychology"
-    ],
-    "courses": [
-      "Nursing",
-      "MBBS Year 1"
-    ],
-    "sources": [
-      {
-        "source_name": "OpenStax",
-        "base_url": "https://openstax.org",
-        "official_url": "https://openstax.org/details/books/psychology-2e",
-        "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
-        "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
-        "access_type": "free"
-      }
-    ],
-    "featured": false
-  },
-  {
-    "title": "Medical-Surgical Nursing",
-    "authors": "OpenStax",
-    "edition": null,
-    "year": 2024,
-    "description": "Medical-surgical nursing textbook for nursing students.",
-    "cover_url": null,
-    "subjects": [
-      "Nursing",
-      "Medical-Surgical Nursing"
-    ],
-    "courses": [
-      "Nursing",
-      "MBBS Year 2"
-    ],
-    "sources": [
-      {
-        "source_name": "OpenStax",
-        "base_url": "https://openstax.org",
-        "official_url": "https://openstax.org/details/books/medical-surgical-nursing",
-        "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
-        "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
-        "access_type": "free"
-      }
-    ],
-    "featured": true
-  },
-  {
-    "title": "Pharmacology for Nurses",
-    "authors": "OpenStax",
-    "edition": null,
-    "year": 2024,
-    "description": "Pharmacology textbook for nursing students.",
-    "cover_url": null,
-    "subjects": [
-      "Pharmacology",
-      "Nursing"
-    ],
-    "courses": [
-      "Nursing",
-      "MBBS Year 1"
-    ],
-    "sources": [
-      {
-        "source_name": "OpenStax",
-        "base_url": "https://openstax.org",
-        "official_url": "https://openstax.org/details/books/pharmacology",
-        "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
-        "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
-        "access_type": "free"
-      }
-    ],
-    "featured": true
-  },
-  {
-    "title": "Maternal-Newborn Nursing",
-    "authors": "OpenStax",
-    "edition": null,
-    "year": 2024,
-    "description": "Maternal-newborn nursing textbook.",
-    "cover_url": null,
-    "subjects": [
-      "Nursing",
-      "Maternal-Newborn Nursing"
-    ],
-    "courses": [
-      "Nursing",
-      "MBBS Year 2"
-    ],
-    "sources": [
-      {
-        "source_name": "OpenStax",
-        "base_url": "https://openstax.org",
-        "official_url": "https://openstax.org/details/books/maternal-newborn-nursing",
-        "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
-        "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
-        "access_type": "free"
-      }
-    ],
-    "featured": true
-  },
-  {
-    "title": "Psychiatric-Mental Health Nursing",
-    "authors": "OpenStax",
-    "edition": null,
-    "year": 2024,
-    "description": "Psychiatric-mental health nursing textbook.",
-    "cover_url": null,
-    "subjects": [
-      "Nursing",
-      "Psychiatric-Mental Health"
-    ],
-    "courses": [
-      "Nursing",
-      "MBBS Year 2"
-    ],
-    "sources": [
-      {
-        "source_name": "OpenStax",
-        "base_url": "https://openstax.org",
-        "official_url": "https://openstax.org/details/books/psychiatric-mental-health",
-        "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
-        "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
-        "access_type": "free"
-      }
-    ],
-    "featured": true
-  },
-  {
-    "title": "Population Health for Nurses",
-    "authors": "OpenStax",
-    "edition": null,
-    "year": 2024,
-    "description": "Population health textbook for nursing students.",
-    "cover_url": null,
-    "subjects": [
-      "Public Health",
-      "Nursing"
-    ],
-    "courses": [
-      "Nursing"
-    ],
-    "sources": [
-      {
-        "source_name": "OpenStax",
-        "base_url": "https://openstax.org",
-        "official_url": "https://openstax.org/details/books/population-health",
-        "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
-        "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
-        "access_type": "free"
-      }
-    ],
-    "featured": true
-  },
-  {
-    "title": "College Physics 2e",
-    "authors": "Paul Peter Urone, Roger Hinrichs",
-    "edition": "2e",
-    "year": 2022,
-    "description": "Algebra-based college physics textbook.",
-    "cover_url": null,
-    "subjects": [
-      "Physics"
-    ],
-    "courses": [
-      "MBBS Year 1",
-      "Physiotherapy"
-    ],
-    "sources": [
-      {
-        "source_name": "OpenStax",
-        "base_url": "https://openstax.org",
-        "official_url": "https://openstax.org/details/books/college-physics-2e",
-        "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
-        "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
-        "access_type": "free"
-      }
-    ],
-    "featured": false
-  },
-  {
-    "title": "University Physics Volume 1",
-    "authors": "Samuel J. Ling, Jeff Sanny, William Moebs",
-    "edition": null,
-    "year": 2016,
-    "description": "Calculus-based university physics volume 1.",
-    "cover_url": null,
-    "subjects": [
-      "Physics"
-    ],
-    "courses": [
-      "MBBS Year 1"
-    ],
-    "sources": [
-      {
-        "source_name": "OpenStax",
-        "base_url": "https://openstax.org",
-        "official_url": "https://openstax.org/details/books/university-physics-volume-1",
-        "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
-        "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
-        "access_type": "free"
-      }
-    ],
-    "featured": false
-  },
-  {
-    "title": "Concepts of Biology",
-    "authors": "Samantha Fowler, Rebecca Roush, James Wise",
-    "edition": null,
-    "year": 2016,
-    "description": "Introductory biology for nonmajors.",
-    "cover_url": null,
-    "subjects": [
-      "Biology"
-    ],
-    "courses": [
-      "MBBS Year 1"
-    ],
-    "sources": [
-      {
-        "source_name": "OpenStax",
-        "base_url": "https://openstax.org",
-        "official_url": "https://openstax.org/details/books/concepts-biology",
-        "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
-        "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
-        "access_type": "free"
-      }
-    ],
-    "featured": false
-  },
-  {
-    "title": "Lifespan Development",
-    "authors": "OpenStax",
-    "edition": null,
-    "year": 2024,
-    "description": "Lifespan development psychology textbook.",
-    "cover_url": null,
-    "subjects": [
-      "Psychology",
-      "Human Development"
-    ],
-    "courses": [
-      "Nursing"
-    ],
-    "sources": [
-      {
-        "source_name": "OpenStax",
-        "base_url": "https://openstax.org",
-        "official_url": "https://openstax.org/details/books/lifespan-development",
-        "license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
-        "license_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
-        "access_type": "free"
-      }
-    ],
-    "featured": true
-  }
+    {
+        "title":  "Nursing Pharmacology",
+        "authors":  "Chippewa Valley Technical College",
+        "edition":  null,
+        "year":  2020,
+        "description":  "Open access nursing pharmacology textbook for entry-level undergraduate nursing students explaining basic pharmacology concepts and common medication classes.",
+        "cover_url":  null,
+        "subjects":  [
+                         "Pharmacology",
+                         "Nursing"
+                     ],
+        "courses":  [
+                        "Nursing",
+                        "MBBS Year 1"
+                    ],
+        "sources":  [
+                        {
+                            "source_name":  "Open Textbook Library",
+                            "base_url":  "https://open.umn.edu/opentextbooks",
+                            "official_url":  "https://open.umn.edu/opentextbooks/textbooks/nursing-pharmacology",
+                            "license":  "CC BY 4.0",
+                            "license_url":  "https://creativecommons.org/licenses/by/4.0/",
+                            "access_type":  "free"
+                        },
+                        {
+                            "source_name":  "WisTech Open (Pressbooks)",
+                            "base_url":  "https://wtcs.pressbooks.pub",
+                            "official_url":  "https://wtcs.pressbooks.pub/pharmacology/",
+                            "license":  "CC BY 4.0",
+                            "license_url":  "https://creativecommons.org/licenses/by/4.0/",
+                            "access_type":  "free"
+                        }
+                    ],
+        "featured":  true
+    },
+    {
+        "title":  "Nursing Skills",
+        "authors":  "Kimberly Ernstmeyer, Elizabeth Christman",
+        "edition":  null,
+        "year":  2021,
+        "description":  "Open access nursing skills textbook covering physical assessments and basic nursing skills for entry-level nursing students.",
+        "cover_url":  null,
+        "subjects":  [
+                         "Nursing",
+                         "Clinical Skills"
+                     ],
+        "courses":  [
+                        "Nursing",
+                        "MBBS Year 1"
+                    ],
+        "sources":  [
+                        {
+                            "source_name":  "Open Textbook Library",
+                            "base_url":  "https://open.umn.edu/opentextbooks",
+                            "official_url":  "https://open.umn.edu/opentextbooks/textbooks/nursing-skills",
+                            "license":  "CC BY 4.0",
+                            "license_url":  "https://creativecommons.org/licenses/by/4.0/",
+                            "access_type":  "free"
+                        },
+                        {
+                            "source_name":  "WisTech Open (Pressbooks)",
+                            "base_url":  "https://wtcs.pressbooks.pub",
+                            "official_url":  "https://wtcs.pressbooks.pub/nursingskills/",
+                            "license":  "CC BY 4.0",
+                            "license_url":  "https://creativecommons.org/licenses/by/4.0/",
+                            "access_type":  "free"
+                        }
+                    ],
+        "featured":  true
+    },
+    {
+        "title":  "Nursing Fundamentals",
+        "authors":  "Kimberly Ernstmeyer, Elizabeth Christman",
+        "edition":  "2e",
+        "year":  2024,
+        "description":  "Foundational nursing practice textbook covering communication, safety, and core nursing concepts using the nursing process.",
+        "cover_url":  null,
+        "subjects":  [
+                         "Nursing",
+                         "Fundamentals of Nursing"
+                     ],
+        "courses":  [
+                        "Nursing",
+                        "MBBS Year 1"
+                    ],
+        "sources":  [
+                        {
+                            "source_name":  "Open Textbook Library",
+                            "base_url":  "https://open.umn.edu/opentextbooks",
+                            "official_url":  "https://open.umn.edu/opentextbooks/textbooks/nursing-fundamentals",
+                            "license":  "CC BY 4.0",
+                            "license_url":  "https://creativecommons.org/licenses/by/4.0/",
+                            "access_type":  "free"
+                        },
+                        {
+                            "source_name":  "WisTech Open (Pressbooks)",
+                            "base_url":  "https://wtcs.pressbooks.pub",
+                            "official_url":  "https://wtcs.pressbooks.pub/nursingfundamentals/",
+                            "license":  "CC BY 4.0",
+                            "license_url":  "https://creativecommons.org/licenses/by/4.0/",
+                            "access_type":  "free"
+                        }
+                    ],
+        "featured":  true
+    },
+    {
+        "title":  "Nursing Care at the End of Life: What Every Clinician Should Know",
+        "authors":  "Susan E. Lowey",
+        "edition":  null,
+        "year":  2015,
+        "description":  "Textbook on end-of-life nursing care covering palliative care, communication, symptom management, ethics, and bereavement.",
+        "cover_url":  null,
+        "subjects":  [
+                         "Nursing",
+                         "Palliative Care"
+                     ],
+        "courses":  [
+                        "Nursing",
+                        "MBBS Year 2"
+                    ],
+        "sources":  [
+                        {
+                            "source_name":  "Open Textbook Library",
+                            "base_url":  "https://open.umn.edu/opentextbooks",
+                            "official_url":  "https://open.umn.edu/opentextbooks/textbooks/nursing-care-at-the-end-of-life-what-every-clinician-should-know",
+                            "license":  "CC BY-NC-SA 4.0",
+                            "license_url":  "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+                            "access_type":  "free"
+                        },
+                        {
+                            "source_name":  "Milne Open Textbooks (Open SUNY)",
+                            "base_url":  "https://milneopentextbooks.org",
+                            "official_url":  "https://milneopentextbooks.org/nursing-care-at-the-end-of-life/",
+                            "license":  "CC BY-NC-SA 4.0",
+                            "license_url":  "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+                            "access_type":  "free"
+                        }
+                    ],
+        "featured":  true
+    },
+    {
+        "title":  "Clinical Procedures for Safer Patient Care",
+        "authors":  "Glynda Rees Doyle, Jodie Anita McCutcheon",
+        "edition":  null,
+        "year":  2015,
+        "description":  "Checklist-based textbook covering standardized clinical nursing procedures to support safe patient care.",
+        "cover_url":  null,
+        "subjects":  [
+                         "Nursing",
+                         "Clinical Skills"
+                     ],
+        "courses":  [
+                        "Nursing",
+                        "MBBS Year 1"
+                    ],
+        "sources":  [
+                        {
+                            "source_name":  "Open Textbook Library",
+                            "base_url":  "https://open.umn.edu/opentextbooks",
+                            "official_url":  "https://open.umn.edu/opentextbooks/textbooks/clinical-procedures-for-safer-patient-care",
+                            "license":  "CC BY 4.0",
+                            "license_url":  "https://creativecommons.org/licenses/by/4.0/",
+                            "access_type":  "free"
+                        },
+                        {
+                            "source_name":  "BCcampus Open Publishing",
+                            "base_url":  "https://opentextbc.ca",
+                            "official_url":  "https://opentextbc.ca/clinicalskills/",
+                            "license":  "CC BY 4.0",
+                            "license_url":  "https://creativecommons.org/licenses/by/4.0/",
+                            "access_type":  "free"
+                        }
+                    ],
+        "featured":  true
+    },
+    {
+        "title":  "Anatomy and Physiology 2e",
+        "authors":  "J. Gordon Betts, Kelly A. Young, James A. Wise, et al.",
+        "edition":  "2e",
+        "year":  2022,
+        "description":  "Comprehensive two-semester human anatomy and physiology textbook from OpenStax.",
+        "cover_url":  null,
+        "subjects":  [
+                         "Anatomy",
+                         "Physiology"
+                     ],
+        "courses":  [
+                        "MBBS Year 1",
+                        "Physiotherapy"
+                    ],
+        "sources":  [
+                        {
+                            "source_name":  "OpenStax",
+                            "base_url":  "https://openstax.org",
+                            "official_url":  "https://openstax.org/details/books/anatomy-and-physiology-2e",
+                            "license":  "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
+                            "license_url":  "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+                            "access_type":  "free",
+                            "direct_file_url":  "https://assets.openstax.org/oscms-prodcms/media/documents/anatomy-and-physiology-2e_-_WEB.pdf"
+                        }
+                    ],
+        "featured":  true
+    },
+    {
+        "title":  "Microbiology",
+        "authors":  "Nina Parker, Mark Schneegurt, Anh-Hue Thi Tu, et al.",
+        "edition":  null,
+        "year":  2016,
+        "description":  "Microbiology textbook for allied health and nursing students.",
+        "cover_url":  null,
+        "subjects":  [
+                         "Microbiology",
+                         "Nursing"
+                     ],
+        "courses":  [
+                        "Nursing",
+                        "MBBS Year 1"
+                    ],
+        "sources":  [
+                        {
+                            "source_name":  "OpenStax",
+                            "base_url":  "https://openstax.org",
+                            "official_url":  "https://openstax.org/details/books/microbiology",
+                            "license":  "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
+                            "license_url":  "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+                            "access_type":  "free",
+                            "direct_file_url":  "https://assets.openstax.org/oscms-prodcms/media/documents/microbiology_-_WEB.pdf"
+                        }
+                    ],
+        "featured":  true
+    },
+    {
+        "title":  "Biology 2e",
+        "authors":  "Mary Ann Clark, Matthew Douglas, Jung Choi",
+        "edition":  "2e",
+        "year":  2018,
+        "description":  "Two-semester biology textbook for science majors.",
+        "cover_url":  null,
+        "subjects":  [
+                         "Biology"
+                     ],
+        "courses":  [
+                        "MBBS Year 1"
+                    ],
+        "sources":  [
+                        {
+                            "source_name":  "OpenStax",
+                            "base_url":  "https://openstax.org",
+                            "official_url":  "https://openstax.org/details/books/biology-2e",
+                            "license":  "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
+                            "license_url":  "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+                            "access_type":  "free",
+                            "direct_file_url":  "https://assets.openstax.org/oscms-prodcms/media/documents/Biology-2e_-_WEB.pdf"
+                        }
+                    ],
+        "featured":  false
+    },
+    {
+        "title":  "Chemistry 2e",
+        "authors":  "Paul Flowers, Klaus Theopold, Richard Langley, et al.",
+        "edition":  "2e",
+        "year":  2019,
+        "description":  "Two-semester chemistry textbook.",
+        "cover_url":  null,
+        "subjects":  [
+                         "Chemistry"
+                     ],
+        "courses":  [
+                        "MBBS Year 1"
+                    ],
+        "sources":  [
+                        {
+                            "source_name":  "OpenStax",
+                            "base_url":  "https://openstax.org",
+                            "official_url":  "https://openstax.org/details/books/chemistry-2e",
+                            "license":  "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
+                            "license_url":  "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+                            "access_type":  "free",
+                            "direct_file_url":  "https://assets.openstax.org/oscms-prodcms/media/documents/chemistry-2e_-_WEB.pdf"
+                        }
+                    ],
+        "featured":  false
+    },
+    {
+        "title":  "Nutrition for Nurses",
+        "authors":  "OpenStax",
+        "edition":  null,
+        "year":  2024,
+        "description":  "Nutrition textbook tailored for nursing students.",
+        "cover_url":  null,
+        "subjects":  [
+                         "Nutrition",
+                         "Nursing"
+                     ],
+        "courses":  [
+                        "Nursing"
+                    ],
+        "sources":  [
+                        {
+                            "source_name":  "OpenStax",
+                            "base_url":  "https://openstax.org",
+                            "official_url":  "https://openstax.org/details/books/nutrition",
+                            "license":  "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
+                            "license_url":  "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+                            "access_type":  "free",
+                            "direct_file_url":  "https://assets.openstax.org/oscms-prodcms/media/documents/Nutrition_for_Nurses-WEB.pdf"
+                        }
+                    ],
+        "featured":  true
+    },
+    {
+        "title":  "Psychology 2e",
+        "authors":  "Rose M. Spielman, William J. Jenkins, Marilyn D. Lovett",
+        "edition":  "2e",
+        "year":  2020,
+        "description":  "Introductory psychology textbook.",
+        "cover_url":  null,
+        "subjects":  [
+                         "Psychology"
+                     ],
+        "courses":  [
+                        "Nursing",
+                        "MBBS Year 1"
+                    ],
+        "sources":  [
+                        {
+                            "source_name":  "OpenStax",
+                            "base_url":  "https://openstax.org",
+                            "official_url":  "https://openstax.org/details/books/psychology-2e",
+                            "license":  "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
+                            "license_url":  "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+                            "access_type":  "free",
+                            "direct_file_url":  "https://assets.openstax.org/oscms-prodcms/media/documents/Psychology2e_WEB.pdf"
+                        }
+                    ],
+        "featured":  false
+    },
+    {
+        "title":  "Medical-Surgical Nursing",
+        "authors":  "OpenStax",
+        "edition":  null,
+        "year":  2024,
+        "description":  "Medical-surgical nursing textbook for nursing students.",
+        "cover_url":  null,
+        "subjects":  [
+                         "Nursing",
+                         "Medical-Surgical Nursing"
+                     ],
+        "courses":  [
+                        "Nursing",
+                        "MBBS Year 2"
+                    ],
+        "sources":  [
+                        {
+                            "source_name":  "OpenStax",
+                            "base_url":  "https://openstax.org",
+                            "official_url":  "https://openstax.org/details/books/medical-surgical-nursing",
+                            "license":  "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
+                            "license_url":  "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+                            "access_type":  "free",
+                            "direct_file_url":  "https://assets.openstax.org/oscms-prodcms/media/documents/Medical-Surgical_Nursing-WEB.pdf"
+                        }
+                    ],
+        "featured":  true
+    },
+    {
+        "title":  "Pharmacology for Nurses",
+        "authors":  "OpenStax",
+        "edition":  null,
+        "year":  2024,
+        "description":  "Pharmacology textbook for nursing students.",
+        "cover_url":  null,
+        "subjects":  [
+                         "Pharmacology",
+                         "Nursing"
+                     ],
+        "courses":  [
+                        "Nursing",
+                        "MBBS Year 1"
+                    ],
+        "sources":  [
+                        {
+                            "source_name":  "OpenStax",
+                            "base_url":  "https://openstax.org",
+                            "official_url":  "https://openstax.org/details/books/pharmacology",
+                            "license":  "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
+                            "license_url":  "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+                            "access_type":  "free",
+                            "direct_file_url":  "https://assets.openstax.org/oscms-prodcms/media/documents/Pharmacology-WEB.pdf"
+                        }
+                    ],
+        "featured":  true
+    },
+    {
+        "title":  "Maternal-Newborn Nursing",
+        "authors":  "OpenStax",
+        "edition":  null,
+        "year":  2024,
+        "description":  "Maternal-newborn nursing textbook.",
+        "cover_url":  null,
+        "subjects":  [
+                         "Nursing",
+                         "Maternal-Newborn Nursing"
+                     ],
+        "courses":  [
+                        "Nursing",
+                        "MBBS Year 2"
+                    ],
+        "sources":  [
+                        {
+                            "source_name":  "OpenStax",
+                            "base_url":  "https://openstax.org",
+                            "official_url":  "https://openstax.org/details/books/maternal-newborn-nursing",
+                            "license":  "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
+                            "license_url":  "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+                            "access_type":  "free",
+                            "direct_file_url":  "https://assets.openstax.org/oscms-prodcms/media/documents/Maternal-Newborn_Nursing-WEB.pdf"
+                        }
+                    ],
+        "featured":  true
+    },
+    {
+        "title":  "Psychiatric-Mental Health Nursing",
+        "authors":  "OpenStax",
+        "edition":  null,
+        "year":  2024,
+        "description":  "Psychiatric-mental health nursing textbook.",
+        "cover_url":  null,
+        "subjects":  [
+                         "Nursing",
+                         "Psychiatric-Mental Health"
+                     ],
+        "courses":  [
+                        "Nursing",
+                        "MBBS Year 2"
+                    ],
+        "sources":  [
+                        {
+                            "source_name":  "OpenStax",
+                            "base_url":  "https://openstax.org",
+                            "official_url":  "https://openstax.org/details/books/psychiatric-mental-health",
+                            "license":  "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
+                            "license_url":  "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+                            "access_type":  "free",
+                            "direct_file_url":  "https://assets.openstax.org/oscms-prodcms/media/documents/Psychiatric-Mental_Health_Nursing-WEB.pdf"
+                        }
+                    ],
+        "featured":  true
+    },
+    {
+        "title":  "Population Health for Nurses",
+        "authors":  "OpenStax",
+        "edition":  null,
+        "year":  2024,
+        "description":  "Population health textbook for nursing students.",
+        "cover_url":  null,
+        "subjects":  [
+                         "Public Health",
+                         "Nursing"
+                     ],
+        "courses":  [
+                        "Nursing"
+                    ],
+        "sources":  [
+                        {
+                            "source_name":  "OpenStax",
+                            "base_url":  "https://openstax.org",
+                            "official_url":  "https://openstax.org/details/books/population-health",
+                            "license":  "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
+                            "license_url":  "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+                            "access_type":  "free",
+                            "direct_file_url":  "https://assets.openstax.org/oscms-prodcms/media/documents/Population_Health_for_Nurses_-_WEB.pdf"
+                        }
+                    ],
+        "featured":  true
+    },
+    {
+        "title":  "College Physics 2e",
+        "authors":  "Paul Peter Urone, Roger Hinrichs",
+        "edition":  "2e",
+        "year":  2022,
+        "description":  "Algebra-based college physics textbook.",
+        "cover_url":  null,
+        "subjects":  [
+                         "Physics"
+                     ],
+        "courses":  [
+                        "MBBS Year 1",
+                        "Physiotherapy"
+                    ],
+        "sources":  [
+                        {
+                            "source_name":  "OpenStax",
+                            "base_url":  "https://openstax.org",
+                            "official_url":  "https://openstax.org/details/books/college-physics-2e",
+                            "license":  "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
+                            "license_url":  "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+                            "access_type":  "free",
+                            "direct_file_url":  "https://assets.openstax.org/oscms-prodcms/media/documents/college-physics-2e_-_WEB.pdf"
+                        }
+                    ],
+        "featured":  false
+    },
+    {
+        "title":  "University Physics Volume 1",
+        "authors":  "Samuel J. Ling, Jeff Sanny, William Moebs",
+        "edition":  null,
+        "year":  2016,
+        "description":  "Calculus-based university physics volume 1.",
+        "cover_url":  null,
+        "subjects":  [
+                         "Physics"
+                     ],
+        "courses":  [
+                        "MBBS Year 1"
+                    ],
+        "sources":  [
+                        {
+                            "source_name":  "OpenStax",
+                            "base_url":  "https://openstax.org",
+                            "official_url":  "https://openstax.org/details/books/university-physics-volume-1",
+                            "license":  "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
+                            "license_url":  "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+                            "access_type":  "free",
+                            "direct_file_url":  "https://assets.openstax.org/oscms-prodcms/media/documents/university-physics-volume-1_-_WEB.pdf"
+                        }
+                    ],
+        "featured":  false
+    },
+    {
+        "title":  "Concepts of Biology",
+        "authors":  "Samantha Fowler, Rebecca Roush, James Wise",
+        "edition":  null,
+        "year":  2016,
+        "description":  "Introductory biology for nonmajors.",
+        "cover_url":  null,
+        "subjects":  [
+                         "Biology"
+                     ],
+        "courses":  [
+                        "MBBS Year 1"
+                    ],
+        "sources":  [
+                        {
+                            "source_name":  "OpenStax",
+                            "base_url":  "https://openstax.org",
+                            "official_url":  "https://openstax.org/details/books/concepts-biology",
+                            "license":  "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
+                            "license_url":  "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+                            "access_type":  "free",
+                            "direct_file_url":  "https://assets.openstax.org/oscms-prodcms/media/documents/Concepts-Biology_-_WEB.pdf"
+                        }
+                    ],
+        "featured":  false
+    },
+    {
+        "title":  "Lifespan Development",
+        "authors":  "OpenStax",
+        "edition":  null,
+        "year":  2024,
+        "description":  "Lifespan development psychology textbook.",
+        "cover_url":  null,
+        "subjects":  [
+                         "Psychology",
+                         "Human Development"
+                     ],
+        "courses":  [
+                        "Nursing"
+                    ],
+        "sources":  [
+                        {
+                            "source_name":  "OpenStax",
+                            "base_url":  "https://openstax.org",
+                            "official_url":  "https://openstax.org/details/books/lifespan-development",
+                            "license":  "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
+                            "license_url":  "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+                            "access_type":  "free",
+                            "direct_file_url":  "https://assets.openstax.org/oscms-prodcms/media/documents/Lifespan_Development_-_WEB.pdf"
+                        }
+                    ],
+        "featured":  true
+    }
 ]

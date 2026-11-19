@@ -27,7 +27,7 @@ export function BookCard({ book }) {
   const freeSource = sources.find(src => src.access_type === 'free');
   const paidOnly = sources.length > 0 && !freeSource;
 
-  const downloadUrl = freeSource?.direct_file_url || freeSource?.official_url;
+  const pdfUrl = freeSource?.direct_file_url;
   const viewUrl = freeSource?.official_url || (paidOnly && sources[0]?.official_url);
 
   return (
@@ -40,10 +40,10 @@ export function BookCard({ book }) {
       {paidOnly && <span className="badge" style={{background:'#fdecec',color:'#7f1d1d',borderColor:'#fecaca'}}>Paid book</span>}
       <div className="muted small" style={{marginTop:'.35rem'}}>{book.source_count ?? 0} source(s)</div>
       <div style={{marginTop:'.5rem'}}>
-        {freeSource ? (
-          <a href={downloadUrl} target="_blank" rel="noopener noreferrer" style={{display:'inline-block',background:'#0b6efd',color:'#fff',padding:'.4rem .7rem',borderRadius:'6px',textDecoration:'none',fontSize:'.9rem'}}>Download PDF</a>
+        {pdfUrl ? (
+          <a href={pdfUrl} target="_blank" rel="noopener noreferrer" style={{display:'inline-block',background:'#0b6efd',color:'#fff',padding:'.4rem .7rem',borderRadius:'6px',textDecoration:'none',fontSize:'.9rem'}}>Download PDF</a>
         ) : (
-          <a href={viewUrl} target="_blank" rel="noopener noreferrer" style={{display:'inline-block',background:'#eef2f7',color:'#1f2937',padding:'.4rem .7rem',borderRadius:'6px',textDecoration:'none',fontSize:'.9rem'}}>View on publisher site</a>
+          <a href={viewUrl} target="_blank" rel="noopener noreferrer" style={{display:'inline-block',background:'#eef2f7',color:'#1f2937',padding:'.4rem .7rem',borderRadius:'6px',textDecoration:'none',fontSize:'.9rem'}}>Open book page</a>
         )}
       </div>
     </div>

@@ -52,19 +52,20 @@ router.get('/', async (req, res, next) => {
     const listSql = `
       SELECT b.id, b.title, b.authors, b.edition, b.year, b.description, b.cover_url, b.featured,
              ${rankSelect},
-             COALESCE(json_agg(DISTINCT jsonb_build_object('id', s.id, 'name', s.name))
-               FILTER (WHERE s.id IS NOT NULL), '[]') AS subjects,
+             COALESCE(json_agg(DISTINCT jsonb_build_object('id', subj.id, 'name', subj.name))
+               FILTER (WHERE subj.id IS NOT NULL), '[]') AS subjects,
              COUNT(DISTINCT bsrc.id)::int AS source_count,
              COALESCE(json_agg(DISTINCT bsrc.license) FILTER (WHERE bsrc.license IS NOT NULL), '[]') AS licenses,
              COALESCE(json_agg(DISTINCT jsonb_build_object(
-               'id', bsrc.id, 'source_id', s.id, 'source_name', s.name,
+               'id', bsrc.id, 'source_id', src.id, 'source_name', src.name,
                'official_url', bsrc.official_url, 'direct_file_url', bsrc.direct_file_url,
                'license', bsrc.license, 'access_type', bsrc.access_type
              )) FILTER (WHERE bsrc.id IS NOT NULL), '[]') AS sources
       FROM books b
       LEFT JOIN book_subjects bs ON bs.book_id = b.id
-      LEFT JOIN subjects s ON s.id = bs.subject_id
+      LEFT JOIN subjects subj ON subj.id = bs.subject_id
       LEFT JOIN book_sources bsrc ON bsrc.book_id = b.id
+      LEFT JOIN sources src ON src.id = bsrc.source_id
       ${whereSql}
       GROUP BY b.id
       ORDER BY ${orderBy}

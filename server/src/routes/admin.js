@@ -50,9 +50,10 @@ router.put('/books/:id', async (req, res, next) => {
     if (!id) return res.status(400).json({ error: 'Invalid id' });
     const { title, authors, edition, year, description, cover_url, subject_ids, course_ids } = req.body || {};
     await client.query('BEGIN');
+    const autoLock = Array.isArray(subject_ids);
     const { rowCount, rows } = await client.query(
-      `UPDATE books SET title=COALESCE($2,title), authors=$3, edition=$4, year=$5, description=$6, cover_url=$7, updated_at=NOW() WHERE id=$1 RETURNING *`,
-      [id, title || null, authors ?? null, edition ?? null, year ?? null, description ?? null, cover_url ?? null]
+      `UPDATE books SET title=COALESCE($2,title), authors=$3, edition=$4, year=$5, description=$6, cover_url=$7, updated_at=NOW(), categories_locked=COALESCE($8,categories_locked) WHERE id=$1 RETURNING *`,
+      [id, title || null, authors ?? null, edition ?? null, year ?? null, description ?? null, cover_url ?? null, autoLock ? true : null]
     );
     if (rowCount === 0) {
       await client.query('ROLLBACK');

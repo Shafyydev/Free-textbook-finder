@@ -14,8 +14,10 @@ export function Layout({ children }) {
           </div>
         </div>
       </nav>
-      <main className="container">{children}</main>
-      <div className="container footer">Only legal, openly licensed or public-domain textbooks. We link to official sources and do not host book files.</div>
+      <div className="container">
+        <main>{children}</main>
+        <div className="footer">Only legal, openly licensed or public-domain textbooks. We link to official sources and do not host book files.</div>
+      </div>
     </>
   );
 }

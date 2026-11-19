@@ -117,7 +117,11 @@ export function Layout({ children }) {
       <div className="container">
         <main>{children}</main>
       </div>
-      <footer className="footer">Only legal, openly licensed or public-domain textbooks. We link to official sources and do not host book files.</footer>
+      <footer className="footer">
+        <div className="footer-inner">
+          Only legal, openly licensed or public-domain textbooks. We link to official sources and do not host book files.
+        </div>
+      </footer>
     </>
   );
 }
@@ -136,7 +140,9 @@ export function BookCard({ book }) {
 
   return (
     <div className="card compact animate-on-scroll">
-      <h3 style={{ margin: '0 0 .25rem', fontSize: '1.05rem' }}><Link to={`/books/${book.id}`}>{book.title}</Link></h3>
+      <h3 style={{ margin: '0 0 .25rem', fontSize: '1.05rem' }}>
+        <Link to={`/books/${book.id}`}>{book.title}</Link>
+      </h3>
       <div className="meta">{[authorsText, book.edition, book.year].filter(Boolean).join(' · ')}</div>
       {book.description && (
         <p className="small desc-line" style={{ margin: '.3rem 0', color: 'var(--indigo-muted)' }}>
@@ -152,7 +158,7 @@ export function BookCard({ book }) {
         </div>
         <a href={pdfUrl || viewUrl} target="_blank" rel="noopener noreferrer"
           className={pdfUrl ? 'btn' : 'btn secondary'}
-          style={{ padding: '.3rem .7rem', fontSize: '.82rem', whiteSpace: 'nowrap' }}>
+          style={{ padding: '.35rem .75rem', fontSize: '.82rem', whiteSpace: 'nowrap' }}>
           {pdfUrl ? 'Download PDF' : 'Open book page'}
         </a>
       </div>

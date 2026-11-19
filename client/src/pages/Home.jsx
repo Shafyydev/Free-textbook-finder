@@ -42,44 +42,46 @@ export default function Home() {
       <div>
         {error && <div className="error">{error}</div>}
 
-        {/* Hero with integrated search */}
-        <section className="hero" style={{ margin: '-1.5rem -1rem 1.5rem' }}>
-          <h1 className="hero-enter-heading">Free Textbook Finder</h1>
-          <p className="hero-sub hero-enter-sub">
-            Find legally free textbooks across all subjects — science, mathematics, business, nursing, humanities, and more.
-          </p>
-          <form className="hero-search hero-enter-form" onSubmit={submit}>
-            <div className="row">
-              <div style={{ flex: '2 1 260px' }}>
-                <label>Search</label>
-                <input value={q} onChange={e => setQ(e.target.value)} placeholder="Title, author, description..." />
+        {/* Hero — full-bleed breaks out of .container */}
+        <section className="hero full-bleed">
+          <div className="hero-inner">
+            <h1 className="hero-enter-heading">Free Textbook Finder</h1>
+            <p className="hero-sub hero-enter-sub">
+              Find legally free textbooks across all subjects — science, mathematics, business, nursing, humanities, and more.
+            </p>
+            <form className="hero-search hero-enter-form" onSubmit={submit}>
+              <div className="row">
+                <div style={{ flex: '2 1 260px' }}>
+                  <label>Search</label>
+                  <input value={q} onChange={e => setQ(e.target.value)} placeholder="Title, author, description..." />
+                </div>
+                <div style={{ flex: '1 1 150px' }}>
+                  <label>Category</label>
+                  <select value={category} onChange={e => setCategory(e.target.value)}>
+                    <option value="">All categories</option>
+                    {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                  </select>
+                </div>
+                <div style={{ flex: '1 1 150px' }}>
+                  <label>Subject</label>
+                  <select value={subject} onChange={e => setSubject(e.target.value)}>
+                    <option value="">All subjects</option>
+                    {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                  </select>
+                </div>
+                <div style={{ flex: '1 1 150px' }}>
+                  <label>Course</label>
+                  <select value={course} onChange={e => setCourse(e.target.value)}>
+                    <option value="">All courses</option>
+                    {courses.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                  </select>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'end' }}>
+                  <button type="submit" className="btn-hero">Search</button>
+                </div>
               </div>
-              <div style={{ flex: '1 1 150px' }}>
-                <label>Category</label>
-                <select value={category} onChange={e => setCategory(e.target.value)}>
-                  <option value="">All categories</option>
-                  {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                </select>
-              </div>
-              <div style={{ flex: '1 1 150px' }}>
-                <label>Subject</label>
-                <select value={subject} onChange={e => setSubject(e.target.value)}>
-                  <option value="">All subjects</option>
-                  {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
-                </select>
-              </div>
-              <div style={{ flex: '1 1 150px' }}>
-                <label>Course</label>
-                <select value={course} onChange={e => setCourse(e.target.value)}>
-                  <option value="">All courses</option>
-                  {courses.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                </select>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'end' }}>
-                <button type="submit" style={{ background: 'var(--cream)', color: 'var(--indigo)', borderColor: 'var(--cream)' }}>Search</button>
-              </div>
-            </div>
-          </form>
+            </form>
+          </div>
         </section>
 
         {/* Featured books */}

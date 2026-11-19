@@ -6,14 +6,14 @@
   /* Derived shades */
   --indigo-hover: color-mix(in srgb, var(--indigo) 80%, var(--cream));
   --indigo-muted: color-mix(in srgb, var(--indigo) 50%, var(--cream));
-  --indigo-border: color-mix(in srgb, var(--indigo) 12%, var(--cream));
-  --indigo-shadow: color-mix(in srgb, var(--indigo) 8%, transparent);
-  --indigo-tint: color-mix(in srgb, var(--indigo) 4%, var(--cream));
+  --indigo-border: color-mix(in srgb, var(--indigo) 18%, var(--cream));
+  --indigo-shadow: color-mix(in srgb, var(--indigo) 10%, transparent);
+  --indigo-tint: color-mix(in srgb, var(--indigo) 5%, var(--cream));
   --cream-dark: color-mix(in srgb, var(--cream) 80%, var(--indigo));
 
   /* Semantic tokens */
   --bg: var(--cream);
-  --card-bg: color-mix(in srgb, var(--cream) 50%, #fff);
+  --card-bg: color-mix(in srgb, var(--cream) 45%, #fff);
   --text: var(--indigo);
   --muted-text: var(--indigo-muted);
   --line: var(--indigo-border);
@@ -35,6 +35,7 @@
 
 /* ===== RESET & BASE ===== */
 * { box-sizing: border-box; }
+html { overflow-x: hidden; }
 body {
   margin: 0;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
@@ -42,6 +43,7 @@ body {
   color: var(--text);
   line-height: 1.6;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 #root {
   display: flex;
@@ -52,7 +54,17 @@ a { color: var(--indigo); font-weight: 500; text-decoration-color: color-mix(in 
 a:hover { text-decoration-color: var(--indigo); }
 
 /* ===== LAYOUT ===== */
-.container { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1rem; flex: 1; }
+.container { max-width: 1100px; width: 100%; margin: 0 auto; padding: 1.5rem 1.5rem; flex: 1; }
+
+/* Full-bleed: breaks out of .container to span full viewport width */
+.full-bleed {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
 
 /* ===== NAVBAR ===== */
 .nav {
@@ -72,95 +84,108 @@ a:hover { text-decoration-color: var(--indigo); }
   justify-content: space-between;
   max-width: 1100px;
   margin: 0 auto;
-  padding: .85rem 1.25rem;
+  padding: 1rem 1.5rem;
   transition: padding var(--transition-base);
 }
-.nav.compact .nav-inner { padding: .55rem 1.25rem; }
+.nav.compact .nav-inner { padding: .65rem 1.5rem; }
 .brand {
-  font-weight: 700;
+  font-weight: 800;
   color: var(--cream);
   text-decoration: none;
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   letter-spacing: -.01em;
 }
+.links { display: flex; gap: .25rem; }
 .links a {
-  margin-left: 1.25rem;
   text-decoration: none;
-  color: color-mix(in srgb, var(--cream) 80%, transparent);
-  font-size: .95rem;
+  color: color-mix(in srgb, var(--cream) 75%, transparent);
+  font-size: .9rem;
   font-weight: 500;
-  transition: color var(--transition-fast);
+  padding: .4rem .75rem;
+  border-radius: 6px;
+  transition: color var(--transition-fast), background var(--transition-fast);
 }
-.links a:hover { color: var(--cream); }
+.links a:hover {
+  color: var(--cream);
+  background: color-mix(in srgb, var(--cream) 10%, transparent);
+}
 
-/* ===== HERO ===== */
+/* ===== HERO (full-bleed) ===== */
 .hero {
   background: var(--indigo);
   color: var(--cream);
-  padding: 3rem 1.25rem 2.5rem;
+  padding: 3.5rem 1.5rem 3rem;
   position: relative;
   overflow: hidden;
 }
+.hero-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
 .hero h1 {
   margin: 0 0 .5rem;
-  font-size: 2.4rem;
+  font-size: 2.5rem;
   font-weight: 800;
   color: var(--cream);
-  letter-spacing: -.02em;
-  max-width: 1100px;
-  margin-left: auto;
-  margin-right: auto;
+  letter-spacing: -.025em;
 }
 .hero .hero-sub {
-  color: color-mix(in srgb, var(--cream) 70%, transparent);
-  font-size: 1.05rem;
-  max-width: 640px;
+  color: color-mix(in srgb, var(--cream) 65%, transparent);
+  font-size: 1.1rem;
+  max-width: 600px;
   line-height: 1.6;
-  max-width: 1100px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0;
 }
 
-/* Sparkle — multiple subtle dots instead of a big star */
+/* Subtle decorative orbs */
 .hero::before,
 .hero::after {
   content: '';
   position: absolute;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--cream) 10%, transparent);
+  background: color-mix(in srgb, var(--cream) 6%, transparent);
   pointer-events: none;
 }
 .hero::before {
-  width: 300px; height: 300px;
-  top: -120px; right: -60px;
+  width: 400px; height: 400px;
+  top: -180px; right: -100px;
 }
 .hero::after {
-  width: 200px; height: 200px;
-  bottom: -80px; left: -40px;
+  width: 250px; height: 250px;
+  bottom: -100px; left: -60px;
 }
 
 /* Search inside hero */
 .hero-search {
-  max-width: 1100px;
-  margin: 1.5rem auto 0;
-  background: color-mix(in srgb, var(--cream) 10%, var(--indigo));
-  border: 1px solid color-mix(in srgb, var(--cream) 15%, transparent);
+  margin-top: 1.75rem;
+  background: color-mix(in srgb, var(--cream) 8%, var(--indigo));
+  border: 1px solid color-mix(in srgb, var(--cream) 12%, transparent);
   border-radius: 12px;
-  padding: 1rem 1.25rem;
-  backdrop-filter: blur(4px);
+  padding: 1.25rem;
 }
-.hero-search label { color: color-mix(in srgb, var(--cream) 60%, transparent); }
+.hero-search label { color: color-mix(in srgb, var(--cream) 55%, transparent); font-size: .8rem; }
 .hero-search input,
 .hero-search select {
-  background: color-mix(in srgb, var(--cream) 8%, var(--indigo));
-  border-color: color-mix(in srgb, var(--cream) 20%, transparent);
+  background: color-mix(in srgb, var(--cream) 6%, var(--indigo));
+  border-color: color-mix(in srgb, var(--cream) 15%, transparent);
   color: var(--cream);
 }
-.hero-search input::placeholder { color: color-mix(in srgb, var(--cream) 40%, transparent); }
+.hero-search input::placeholder { color: color-mix(in srgb, var(--cream) 35%, transparent); }
 .hero-search input:focus,
 .hero-search select:focus {
-  border-color: color-mix(in srgb, var(--cream) 50%, transparent);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--cream) 12%, transparent);
+  border-color: color-mix(in srgb, var(--cream) 40%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--cream) 10%, transparent);
+}
+.hero-search .btn-hero {
+  background: var(--cream);
+  color: var(--indigo);
+  border-color: var(--cream);
+  font-weight: 700;
+}
+.hero-search .btn-hero:hover {
+  background: color-mix(in srgb, var(--cream) 85%, var(--indigo));
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--indigo) 30%, transparent);
 }
 
 /* ===== CARDS ===== */
@@ -169,16 +194,19 @@ a:hover { text-decoration-color: var(--indigo); }
   border: 1px solid var(--indigo-border);
   border-radius: 12px;
   padding: 1.25rem;
-  box-shadow: 0 1px 3px var(--indigo-shadow), 0 1px 2px var(--indigo-shadow);
+  box-shadow: 0 1px 4px var(--indigo-shadow);
   transition: transform var(--transition-base), box-shadow var(--transition-base);
 }
-.card.compact { padding: 1rem; }
+.card.compact { padding: 1rem 1.15rem; }
 .card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px color-mix(in srgb, var(--indigo) 12%, transparent);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--indigo) 12%, transparent);
 }
 /* Don't lift form cards or admin table cards */
-form.card:hover, .section.card:hover { transform: none; box-shadow: 0 1px 3px var(--indigo-shadow), 0 1px 2px var(--indigo-shadow); }
+form.card:hover, .section.card:hover {
+  transform: none;
+  box-shadow: 0 1px 4px var(--indigo-shadow);
+}
 
 .grid { display: grid; gap: 1rem; }
 .grid-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
@@ -209,7 +237,7 @@ button, .btn {
   background: var(--indigo);
   color: var(--cream);
   border: 1.5px solid var(--indigo);
-  padding: .55rem 1rem;
+  padding: .55rem 1.1rem;
   border-radius: 8px;
   cursor: pointer;
   font: inherit;
@@ -251,7 +279,7 @@ button:active::after, .btn:active::after { opacity: 1; }
 button.secondary, .btn.secondary {
   background: transparent;
   color: var(--indigo);
-  border: 1.5px solid color-mix(in srgb, var(--indigo) 30%, var(--cream));
+  border: 1.5px solid var(--indigo-border);
 }
 button.secondary:hover, .btn.secondary:hover {
   background: var(--indigo);
@@ -267,7 +295,7 @@ button.secondary:hover, .btn.secondary:hover {
   border: 1px solid var(--indigo-border);
   border-radius: 999px;
   padding: .15rem .6rem;
-  font-size: .8rem;
+  font-size: .78rem;
   font-weight: 500;
   margin: .15rem .25rem 0 0;
   transition: background var(--transition-fast), border-color var(--transition-fast);
@@ -311,7 +339,7 @@ button.secondary:hover, .btn.secondary:hover {
   background: var(--indigo-tint);
   transition: border-color var(--transition-fast);
 }
-.source:hover { border-color: color-mix(in srgb, var(--indigo) 25%, var(--cream)); }
+.source:hover { border-color: color-mix(in srgb, var(--indigo) 30%, var(--cream)); }
 
 /* Feedback */
 .error {
@@ -345,20 +373,21 @@ th { color: var(--muted-text); font-weight: 600; font-size: .8rem; text-transfor
 /* Footer */
 .footer {
   background: var(--indigo);
-  color: color-mix(in srgb, var(--cream) 70%, transparent);
-  padding: 1.5rem 1.25rem;
+  color: color-mix(in srgb, var(--cream) 65%, transparent);
+  padding: 1.25rem 1.5rem;
   font-size: .85rem;
   text-align: center;
   margin-top: auto;
 }
+.footer-inner { max-width: 1100px; margin: 0 auto; }
 
 /* ===== SCROLL PROGRESS BAR ===== */
 .scroll-progress {
   position: fixed;
   top: 0;
   left: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--cream), color-mix(in srgb, var(--cream) 60%, transparent));
+  height: 3px;
+  background: var(--cream);
   z-index: 200;
   transform-origin: left;
   will-change: transform;
@@ -457,9 +486,10 @@ th { color: var(--muted-text); font-weight: 600; font-size: .8rem; text-transfor
 @media (max-width: 640px) {
   .hero { padding: 2rem 1rem 1.5rem; }
   .hero h1 { font-size: 1.6rem; }
-  .hero-search { padding: .75rem; }
-  .nav-inner { padding: .6rem .75rem; }
+  .hero-search { padding: .75rem 1rem; }
+  .nav-inner { padding: .65rem 1rem; }
   .row { flex-direction: column; }
   .grid-2 { grid-template-columns: 1fr; }
-  .container { padding: 1rem .75rem; }
+  .container { padding: 1rem; }
+  .links a { padding: .3rem .5rem; font-size: .85rem; }
 }

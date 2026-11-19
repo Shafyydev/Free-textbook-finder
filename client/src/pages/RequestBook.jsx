@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { api } from '../api/client.js';
+import { PageFade } from '../components/ui.jsx';
 
 export default function RequestBook() {
   const [sp] = useSearchParams();
@@ -22,16 +23,27 @@ export default function RequestBook() {
   }
 
   return (
-    <div style={{maxWidth:700}}>
-      <h1>Request a textbook</h1>
-      <p className="muted">Request a title you need. We only add books from legal, official open sources.</p>
-      <form className="card" onSubmit={submit}>
-        {status.msg && <div className={status.type==='error'?'error':'success'}>{status.msg}</div>}
-        <div style={{marginBottom:'.75rem'}}><label>Requested title *</label><input value={form.requested_title} onChange={e=>setForm({...form, requested_title:e.target.value})} maxLength={300} required /></div>
-        <div style={{marginBottom:'.75rem'}}><label>Notes</label><textarea value={form.notes} onChange={e=>setForm({...form, notes:e.target.value})} maxLength={2000} placeholder="Edition, author, course, or other details" /></div>
-        <div style={{marginBottom:'.75rem'}}><label>Contact (optional)</label><input value={form.contact} onChange={e=>setForm({...form, contact:e.target.value})} maxLength={200} placeholder="Email or other contact (optional)" /></div>
-        <button disabled={busy} type="submit">{busy ? 'Submitting...' : 'Submit request'}</button>
-      </form>
-    </div>
+    <PageFade>
+      <div style={{ maxWidth: 700 }}>
+        <h1>Request a textbook</h1>
+        <p className="muted">Request a title you need. We only add books from legal, official open sources.</p>
+        <form className="card" onSubmit={submit}>
+          {status.msg && <div className={status.type === 'error' ? 'error' : 'success'}>{status.msg}</div>}
+          <div style={{ marginBottom: '.75rem' }}>
+            <label>Requested title *</label>
+            <input value={form.requested_title} onChange={e => setForm({ ...form, requested_title: e.target.value })} maxLength={300} required />
+          </div>
+          <div style={{ marginBottom: '.75rem' }}>
+            <label>Notes</label>
+            <textarea value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })} maxLength={2000} placeholder="Edition, author, course, or other details" />
+          </div>
+          <div style={{ marginBottom: '.75rem' }}>
+            <label>Contact (optional)</label>
+            <input value={form.contact} onChange={e => setForm({ ...form, contact: e.target.value })} maxLength={200} placeholder="Email or other contact (optional)" />
+          </div>
+          <button disabled={busy} type="submit">{busy ? 'Submitting...' : 'Submit request'}</button>
+        </form>
+      </div>
+    </PageFade>
   );
 }

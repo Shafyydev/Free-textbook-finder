@@ -5,6 +5,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import rateLimit from 'express-rate-limit';
 import booksRouter from './routes/books.js';
+import subjectsRouter from './routes/subjects.js';
+import coursesRouter from './routes/courses.js';
+import sourcesRouter from './routes/sources.js';
 import requestsRouter from './routes/requests.js';
 import adminRouter from './routes/admin.js';
 import errorHandler from './middleware/errorHandler.js';
@@ -21,6 +24,9 @@ app.use(express.json({ limit: '100kb' }));
 app.get('/api/health', (req, res) => res.json({ ok: true }));
 
 app.use('/api/books', booksRouter);
+app.use('/api/subjects', subjectsRouter);
+app.use('/api/courses', coursesRouter);
+app.use('/api/sources', sourcesRouter);
 app.use('/api/requests', rateLimit({ windowMs: 15 * 60 * 1000, max: 30 }), requestsRouter);
 app.use('/api/admin', adminRouter);
 

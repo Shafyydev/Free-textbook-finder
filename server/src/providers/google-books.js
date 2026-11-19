@@ -22,7 +22,7 @@ export async function search(query, { limit = 10, apiKey } = {}) {
 
   if (!data.ok) {
     console.warn(`Google Books provider returned ${data.status}`);
-    return [];
+    throw new Error(`Google Books API returned ${data.status} (check GOOGLE_BOOKS_API_KEY in .env)`);
   }
 
   const json = await data.json();

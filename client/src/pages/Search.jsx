@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import { api } from '../api/client.js';
-import { BookCard, SkeletonList, SkeletonCard } from '../components/ui.jsx';
+import { BookCard, SkeletonList } from '../components/ui.jsx';
 
 export default function Search() {
   const [sp, setSp] = useSearchParams();
@@ -53,18 +53,32 @@ export default function Search() {
     if (q2) navigate(`/search?q=${encodeURIComponent(q2)}`);
   }
 
+  function providerStatusIcon(status) {
+    const s = {
+      ok: { color: '#166534', label: 'OK' },
+      empty: { color: '#6b7280', label: 'Empty' },
+      failed: { color: '#b91c1c', label: 'Failed' }
+    }[status] || { color: '#6b7280', label: 'Unknown' };
+    return s;
+  }
+
   if (!q) {
     return (
       <div className="container">
         <section className="hero">
           <div className="hero-inner">
             <h1>Free Textbook Finder</h1>
-            <p className="hero-sub">Search legally free textbooks across all subjects — science, mathematics, business, nursing, medicine, humanities, and more.</p>
+            <p className="hero-sub">Search legally free textbooks across all subjects — science, mathematics, business, nursing, medicine, humanities, computer science, and more. We link to official sources with verified license information.</p>
             <form className="hero-search" onSubmit={handleHeroSubmit}>
               <label>Search textbook title, author, or subject</label>
-              <input name="q" defaultValue={q} autoFocus />
-              <button type="submit" className="btn btn-hero">Search</button>
+              <div style={{ display: 'flex', gap: '.5rem', alignItems: 'center' }}>
+                <input name="q" autoFocus />
+                <button type="submit" className="btn btn-hero">Search</button>
+              </div>
             </form>
+            <p className="small muted" style={{ marginTop: '.75rem', textAlign: 'center' }}>
+              Example: "anatomy", "calculus", "pride and prejudice"
+            </p>
           </div>
         </section>
       </div>
@@ -78,7 +92,17 @@ export default function Search() {
         <div className="muted small">
           {total} result{'s' !== total === 1 ? '' : 's'} for <strong>"{q}"</strong>
           {providers.length > 0 && (
-            <span> · {providers.map(p => `${p.name}: ${p.count}`).join(', ')}</span>
+            <>
+              <span> · </span>
+              {providers.map(p => {
+                const st = providerStatusIcon(p.status || 'ok');
+                return (
+                  <span key={p.name} style={{ marginLeft: '.35rem', color: st.color, fontSize: '.8rem', fontWeight: '600' }}>
+                    {p.name}: {p.count} ({st.label})
+                  </span>
+                );
+              })}
+            </>
           )}
         </div>
       </nav>

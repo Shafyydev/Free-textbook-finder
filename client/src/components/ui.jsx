@@ -141,6 +141,7 @@ export function BookCard({ book }) {
   const borrowOpt = book.options?.find(o => o.type === 'borrow');
   const buyOpt = book.options?.find(o => o.type === 'buy');
   const primaryOpt = downloadOpt || readOpt || borrowOpt || buyOpt || book.options?.[0];
+  const officialOpt = book.options?.find(o => o.type === 'read' || o.type === 'download') || book.options?.[0];
 
   return (
     <div className="card compact animate-on-scroll" style={{ borderColor: statusBadge.border }}>
@@ -170,7 +171,16 @@ export function BookCard({ book }) {
             style={{ padding: '.35rem .75rem', fontSize: '.82rem', whiteSpace: 'nowrap' }}>
             {downloadOpt ? 'Download PDF' : readOpt ? 'Read online' : borrowOpt ? 'Borrow' : 'View'}
           </a>
-        ) : null}
+        ) : (
+          // Fallback: always show a link even if no typed option
+          officialOpt ? (
+            <a href={officialOpt.url} target="_blank" rel="noopener noreferrer"
+              className="btn secondary"
+              style={{ padding: '.35rem .75rem', fontSize: '.82rem', whiteSpace: 'nowrap' }}>
+              Check official page
+            </a>
+          ) : null
+        )}
       </div>
     </div>
   );

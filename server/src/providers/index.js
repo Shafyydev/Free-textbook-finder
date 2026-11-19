@@ -50,6 +50,13 @@ export async function searchBooks(query, { limit = 20, userIp } = {}) {
 
   const providerResults = await Promise.all(fetchPromises);
 
+  // Build provider status info for the client
+  const providerStatus = providerResults.map(p => {
+    if (p.error) return { name: p.provider, count: p.results.length, status: 'failed' };
+    if (p.results.length === 0) return { name: p.provider, count: 0, status: 'empty' };
+    return { name: p.provider, count: p.results.length, status: 'ok' };
+  });
+
   // Cache the results
   await cacheResults(trimmedQuery, providerResults);
 
@@ -83,7 +90,7 @@ export async function searchBooks(query, { limit = 20, userIp } = {}) {
   return {
     results: limited,
     total: merged.length,
-    providers: providerResults.map(p => ({ name: p.provider, count: p.results.length }))
+    providers: providerStatus
   };
 }
 

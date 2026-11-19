@@ -40,24 +40,6 @@ async function seed() {
   try {
     await client.query('BEGIN');
 
-    // Remove books not in the current seed file (by title + edition)
-    for (const b of books) {
-      await client.query(
-        `DELETE FROM books WHERE lower(title)=lower($1) AND coalesce(edition,'')<>coalesce($2,'')`,
-        [b.title, b.edition || null]
-      );
-    }
-    // Keep only books present in seed (by title + edition)
-    const seedKeys = books.map(b => [b.title.toLowerCase(), b.edition || null]);
-    if (seedKeys.length) {
-      const placeholders = seedKeys.map((_, i) => `($${i * 2 + 1}, $${i * 2 + 2})`).join(',');
-      const flat = seedKeys.flat();
-      await client.query(
-        `DELETE FROM books WHERE NOT (lower(title), coalesce(edition,'')) IN (${placeholders})`,
-        flat
-      );
-    }
-
     for (const b of books) {
       const existing = await client.query('SELECT id FROM books WHERE lower(title)=lower($1) AND coalesce(edition,\'\')=coalesce($2,\'\')', [b.title, b.edition || null]);
       let bookId;

@@ -55,7 +55,12 @@ router.get('/', async (req, res, next) => {
              COALESCE(json_agg(DISTINCT jsonb_build_object('id', s.id, 'name', s.name))
                FILTER (WHERE s.id IS NOT NULL), '[]') AS subjects,
              COUNT(DISTINCT bsrc.id)::int AS source_count,
-             COALESCE(json_agg(DISTINCT bsrc.license) FILTER (WHERE bsrc.license IS NOT NULL), '[]') AS licenses
+             COALESCE(json_agg(DISTINCT bsrc.license) FILTER (WHERE bsrc.license IS NOT NULL), '[]') AS licenses,
+             COALESCE(json_agg(DISTINCT jsonb_build_object(
+               'id', bsrc.id, 'source_id', s.id, 'source_name', s.name,
+               'official_url', bsrc.official_url, 'direct_file_url', bsrc.direct_file_url,
+               'license', bsrc.license, 'access_type', bsrc.access_type
+             )) FILTER (WHERE bsrc.id IS NOT NULL), '[]') AS sources
       FROM books b
       LEFT JOIN book_subjects bs ON bs.book_id = b.id
       LEFT JOIN subjects s ON s.id = bs.subject_id

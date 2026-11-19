@@ -72,6 +72,10 @@ export async function search(query, { limit = 10, apiKey } = {}) {
       // "free" when the source explicitly states public domain or open license.
       // NCBI E-utilities esummary does not return an explicit license field,
       // so mark as unknown unless we can verify otherwise.
+      // NCBI Bookshelf books are freely readable, but per SPEC.md only label
+      // "free" when the source explicitly states public domain or open license.
+      // NCBI E-utilities esummary does not return an explicit license field,
+      // so mark as unknown unless we can verify otherwise.
       const resultItem = new SearchResult({
         title,
         authors,
@@ -89,6 +93,11 @@ export async function search(query, { limit = 10, apiKey } = {}) {
         license: 'Unknown - no explicit license from NCBI E-utilities',
         price: null
       });
+
+      // Add site metadata for UI rendering
+      resultItem.site_type = 'library';
+      resultItem.favicon = 'https://www.ncbi.nlm.nih.gov/favicon.ico';
+      resultItem.snippet = `${title} - NCBI Bookshelf`;
 
       formatted.push(resultItem);
     } catch (err) {

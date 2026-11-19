@@ -143,6 +143,11 @@ async function searchSingleVariant(q, { limit = 10, apiKey } = {}) {
       });
     }
 
+    // Add site metadata for UI rendering
+    result.site_type = 'retailer';
+    result.favicon = 'https://books.google.com/favicon.ico';
+    result.snippet = description || `Search result from Google Books for "${title}"`;
+
     results.push(result);
   }
 

@@ -69,6 +69,11 @@ export async function search(query, { limit = 10 } = {}) {
         });
       }
 
+      // Add site metadata for UI rendering
+      result.site_type = 'library';
+      result.favicon = 'https://openlibrary.org/favicon.ico';
+      result.snippet = description || `Search result from Open Library for "${title}"`;
+
       results.push(result);
     } catch (err) {
       console.warn(`Open Library item processing failed: ${err.message}`);

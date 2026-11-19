@@ -1,6 +1,7 @@
 import pool from '../db/pool.js';
 import { SearchResult, OPTION_TYPE, mergeResults, withTimeout } from './types.js';
 import { extractQueryWords, scoreResult, passesRelevance } from './relevance.js';
+import { classifyDomain, BLOCKED_DOMAIN_SET } from './domains.js';
 import { search as localSearch, PROVIDER_NAME as LOCAL_NAME } from './local.js';
 import { search as googleBooksSearch, PROVIDER_NAME as GOOGLE_NAME } from './google-books.js';
 import { search as openstaxSearch, PROVIDER_NAME as OPENAX_NAME } from './openstax.js';
@@ -79,14 +80,31 @@ export async function searchBooks(query, { limit = 20, userIp } = {}) {
     allResults.push(...results.map(r => ({ ...r, _provider: provider })));
   }
 
+  // Filter out blocked domains
+  const filtered = allResults.filter(r => {
+    const host = (r._provider === 'Google Books' ? 'books.google.com' :
+                  r._provider === 'Open Library' ? 'openlibrary.org' :
+                  r._provider === 'OpenStax' ? 'openstax.org' :
+                  r._provider === 'DOAB' ? 'directory.doabooks.org' :
+                  r._provider === 'Gutenberg' ? 'gutendex.com' :
+                  r._provider === 'NCBI' ? 'ncbi.nlm.nih.gov' :
+                  r._provider === 'local' ? 'local' : '');
+    return !BLOCKED_DOMAIN_SET.has(host);
+  });
+
+  const blockedCount = allResults.length - filtered.length;
+
   // Merge duplicates
-  const merged = mergeResults(allResults.map(r => new SearchResult({
+  const merged = mergeResults(filtered.map(r => new SearchResult({
     title: r.title,
     authors: r.authors,
     isbn: r.isbn,
     cover_url: r.cover_url,
     status: r.status,
-    options: r.options
+    options: r.options,
+    site_type: r.site_type || classifyDomain(r.options?.[0]?.url || ''),
+    favicon: r.favicon || '/favicon.ico',
+    snippet: r.snippet || ''
   })));
 
   // Apply relevance filtering: keep only results where >= 70% of important
@@ -111,7 +129,8 @@ export async function searchBooks(query, { limit = 20, userIp } = {}) {
   return {
     results: limited,
     total: relevant.length,
-    providers: providerStatus
+    providers: providerStatus,
+    blockedCount
   };
 }
 

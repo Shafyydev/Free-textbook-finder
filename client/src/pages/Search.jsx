@@ -10,8 +10,10 @@ export default function Search() {
   const [results, setResults] = useState([]);
   const [total, setTotal] = useState(0);
   const [providers, setProviders] = useState([]);
+  const [blockedCount, setBlockedCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [filter, setFilter] = useState('all');
 
   useEffect(() => {
     const query = sp.get('q') || '';
@@ -20,6 +22,7 @@ export default function Search() {
       setResults([]);
       setTotal(0);
       setProviders([]);
+      setBlockedCount(0);
       return;
     }
     doSearch(query);
@@ -41,6 +44,7 @@ export default function Search() {
       setResults(finalResults);
       setTotal(finalResults.length);
       setProviders(data.providers || []);
+      setBlockedCount(data.blockedCount || 0);
     } catch (e) {
       setError(e.message || 'Search failed');
       setResults([]);
@@ -69,6 +73,45 @@ export default function Search() {
     }[status] || { color: '#6b7280', label: 'Unknown' };
     return s;
   }
+
+  // Badge config based on site type (from SPEC.md)
+  function badgeFor(book) {
+    const st = book.site_type || 'unknown';
+    const license = book.license || '';
+    const saleability = book.options?.[0]?.license || '';
+    const viewability = book.options?.[0]?.license || '';
+
+    // Retailers show Paid
+    if (st === 'retailer') return { label: 'Paid', color: '#b42318', bg: '#fef2f2' };
+    // Google Books shows Preview or Paid from saleInfo
+    if (book._provider === 'Google Books') {
+      if (saleability && saleability.includes('Paid') || book.status === 'paid') return { label: 'Paid', color: '#b42318', bg: '#fef2f2' };
+      if (saleability && saleability.includes('Limited preview') || book.status === 'unknown') return { label: 'Preview', color: '#f59e0b', bg: '#fffbeb' };
+      return { label: 'Unknown', color: '#6b7280', bg: '#f3f4f6' };
+    }
+    // Internet Archive lending items show Borrow
+    if (st === 'library') return { label: 'Borrow', color: '#1d4ed8', bg: '#eff6ff' };
+    // Open repositories show Free only when explicit open license or public domain
+    if (st === 'open_repository') {
+      if (license && (license.toLowerCase().includes('creative commons') ||
+          license.toLowerCase().includes('public domain') ||
+          license.toLowerCase().includes('open access') ||
+          license.toLowerCase().includes('cc by') ||
+          license.toLowerCase().includes('cc0'))) {
+        return { label: 'Free', color: '#166534', bg: '#e7f6ea' };
+      }
+      return { label: 'Unknown', color: '#6b7280', bg: '#f3f4f6' };
+    }
+    // Anything else shows Unverified
+    return { label: 'Unverified', color: '#6b7280', bg: '#f3f4f6' };
+  }
+
+  const filteredResults = filter === 'all'
+    ? results
+    : results.filter(r => {
+        const badge = badgeFor(r);
+        return badge.label.toLowerCase() === filter.toLowerCase();
+      });
 
   if (!q) {
     return (
@@ -115,14 +158,34 @@ export default function Search() {
               })}
             </>
           )}
+          {blockedCount > 0 && (
+            <span style={{ marginLeft: '.35rem', color: '#b42318', fontSize: '.8rem', fontWeight: '600' }}>
+              {blockedCount} blocked
+            </span>
+          )}
         </div>
       </nav>
+
+      {/* Type filter */}
+      <div className="section card" style={{ padding: '.75rem 1rem', marginBottom: '1rem', display: 'flex', gap: '.5rem', alignItems: 'center' }}>
+        <span className="muted small" style={{ fontWeight: '600' }}>Filter: </span>
+        {['all', 'free', 'paid', 'borrow', 'preview'].map(f => (
+          <button
+            key={f}
+            onClick={() => setFilter(f)}
+            className={filter === f ? 'btn' : 'btn secondary'}
+            style={{ padding: '.35rem .75rem', fontSize: '.85rem' }}
+          >
+            {f.charAt(0).toUpperCase() + f.slice(1)}
+          </button>
+        ))}
+      </div>
 
       {error && <div className="error">{error}</div>}
 
       {loading ? (
         <SkeletonList count={6} />
-      ) : results.length === 0 ? (
+      ) : filteredResults.length === 0 ? (
         <div className="card" style={{ textAlign: 'center', padding: '3rem 1rem' }}>
           <h2 style={{ color: 'var(--muted-text)', marginBottom: '.5rem' }}>Not found</h2>
           <p className="muted" style={{ marginBottom: '.5rem' }}>We couldn&rsquo;t find a legal free copy or a clear listing for <strong>"{q}"</strong>.</p>
@@ -139,8 +202,8 @@ export default function Search() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-2">
-          {results.map((book) => (
+        <div className="list">
+          {filteredResults.map((book) => (
             <BookCard key={book.isbn || book.title} book={book} />
           ))}
         </div>

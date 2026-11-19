@@ -80,6 +80,11 @@ export async function search(query, { limit = 10 } = {}) {
         price: null
       });
 
+      // Add site metadata for UI rendering
+      result.site_type = 'open_repository';
+      result.favicon = 'https://directory.doabooks.org/favicon.ico';
+      result.snippet = `${title} - Open Access book from DOAB`;
+
       results.push(result);
     } catch (err) {
       console.warn(`DOAB item processing failed: ${err.message}`);

@@ -95,7 +95,11 @@ export async function search(query, { limit = 20 } = {}) {
         }
       }
 
-      // Extract ISBN from license or description if present (local DB doesn't store ISBN)
+      // Add site metadata for UI rendering
+      result.site_type = 'open_repository';
+      result.favicon = '/favicon.ico';
+      result.snippet = book.description || `Local library result: "${book.title}"`;
+
       results.push(result);
     }
 

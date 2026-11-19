@@ -30,21 +30,29 @@ export function BookCard({ book }) {
   const pdfUrl = freeSource?.direct_file_url;
   const viewUrl = freeSource?.official_url || (paidOnly && sources[0]?.official_url);
 
+  const authorList = book.authors ? String(book.authors).split(/,\s*/) : [];
+  const authorsShown = authorList.slice(0, 3);
+  const authorsText = authorsShown.join(', ') + (authorList.length > 3 ? ' et al.' : '');
+
   return (
-    <div className="card">
-      <h3 style={{margin:'0 0 .25rem'}}><Link to={`/books/${book.id}`}>{book.title}</Link></h3>
-      <div className="meta">{[book.authors, book.edition, book.year].filter(Boolean).join(' · ')}</div>
-      {book.description && <p className="small" style={{margin:'.4rem 0'}}>{String(book.description).slice(0, 220)}{String(book.description).length>220?'…':''}</p>}
-      <div>{(book.subjects || []).map(s => <span key={s.id} className="badge">{s.name}</span>)}</div>
-      {(book.licenses || []).map(lic => <span key={lic} className="badge" style={{background:'#f0f4f8',color:'#4a5568',borderColor:'#cbd5e0'}}>{lic}</span>)}
-      {paidOnly && <span className="badge" style={{background:'#fdecec',color:'#7f1d1d',borderColor:'#fecaca'}}>Paid book</span>}
-      <div className="muted small" style={{marginTop:'.35rem'}}>{book.source_count ?? 0} source(s)</div>
-      <div style={{marginTop:'.5rem'}}>
-        {pdfUrl ? (
-          <a href={pdfUrl} target="_blank" rel="noopener noreferrer" style={{display:'inline-block',background:'#0b6efd',color:'#fff',padding:'.4rem .7rem',borderRadius:'6px',textDecoration:'none',fontSize:'.9rem'}}>Download PDF</a>
-        ) : (
-          <a href={viewUrl} target="_blank" rel="noopener noreferrer" style={{display:'inline-block',background:'#eef2f7',color:'#1f2937',padding:'.4rem .7rem',borderRadius:'6px',textDecoration:'none',fontSize:'.9rem'}}>Open book page</a>
-        )}
+    <div className="card compact">
+      <h3 style={{margin:'0 0 .2rem'}}><Link to={`/books/${book.id}`}>{book.title}</Link></h3>
+      <div className="meta">{[authorsText, book.edition, book.year].filter(Boolean).join(' · ')}</div>
+      {book.description && (
+        <p className="small desc-line" style={{margin:'.2rem 0'}}>
+          {String(book.description)}
+        </p>
+      )}
+      <div className="card-bottom" style={{marginTop:'.3rem'}}>
+        <div style={{flex:'1',display:'flex',flexWrap:'wrap',gap:'.25rem',alignItems:'center'}}>
+          {(book.subjects || []).map(s => <span key={s.id} className="badge">{s.name}</span>)}
+          {(book.licenses || []).map(lic => <span key={lic} className="badge" style={{background:'#f0f4f8',color:'#4a5568',borderColor:'#cbd5e0'}}>{lic}</span>)}
+          {paidOnly && <span className="badge" style={{background:'#fdecec',color:'#7f1d1d',borderColor:'#fecaca'}}>Paid book</span>}
+          <span className="muted small">{book.source_count ?? 0} source(s)</span>
+        </div>
+        <a href={pdfUrl || viewUrl} target="_blank" rel="noopener noreferrer" style={{display:'inline-block',background:pdfUrl?'#0b6efd':'#eef2f7',color:pdfUrl?'#fff':'#1f2937',padding:'.3rem .6rem',borderRadius:'6px',textDecoration:'none',fontSize:'.85rem',whiteSpace:'nowrap'}}>
+          {pdfUrl ? 'Download PDF' : 'Open book page'}
+        </a>
       </div>
     </div>
   );

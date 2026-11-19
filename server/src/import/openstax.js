@@ -11,41 +11,92 @@ const CC_BY_NC_SA = 'Creative Commons Attribution-NonCommercial-ShareAlike Licen
 const CC_BY_NC_SA_URL = 'https://creativecommons.org/licenses/by-nc-sa/4.0/';
 
 // Map OpenStax subject names to general categories
-function subjectToCategory(subjects) {
+function subjectToCategory(subjects, title) {
   const s = subjects.map(x => x.toLowerCase()).join(' ');
-  if (s.includes('nursing') || s.includes('pharmacology') || s.includes('anatomy') || s.includes('physiology') || s.includes('health') || s.includes('medical') || s.includes('palliative') || s.includes('maternal') || s.includes('newborn') || s.includes('psychiatric') || s.includes('population') || s.includes('nutrition')) {
+  const t = title.toLowerCase();
+
+  // Nursing: only if subject is specifically "nursing"
+  if (s.includes('nursing')) {
     return 'Nursing';
   }
-  if (s.includes('computer') || s.includes('programming') || s.includes('software') || s.includes('data science') || s.includes('information systems')) {
-    return 'Computer Science';
+
+  // Mathematics: math-related subjects
+  if (s.includes('mathematics') || s.includes('algebra') || s.includes('precalculus') ||
+      s.includes('statistics') || s.includes('calculus') || s.includes('math') ||
+      s.includes('trigonometry') || s.includes('geometry')) {
+    return 'Mathematics';
   }
-  if (s.includes('biology') || s.includes('chemistry') || s.includes('physics') || s.includes('astronomy')) {
+
+  // Medicine and Health: health-related subjects (but not nursing)
+  if (s.includes('anatomy') || s.includes('physiology') || s.includes('pharmacology') ||
+      s.includes('medical') || s.includes('palliative') || s.includes('maternal') ||
+      s.includes('newborn') || s.includes('psychiatric') || s.includes('population') ||
+      s.includes('nutrition') || s.includes('health')) {
+    return 'Medicine and Health';
+  }
+
+  // Title-based health detection for books with generic "Science" subject
+  if (s === 'science' || !s) {
+    if (t.includes('anatomy') || t.includes('physiology') || t.includes('pharmacology') ||
+        t.includes('pharmaceutical') || t.includes('nursing') || t.includes('medical') ||
+        t.includes('health') || t.includes('microbiology') || t.includes('clinical') ||
+        t.includes('patient') || t.includes('medicine') || t.includes('biomedical')) {
+      return 'Medicine and Health';
+    }
+  }
+
+  // Science: biology, chemistry, physics, astronomy, science
+  if (s.includes('biology') || s.includes('chemistry') || s.includes('physics') ||
+      s.includes('astronomy') || s === 'science') {
     return 'Science';
   }
-  if (s.includes('accounting') || s.includes('management') || s.includes('marketing') || s.includes('finance') || s.includes('economics') || s.includes('business') || s.includes('organizational')) {
-    return 'Business';
-  }
-  if (s.includes('history') || s.includes('writing') || s.includes('humanities') || s.includes('philosophy') || s.includes('religion') || s.includes('art') || s.includes('music')) {
-    return 'Humanities';
-  }
-  if (s.includes('psychology') || s.includes('sociology') || s.includes('political') || s.includes('anthropology') || s.includes('geography')) {
+
+  // Social Sciences
+  if (s.includes('social sciences') || s.includes('psychology') || s.includes('sociology') ||
+      s.includes('political') || s.includes('anthropology') || s.includes('geography')) {
     return 'Social Sciences';
   }
-  if (s.includes('computer') || s.includes('programming') || s.includes('software') || s.includes('data science') || s.includes('information systems')) {
+
+  // Business
+  if (s.includes('accounting') || s.includes('management') || s.includes('marketing') ||
+      s.includes('finance') || s.includes('economics') || s.includes('business') ||
+      s.includes('organizational')) {
+    return 'Business';
+  }
+
+  // Humanities
+  if (s.includes('history') || s.includes('writing') || s.includes('humanities') ||
+      s.includes('philosophy') || s.includes('religion') || s.includes('art') ||
+      s.includes('music')) {
+    return 'Humanities';
+  }
+
+  // Computer Science
+  if (s.includes('computer') || s.includes('programming') || s.includes('software') ||
+      s.includes('data science') || s.includes('information systems')) {
     return 'Computer Science';
   }
+
+  // Engineering and Technology
   if (s.includes('engineering') || s.includes('technology')) {
     return 'Engineering and Technology';
   }
+
+  // Education
   if (s.includes('education') || s.includes('teaching')) {
     return 'Education';
   }
+
+  // Languages
   if (s.includes('language') || s.includes('spanish') || s.includes('french') || s.includes('english')) {
     return 'Languages';
   }
+
+  // Law
   if (s.includes('law') || s.includes('legal')) {
     return 'Law';
   }
+
   return 'Science';
 }
 
@@ -156,7 +207,7 @@ async function importOpenStax() {
 
         const title = detail.title;
         const authors = extractAuthors(detail.authors);
-        const edition = null; // OpenStax API doesn't provide edition at top level
+        const edition = null;
         const year = extractYear(detail.publish_date);
         const description = stripHtml(detail.description);
         const license = detail.license_name;
@@ -174,25 +225,25 @@ async function importOpenStax() {
         // Verify PDF
         const verifiedPdf = await verifyPdf(pdfUrl);
 
-        const category = subjectToCategory(subjects);
+        const category = subjectToCategory(subjects, title);
 
-        // Check if book exists
+        // Check if book exists - match on title only (edition may differ between seed and import)
         const existing = await client.query(
-          'SELECT id FROM books WHERE lower(title)=lower($1) AND coalesce(edition,\'\')=coalesce($2,\'\')',
-          [title, edition || null]
+          'SELECT id FROM books WHERE lower(title) = lower($1)',
+          [title]
         );
 
         if (existing.rowCount) {
           const bookId = existing.rows[0].id;
-          // Only update if we have better data - don't overwrite verified fields with worse values
+          // Update book metadata but preserve featured flag set by admin
           await client.query(
             'UPDATE books SET authors=COALESCE($2,authors), year=COALESCE($3,year), description=COALESCE($4,description), updated_at=NOW() WHERE id=$1',
             [bookId, authors, year, description]
           );
-          // Update sources - replace with verified data
-          await client.query('DELETE FROM book_sources WHERE book_id=$1', [bookId]);
+          // Replace subjects, categories, and sources with verified data
           await client.query('DELETE FROM book_subjects WHERE book_id=$1', [bookId]);
           await client.query('DELETE FROM book_categories WHERE book_id=$1', [bookId]);
+          await client.query('DELETE FROM book_sources WHERE book_id=$1', [bookId]);
 
           const sourceId = await ensureSource(client, 'OpenStax', 'https://openstax.org', null);
           await client.query(

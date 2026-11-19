@@ -49,6 +49,7 @@ async function seed() {
           [bookId, b.authors || null, b.year || null, b.description || null, b.cover_url || null]);
         await client.query('DELETE FROM book_subjects WHERE book_id=$1', [bookId]);
         await client.query('DELETE FROM book_courses WHERE book_id=$1', [bookId]);
+        await client.query('DELETE FROM book_categories WHERE book_id=$1', [bookId]);
         await client.query('DELETE FROM book_sources WHERE book_id=$1', [bookId]);
       } else {
         const ins = await client.query(

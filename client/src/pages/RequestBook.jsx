@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { api } from '../api/client.js';
 
 export default function RequestBook() {
-  const [form, setForm] = useState({ requested_title: '', notes: '', contact: '' });
+  const [sp] = useSearchParams();
+  const [form, setForm] = useState({ requested_title: sp.get('title') || '', notes: '', contact: '' });
   const [status, setStatus] = useState({ type: '', msg: '' });
   const [busy, setBusy] = useState(false);
 

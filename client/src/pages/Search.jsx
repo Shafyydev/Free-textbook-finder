@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { BookCard } from '../components/ui.jsx';
 
@@ -41,7 +41,12 @@ export default function Search() {
       {loading ? <p className="muted">Loading...</p> : <>
         <p className="muted small">{data.total} result(s)</p>
         <div className="list">{(data.items||[]).map(b => <BookCard key={b.id} book={b} />)}</div>
-        {!data.items?.length && <p className="muted">No books found. Try broader terms or clear filters.</p>}
+        {!data.items?.length && q ? (
+          <>
+            <p className="muted">No books found. Try broader terms or clear filters.</p>
+            <p className="small"><Link to={{ pathname: '/request', search: `?title=${encodeURIComponent(q)}` }}>Request this book</Link></p>
+          </>
+        ) : !data.items?.length && <p className="muted">No books found. Try broader terms or clear filters.</p>}
       </>}
     </div>
   );

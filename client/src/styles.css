@@ -424,15 +424,21 @@ th { color: var(--muted-text); font-weight: 600; font-size: .8rem; text-transfor
 }
 
 /* ===== SCROLL ANIMATIONS ===== */
+/* Cards start visible so they're never hidden if the observer fails.
+   The reveal animation only adds a subtle fade-in enhancement. */
 .animate-on-scroll {
+  opacity: 1;
+  transform: none;
+  transition: opacity 350ms ease, transform 350ms ease;
+  will-change: auto;
+}
+.animate-on-scroll.reveal {
   opacity: 0;
   transform: translateY(16px);
-  transition: opacity 350ms ease, transform 350ms ease;
-  will-change: opacity, transform;
+  animation: fade-in-up 400ms ease forwards;
 }
-.animate-on-scroll.visible {
-  opacity: 1;
-  transform: translateY(0);
+@keyframes fade-in-up {
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ===== HERO ENTRANCE ===== */

@@ -47,29 +47,57 @@ export function useStaggeredAnimation(count) {
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
+    // Cards start visible (CSS handles reveal animation).
+    // Only add staggered animation delay if not reduced motion.
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      container.querySelectorAll('.animate-on-scroll').forEach(el => el.classList.add('visible'));
       return;
     }
     const cards = container.querySelectorAll('.animate-on-scroll');
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.08 }
-    );
     cards.forEach((card, i) => {
       card.style.transitionDelay = `${i * 50}ms`;
-      observer.observe(card);
+      card.classList.add('reveal');
     });
-    return () => observer.disconnect();
+    return () => {
+      cards.forEach((card) => {
+        card.style.transitionDelay = '';
+        card.classList.remove('reveal');
+      });
+    };
   }, [count]);
   return containerRef;
+}
+
+/* ===== Error Boundary ===== */
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null, info: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error, errorInfo) {
+    this.setState({ error, info: errorInfo });
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="card" style={{ textAlign: 'center', padding: '2rem 1rem' }}>
+          <h2 style={{ color: '#b42318', marginBottom: '.5rem' }}>Card failed to load</h2>
+          <p className="muted">{this.state.error?.message || 'Unknown error'}</p>
+          <button
+            className="btn"
+            style={{ marginTop: '.5rem' }}
+            onClick={() => this.setState({ hasError: false, error: null, info: null })}
+          >
+            Try again
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
 }
 
 /* ===== Components ===== */
@@ -127,6 +155,14 @@ export function Layout({ children }) {
 }
 
 export function BookCard({ book }) {
+  return (
+    <ErrorBoundary>
+      <CardInner book={book} />
+    </ErrorBoundary>
+  );
+}
+
+function CardInner({ book }) {
   const statusBadge = {
     free: { label: 'Free', bg: '#e7f6ea', text: '#166534', border: '#86efac' },
     paid: { label: 'Paid', bg: '#fef2f2', text: '#991b1b', border: '#fecaca' },

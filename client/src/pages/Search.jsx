@@ -30,8 +30,16 @@ export default function Search() {
     setError('');
     try {
       const data = await api.searchBooks({ q: query });
-      setResults(data.results || []);
-      setTotal(data.total || 0);
+      let results = data.results || [];
+      // Group results: free first, then paid, then borrow, then unknown (limited)
+      const free = results.filter(r => r.status === 'free');
+      const paid = results.filter(r => r.status === 'paid');
+      const borrow = results.filter(r => r.status === 'borrow');
+      const unknown = results.filter(r => r.status === 'unknown');
+      // Only show unknown if there are no free/paid/borrow results, limited to first few
+      const finalResults = [...free, ...paid, ...borrow, ...(free.length || paid.length || borrow.length ? [] : unknown.slice(0, 5))];
+      setResults(finalResults);
+      setTotal(finalResults.length);
       setProviders(data.providers || []);
     } catch (e) {
       setError(e.message || 'Search failed');

@@ -9,6 +9,7 @@
     "start": "node src/index.js",
     "migrate": "node src/db/migrate.js",
     "seed": "node src/db/seed.js",
+    "import:openstax": "node src/import/openstax.js",
     "test": "node --test"
   },
   "dependencies": {

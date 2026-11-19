@@ -71,7 +71,7 @@ The Vite dev server runs on port 5173 by default and proxies `/api` to the backe
 
 ## Features
 - Search books by title, author, description, subject, course, category, or source
-- Browse by general category (Medicine and Health, Nursing, Science, Mathematics, Engineering and Technology, Business, Social Sciences, Humanities, Computer Science, Education, Languages, Law)
+- Browse by general category (Medicine and Health, Nursing, Science, Mathematics, Business, Social Sciences, Humanities, Computer Science)
 - Full-text search with relevance ranking; default (no query) lists featured books first, then alphabetically
 - Book detail pages showing license, official source links, subjects, courses, and category
 - License labels shown on every search result card
@@ -118,4 +118,10 @@ The Vite dev server runs on port 5173 by default and proxies `/api` to the backe
 - The app never hosts, copies, or downloads book files — it only links to official sources.
 
 ## Seeds
-The seed file is `server/src/db/seed/books.json`. To add more verified books, append records to that array and re-run `npm run seed` (it upserts by title + edition). The import script `server/src/import/openstax.js` can also be used to bulk-import all live OpenStax books from the official API.
+The seed file is `server/src/db/seed/books.json`. To add more verified books, append records to that array and re-run `npm run seed` (it upserts by title + edition). The import script `server/src/import/openstax.js` can also be used to bulk-import all live OpenStax books from the official API:
+
+```powershell
+cd server && npm run import:openstax
+```
+
+This reads every live book from the OpenStax CMS API that has a license name and license URL, verifies each `direct_file_url` (PDF link) returns a PDF, and upserts books by title + edition. It logs how many books were added, updated, and skipped, with skip reasons.

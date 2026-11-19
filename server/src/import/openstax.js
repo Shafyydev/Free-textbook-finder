@@ -31,7 +31,10 @@ function subjectToCategory(subjects) {
   if (s.includes('psychology') || s.includes('sociology') || s.includes('political') || s.includes('anthropology') || s.includes('geography')) {
     return 'Social Sciences';
   }
-  if (s.includes('computer') || s.includes('programming') || s.includes('software') || s.includes('engineering') || s.includes('technology')) {
+  if (s.includes('computer') || s.includes('programming') || s.includes('software') || s.includes('data science') || s.includes('information systems')) {
+    return 'Computer Science';
+  }
+  if (s.includes('engineering') || s.includes('technology')) {
     return 'Engineering and Technology';
   }
   if (s.includes('education') || s.includes('teaching')) {

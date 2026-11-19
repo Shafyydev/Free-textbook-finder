@@ -40,8 +40,6 @@ export async function search(query, { limit = 10 } = {}) {
       const license = metadata.find(m => m.metadata_key === 'dc.rights')?.metadata_value || 'Unknown';
       const isbn = metadata.find(m => m.metadata_key === 'dc.identifier.isbn')?.metadata_value || null;
 
-      const license = metadata.find(m => m.metadata_key === 'dc.rights')?.metadata_value || null;
-
       // Find download URL from bitstreams
       const downloadUrl = bitstreams.find(b => b.name?.toLowerCase().endsWith('.pdf'))?._links?.self?.href || null;
       const handle = metadata.find(m => m.metadata_key === 'dc.identifier.uri')?.metadata_value || null;

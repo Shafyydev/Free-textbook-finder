@@ -3,17 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../api/client.js';
 import { BookCard, SkeletonList, PageFade, useStaggeredAnimation } from '../components/ui.jsx';
 
-function HeroSparkle() {
-  return (
-    <div className="hero-sparkle" aria-hidden="true">
-      <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M18 2l3.09 10.91L32 18l-10.91 3.09L18 32l-3.09-10.91L4 18l10.91-3.09L18 2z"
-              fill="var(--cream)" fillOpacity=".85" />
-      </svg>
-    </div>
-  );
-}
-
 export default function Home() {
   const [q, setQ] = useState('');
   const [subject, setSubject] = useState('');
@@ -52,44 +41,53 @@ export default function Home() {
     <PageFade>
       <div>
         {error && <div className="error">{error}</div>}
-        <section className="hero">
-          <HeroSparkle />
+
+        {/* Hero with integrated search */}
+        <section className="hero" style={{ margin: '-1.5rem -1rem 1.5rem' }}>
           <h1 className="hero-enter-heading">Free Textbook Finder</h1>
-          <p className="muted hero-enter-sub">Find legally free textbooks across all subjects — science, mathematics, business, nursing, humanities, and more. Links to official sources with verified license info.</p>
+          <p className="hero-sub hero-enter-sub">
+            Find legally free textbooks across all subjects — science, mathematics, business, nursing, humanities, and more.
+          </p>
+          <form className="hero-search hero-enter-form" onSubmit={submit}>
+            <div className="row">
+              <div style={{ flex: '2 1 260px' }}>
+                <label>Search</label>
+                <input value={q} onChange={e => setQ(e.target.value)} placeholder="Title, author, description..." />
+              </div>
+              <div style={{ flex: '1 1 150px' }}>
+                <label>Category</label>
+                <select value={category} onChange={e => setCategory(e.target.value)}>
+                  <option value="">All categories</option>
+                  {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                </select>
+              </div>
+              <div style={{ flex: '1 1 150px' }}>
+                <label>Subject</label>
+                <select value={subject} onChange={e => setSubject(e.target.value)}>
+                  <option value="">All subjects</option>
+                  {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                </select>
+              </div>
+              <div style={{ flex: '1 1 150px' }}>
+                <label>Course</label>
+                <select value={course} onChange={e => setCourse(e.target.value)}>
+                  <option value="">All courses</option>
+                  {courses.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                </select>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'end' }}>
+                <button type="submit" style={{ background: 'var(--cream)', color: 'var(--indigo)', borderColor: 'var(--cream)' }}>Search</button>
+              </div>
+            </div>
+          </form>
         </section>
-        <form className="card hero-enter-form" onSubmit={submit}>
-          <div className="row">
-            <div style={{ flex: '2 1 260px' }}>
-              <label>Search</label>
-              <input value={q} onChange={e => setQ(e.target.value)} placeholder="Title, author, description..." />
-            </div>
-            <div style={{ flex: '1 1 160px' }}>
-              <label>Category</label>
-              <select value={category} onChange={e => setCategory(e.target.value)}>
-                <option value="">All categories</option>
-                {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-              </select>
-            </div>
-            <div style={{ flex: '1 1 160px' }}>
-              <label>Subject</label>
-              <select value={subject} onChange={e => setSubject(e.target.value)}>
-                <option value="">All subjects</option>
-                {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
-              </select>
-            </div>
-            <div style={{ flex: '1 1 160px' }}>
-              <label>Course</label>
-              <select value={course} onChange={e => setCourse(e.target.value)}>
-                <option value="">All courses</option>
-                {courses.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-              </select>
-            </div>
-            <div><button type="submit">Search</button></div>
-          </div>
-        </form>
+
+        {/* Featured books */}
         <section className="section">
-          <h2>Featured Textbooks</h2>
-          <p className="small muted">Jump to results: <Link to="/search">all books</Link></p>
+          <h2 style={{ marginBottom: '.25rem' }}>Featured Textbooks</h2>
+          <p className="small muted" style={{ marginTop: 0 }}>
+            Jump to results: <Link to="/search">all books</Link>
+          </p>
           {loading ? (
             <SkeletonList count={6} />
           ) : featured.length ? (

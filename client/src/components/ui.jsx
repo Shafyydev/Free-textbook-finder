@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 /* ===== Custom Hooks ===== */
 
-/** Compact navbar on scroll + scroll-progress bar */
 function useScrollEffects() {
   const [compact, setCompact] = useState(false);
   const progressRef = useRef(null);
@@ -24,14 +23,11 @@ function useScrollEffects() {
   return { compact, progressRef };
 }
 
-/** IntersectionObserver-based scroll animation */
 export function useScrollAnimation() {
   const ref = useRef(null);
-
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    // Respect reduced-motion
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       el.classList.add('visible');
       return;
@@ -43,14 +39,11 @@ export function useScrollAnimation() {
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
-
   return ref;
 }
 
-/** Staggered scroll animation for lists of cards */
 export function useStaggeredAnimation(count) {
   const containerRef = useRef(null);
-
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -76,25 +69,11 @@ export function useStaggeredAnimation(count) {
     });
     return () => observer.disconnect();
   }, [count]);
-
   return containerRef;
 }
 
 /* ===== Components ===== */
 
-/** Sparkle SVG for the hero */
-function HeroSparkle() {
-  return (
-    <div className="hero-sparkle" aria-hidden="true">
-      <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M18 2l3.09 10.91L32 18l-10.91 3.09L18 32l-3.09-10.91L4 18l10.91-3.09L18 2z"
-              fill="var(--cream)" fillOpacity=".85" />
-      </svg>
-    </div>
-  );
-}
-
-/** Skeleton card for loading states */
 export function SkeletonCard() {
   return (
     <div className="skeleton-card">
@@ -106,7 +85,6 @@ export function SkeletonCard() {
   );
 }
 
-/** Multiple skeleton cards */
 export function SkeletonList({ count = 6 }) {
   return (
     <div className="list">
@@ -115,12 +93,9 @@ export function SkeletonList({ count = 6 }) {
   );
 }
 
-/** Page wrapper with fade-in animation */
 export function PageFade({ children }) {
   const location = useLocation();
-  const [key, setKey] = useState(location.key);
-  useEffect(() => { setKey(location.key); }, [location.key]);
-  return <div className="page-fade-enter" key={key}>{children}</div>;
+  return <div className="page-fade-enter" key={location.key}>{children}</div>;
 }
 
 export function Layout({ children }) {
@@ -141,8 +116,8 @@ export function Layout({ children }) {
       </nav>
       <div className="container">
         <main>{children}</main>
-        <div className="footer">Only legal, openly licensed or public-domain textbooks. We link to official sources and do not host book files.</div>
       </div>
+      <footer className="footer">Only legal, openly licensed or public-domain textbooks. We link to official sources and do not host book files.</footer>
     </>
   );
 }
@@ -161,14 +136,14 @@ export function BookCard({ book }) {
 
   return (
     <div className="card compact animate-on-scroll">
-      <h3 style={{ margin: '0 0 .2rem' }}><Link to={`/books/${book.id}`}>{book.title}</Link></h3>
+      <h3 style={{ margin: '0 0 .25rem', fontSize: '1.05rem' }}><Link to={`/books/${book.id}`}>{book.title}</Link></h3>
       <div className="meta">{[authorsText, book.edition, book.year].filter(Boolean).join(' · ')}</div>
       {book.description && (
-        <p className="small desc-line" style={{ margin: '.2rem 0' }}>
+        <p className="small desc-line" style={{ margin: '.3rem 0', color: 'var(--indigo-muted)' }}>
           {String(book.description)}
         </p>
       )}
-      <div className="card-bottom" style={{ marginTop: '.3rem' }}>
+      <div className="card-bottom" style={{ marginTop: '.4rem' }}>
         <div style={{ flex: '1', display: 'flex', flexWrap: 'wrap', gap: '.25rem', alignItems: 'center' }}>
           {(book.subjects || []).map(s => <span key={s.id} className="badge">{s.name}</span>)}
           {(book.licenses || []).map(lic => <span key={lic} className="badge">{lic}</span>)}
@@ -177,7 +152,7 @@ export function BookCard({ book }) {
         </div>
         <a href={pdfUrl || viewUrl} target="_blank" rel="noopener noreferrer"
           className={pdfUrl ? 'btn' : 'btn secondary'}
-          style={{ padding: '.3rem .6rem', fontSize: '.85rem', whiteSpace: 'nowrap' }}>
+          style={{ padding: '.3rem .7rem', fontSize: '.82rem', whiteSpace: 'nowrap' }}>
           {pdfUrl ? 'Download PDF' : 'Open book page'}
         </a>
       </div>
@@ -197,7 +172,7 @@ export function SourceList({ sources = [] }) {
               {src.access_type === 'paid' ? 'Paid' : 'Free'}
             </span>
           </div>
-          <div className="small">
+          <div className="small" style={{ marginTop: '.2rem' }}>
             License: <strong>{src.license || 'Unknown'}</strong>
             {src.license_url ? <> · <a href={src.license_url} target="_blank" rel="noopener noreferrer">license details</a></> : null}
           </div>

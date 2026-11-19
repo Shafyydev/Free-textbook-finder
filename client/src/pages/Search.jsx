@@ -57,8 +57,8 @@ export default function Search() {
   return (
     <PageFade>
       <div>
-        <h1>Search</h1>
         <form className="card" onSubmit={apply}>
+          <h1 style={{ marginTop: 0, marginBottom: '1rem', textAlign: 'center' }}>Search</h1>
           <div className="row">
             <div style={{ flex: '2 1 180px' }}>
               <label>Query</label>

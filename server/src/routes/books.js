@@ -96,7 +96,7 @@ router.get('/:id', async (req, res, next) => {
       pool.query(`SELECT c.id, c.name FROM courses c JOIN book_courses bc ON bc.course_id = c.id WHERE bc.book_id = $1 ORDER BY c.name`, [id]),
       pool.query(`
         SELECT bsrc.id, bsrc.official_url, bsrc.direct_file_url, bsrc.license, bsrc.license_url,
-               bsrc.can_host, bsrc.last_checked_at, bsrc.link_status,
+               bsrc.can_host, bsrc.last_checked_at, bsrc.link_status, bsrc.access_type,
                s.id AS source_id, s.name AS source_name, s.base_url
         FROM book_sources bsrc
         JOIN sources s ON s.id = bsrc.source_id

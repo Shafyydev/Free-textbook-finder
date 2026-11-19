@@ -79,9 +79,9 @@ async function seed() {
       for (const src of b.sources || []) {
         const sourceId = await ensureSource(client, src.source_name, src.base_url || null, src.notes || null);
         await client.query(
-          `INSERT INTO book_sources (book_id, source_id, official_url, direct_file_url, license, license_url, can_host, link_status, last_checked_at)
-           VALUES ($1,$2,$3,$4,$5,$6,false,'unknown',NOW())`,
-          [bookId, sourceId, src.official_url, src.direct_file_url || null, src.license, src.license_url || null]
+          `INSERT INTO book_sources (book_id, source_id, official_url, direct_file_url, license, license_url, can_host, link_status, last_checked_at, access_type)
+           VALUES ($1,$2,$3,$4,$5,$6,false,'unknown',NOW(),$7)`,
+          [bookId, sourceId, src.official_url, src.direct_file_url || null, src.license, src.license_url || null, src.access_type || 'free']
         );
       }
       await client.query('SELECT refresh_book_search_vector($1)', [bookId]);

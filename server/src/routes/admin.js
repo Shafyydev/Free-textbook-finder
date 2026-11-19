@@ -90,13 +90,15 @@ router.delete('/books/:id', async (req, res, next) => {
 // Book sources
 router.post('/book-sources', async (req, res, next) => {
   try {
-    const { book_id, source_id, official_url, direct_file_url, license, license_url, can_host, link_status } = req.body || {};
+    const { book_id, source_id, official_url, direct_file_url, license, license_url, can_host, link_status, access_type } = req.body || {};
     if (!book_id || !source_id || !official_url || !license) return res.status(400).json({ error: 'book_id, source_id, official_url, license are required' });
     if (typeof official_url !== 'string' || official_url.length > 1000) return res.status(400).json({ error: 'Invalid official_url' });
+    const validAccessTypes = ['free', 'paid'];
+    const at = access_type && validAccessTypes.includes(access_type) ? access_type : 'free';
     const { rows } = await pool.query(
-      `INSERT INTO book_sources (book_id, source_id, official_url, direct_file_url, license, license_url, can_host, link_status)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *`,
-      [book_id, source_id, official_url.trim(), direct_file_url || null, String(license).trim(), license_url || null, !!can_host, link_status || 'unknown']
+      `INSERT INTO book_sources (book_id, source_id, official_url, direct_file_url, license, license_url, can_host, link_status, access_type)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *`,
+      [book_id, source_id, official_url.trim(), direct_file_url || null, String(license).trim(), license_url || null, !!can_host, link_status || 'unknown', at]
     );
     res.status(201).json(rows[0]);
   } catch (err) { next(err); }
@@ -106,14 +108,17 @@ router.put('/book-sources/:id', async (req, res, next) => {
   try {
     const id = parseId(req.params.id);
     if (!id) return res.status(400).json({ error: 'Invalid id' });
-    const { book_id, source_id, official_url, direct_file_url, license, license_url, can_host, link_status, last_checked_at } = req.body || {};
+    const { book_id, source_id, official_url, direct_file_url, license, license_url, can_host, link_status, last_checked_at, access_type } = req.body || {};
+    const validAccessTypes = ['free', 'paid'];
+    const at = access_type && validAccessTypes.includes(access_type) ? access_type : null;
     const { rows, rowCount } = await pool.query(
       `UPDATE book_sources SET
         book_id=COALESCE($2,book_id), source_id=COALESCE($3,source_id), official_url=COALESCE($4,official_url),
         direct_file_url=$5, license=COALESCE($6,license), license_url=$7, can_host=COALESCE($8,can_host),
-        link_status=COALESCE($9,link_status), last_checked_at=COALESCE($10,last_checked_at)
+        link_status=COALESCE($9,link_status), last_checked_at=COALESCE($10,last_checked_at),
+        access_type=COALESCE($11,access_type)
        WHERE id=$1 RETURNING *`,
-      [id, book_id || null, source_id || null, official_url || null, direct_file_url ?? null, license || null, license_url ?? null, typeof can_host === 'boolean' ? can_host : null, link_status || null, last_checked_at || null]
+      [id, book_id || null, source_id || null, official_url || null, direct_file_url ?? null, license || null, license_url ?? null, typeof can_host === 'boolean' ? can_host : null, link_status || null, last_checked_at || null, at]
     );
     if (!rowCount) return res.status(404).json({ error: 'Not found' });
     res.json(rows[0]);

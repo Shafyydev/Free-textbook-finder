@@ -46,7 +46,7 @@ export default function BookDetail() {
         <section className="section animate-on-scroll" ref={sectionRef}>
           <h2>Official sources</h2>
           <p className="small muted">License is shown for each source. Links open the official provider in a new tab.</p>
-          <div style={{ marginBottom: '.75rem' }}>
+          <div style={{ marginBottom: '.75rem', textAlign: 'center' }}>
             {pdfUrl ? (
               <a href={pdfUrl} target="_blank" rel="noopener noreferrer" className="btn"
                 style={{ padding: '.5rem .8rem', fontSize: '1rem', fontWeight: '600' }}>

@@ -100,16 +100,16 @@ export default function Search() {
           <SkeletonList count={6} />
         ) : (
           <>
-            <p className="muted small">{data.total} result(s)</p>
+            <p className="muted small" style={{ textAlign: 'center' }}>{data.total} result(s)</p>
             <div className="list" ref={listRef}>
               {(data.items || []).map(b => <BookCard key={b.id} book={b} />)}
             </div>
             {!data.items?.length && q ? (
               <>
-                <p className="muted">No books found. Try broader terms or clear filters.</p>
-                <p className="small"><Link to={{ pathname: '/request', search: `?title=${encodeURIComponent(q)}` }}>Request this book</Link></p>
+                <p className="muted" style={{ textAlign: 'center' }}>No books found. Try broader terms or clear filters.</p>
+                <p className="small" style={{ textAlign: 'center' }}><Link to={{ pathname: '/request', search: `?title=${encodeURIComponent(q)}` }}>Request this book</Link></p>
               </>
-            ) : !data.items?.length && <p className="muted">No books found. Try broader terms or clear filters.</p>}
+            ) : !data.items?.length && <p className="muted" style={{ textAlign: 'center' }}>No books found. Try broader terms or clear filters.</p>}
           </>
         )}
       </div>

@@ -38,14 +38,14 @@ export default function Admin() {
 
   if (!authed) return (
     <PageFade>
-      <div style={{ maxWidth: 420 }}>
+      <div style={{ maxWidth: 420, margin: '0 auto' }}>
         <h1>Admin</h1>
-        <p className="muted">Enter the admin password to manage books, sources, and requests.</p>
+        <p className="muted" style={{ textAlign: 'center' }}>Enter the admin password to manage books, sources, and requests.</p>
         <form className="card" onSubmit={login}>
           {err && <div className="error">{err}</div>}
           <label>Admin password</label>
           <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
-          <div style={{ marginTop: '.75rem' }}><button type="submit">Login</button></div>
+          <div style={{ marginTop: '.75rem', textAlign: 'center' }}><button type="submit">Login</button></div>
         </form>
       </div>
     </PageFade>
@@ -97,7 +97,7 @@ export default function Admin() {
             </td></tr>)}
           </tbody></table>
         </section>
-        <p className="small muted">Loaded subjects: {subjects.map(s => s.name).join(', ') || 'none'} · courses: {courses.map(c => c.name).join(', ') || 'none'}</p>
+        <p className="small muted" style={{ textAlign: 'center', marginTop: '1.25rem' }}>Loaded subjects: {subjects.map(s => s.name).join(', ') || 'none'} · courses: {courses.map(c => c.name).join(', ') || 'none'}</p>
       </div>
     </PageFade>
   );

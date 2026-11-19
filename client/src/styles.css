@@ -53,6 +53,24 @@ body {
 a { color: var(--indigo); font-weight: 500; text-decoration-color: color-mix(in srgb, var(--indigo) 30%, transparent); }
 a:hover { text-decoration-color: var(--indigo); }
 
+/* Centering all headings and subtitles */
+h1, h2, h3, h4, h5, h6 {
+  text-align: center;
+}
+.meta,
+.subtitle,
+.hero-sub,
+h1 + .muted, h2 + .muted, h3 + .muted,
+h1 + .meta, h2 + .meta, h3 + .meta,
+h1 + p, h2 + p, h3 + p,
+h1 + p.small, h2 + p.small, h3 + p.small,
+.section > p.small,
+.section > p.muted,
+p.muted.small,
+p.small.muted {
+  text-align: center;
+}
+
 /* ===== LAYOUT ===== */
 .container { max-width: 1100px; width: 100%; margin: 0 auto; padding: 1.5rem 1.5rem; flex: 1; }
 
@@ -128,13 +146,15 @@ a:hover { text-decoration-color: var(--indigo); }
   font-weight: 800;
   color: var(--cream);
   letter-spacing: -.025em;
+  text-align: center;
 }
 .hero .hero-sub {
   color: color-mix(in srgb, var(--cream) 65%, transparent);
   font-size: 1.1rem;
   max-width: 600px;
   line-height: 1.6;
-  margin: 0;
+  margin: 0 auto;
+  text-align: center;
 }
 
 /* Subtle decorative orbs */
@@ -378,8 +398,16 @@ th { color: var(--muted-text); font-weight: 600; font-size: .8rem; text-transfor
   font-size: .85rem;
   text-align: center;
   margin-top: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.footer-inner { max-width: 1100px; margin: 0 auto; }
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+  width: 100%;
+}
 
 /* ===== SCROLL PROGRESS BAR ===== */
 .scroll-progress {

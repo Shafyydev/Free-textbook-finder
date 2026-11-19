@@ -97,7 +97,7 @@ export default function Home() {
               {featured.map(b => <BookCard key={b.id} book={b} />)}
             </div>
           ) : (
-            <p className="muted">No books loaded yet. Add seed data and run the database seed.</p>
+            <p className="muted" style={{ textAlign: 'center' }}>No books loaded yet. Add seed data and run the database seed.</p>
           )}
         </section>
       </div>

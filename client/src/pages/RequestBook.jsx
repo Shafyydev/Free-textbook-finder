@@ -24,9 +24,9 @@ export default function RequestBook() {
 
   return (
     <PageFade>
-      <div style={{ maxWidth: 700 }}>
+      <div style={{ maxWidth: 700, margin: '0 auto' }}>
         <h1>Request a textbook</h1>
-        <p className="muted">Request a title you need. We only add books from legal, official open sources.</p>
+        <p className="muted" style={{ textAlign: 'center' }}>Request a title you need. We only add books from legal, official open sources.</p>
         <form className="card" onSubmit={submit}>
           {status.msg && <div className={status.type === 'error' ? 'error' : 'success'}>{status.msg}</div>}
           <div style={{ marginBottom: '.75rem' }}>
@@ -41,7 +41,9 @@ export default function RequestBook() {
             <label>Contact (optional)</label>
             <input value={form.contact} onChange={e => setForm({ ...form, contact: e.target.value })} maxLength={200} placeholder="Email or other contact (optional)" />
           </div>
-          <button disabled={busy} type="submit">{busy ? 'Submitting...' : 'Submit request'}</button>
+          <div style={{ textAlign: 'center' }}>
+            <button disabled={busy} type="submit">{busy ? 'Submitting...' : 'Submit request'}</button>
+          </div>
         </form>
       </div>
     </PageFade>

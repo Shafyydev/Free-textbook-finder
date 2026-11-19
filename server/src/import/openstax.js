@@ -10,32 +10,62 @@ const CC_BY_URL = 'https://creativecommons.org/licenses/by/4.0/';
 const CC_BY_NC_SA = 'Creative Commons Attribution-NonCommercial-ShareAlike License';
 const CC_BY_NC_SA_URL = 'https://creativecommons.org/licenses/by-nc-sa/4.0/';
 
-// Map OpenStax subject keywords to general categories
+// Map OpenStax subject names to general categories
 function subjectToCategory(subjects) {
   const s = subjects.map(x => x.toLowerCase()).join(' ');
   if (s.includes('nursing') || s.includes('pharmacology') || s.includes('anatomy') || s.includes('physiology') || s.includes('health') || s.includes('medical') || s.includes('palliative') || s.includes('maternal') || s.includes('newborn') || s.includes('psychiatric') || s.includes('population') || s.includes('nutrition')) {
     return 'Medicine and Health';
   }
-  if (s.includes('mathematics') || s.includes('algebra') || s.precalculus || s.includes('statistics') || s.includes('calculus')) {
+  if (s.includes('mathematics') || s.includes('algebra') || s.includes('precalculus') || s.includes('statistics') || s.includes('calculus') || s.includes('math')) {
     return 'Mathematics';
   }
-  if (s.includes('biology') || s.includes('chemistry') || s.includes('physics')) {
+  if (s.includes('biology') || s.includes('chemistry') || s.includes('physics') || s.includes('astronomy')) {
     return 'Science';
   }
   if (s.includes('accounting') || s.includes('management') || s.includes('marketing') || s.includes('finance') || s.includes('economics') || s.includes('business') || s.includes('organizational')) {
     return 'Business';
   }
-  if (s.includes('history') || s.includes('writing') || s.includes('humanities')) {
+  if (s.includes('history') || s.includes('writing') || s.includes('humanities') || s.includes('philosophy') || s.includes('religion') || s.includes('art') || s.includes('music')) {
     return 'Humanities';
   }
-  if (s.includes('psychology') || s.includes('sociology') || s.includes('political')) {
+  if (s.includes('psychology') || s.includes('sociology') || s.includes('political') || s.includes('anthropology') || s.includes('geography')) {
     return 'Social Sciences';
+  }
+  if (s.includes('computer') || s.includes('programming') || s.includes('software') || s.includes('engineering') || s.includes('technology')) {
+    return 'Engineering and Technology';
+  }
+  if (s.includes('education') || s.includes('teaching')) {
+    return 'Education';
+  }
+  if (s.includes('language') || s.includes('spanish') || s.includes('french') || s.includes('english')) {
+    return 'Languages';
+  }
+  if (s.includes('law') || s.includes('legal')) {
+    return 'Law';
   }
   return 'Science';
 }
 
-function slugify(title) {
-  return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+function extractAuthors(authorsArray) {
+  if (!Array.isArray(authorsArray)) return null;
+  return authorsArray
+    .filter(a => a.type === 'author' && a.value && a.value.name)
+    .map(a => a.value.name)
+    .join(', ');
+}
+
+function stripHtml(html) {
+  if (!html) return null;
+  return html
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function extractYear(publishDate) {
+  if (!publishDate) return null;
+  const m = String(publishDate).match(/^(\d{4})/);
+  return m ? parseInt(m[1], 10) : null;
 }
 
 async function ensureSource(client, name, base_url, notes) {
@@ -62,17 +92,18 @@ async function ensureCategory(client, name) {
 }
 
 async function verifyPdf(url) {
+  if (!url) return null;
   try {
     const res = await fetch(url, { method: 'HEAD' });
     const ct = res.headers.get('content-type') || '';
-    if (ct.includes('application/pdf') || ct.includes('application/x-pdf')) return true;
+    if (ct.includes('application/pdf') || ct.includes('application/x-pdf')) return url;
   } catch {}
   try {
     const res = await fetch(url, { method: 'GET' });
     const ct = res.headers.get('content-type') || '';
-    if (ct.includes('application/pdf') || ct.includes('application/x-pdf')) return true;
+    if (ct.includes('application/pdf') || ct.includes('application/x-pdf')) return url;
   } catch {}
-  return false;
+  return null;
 }
 
 async function importOpenStax() {
@@ -80,6 +111,7 @@ async function importOpenStax() {
   let offset = 0;
   let added = 0, updated = 0, skipped = 0;
   const skipReasons = {};
+  const csEngineeringTitles = [];
 
   const client = await pool.connect();
   try {
@@ -93,49 +125,52 @@ async function importOpenStax() {
       if (!items.length) break;
 
       for (const item of items) {
-        if (item.book_state !== 'live') {
+        // Fetch detail page for full fields
+        const detailUrl = item.meta.detail_url;
+        let detail;
+        try {
+          const dres = await fetch(detailUrl);
+          detail = await dres.json();
+        } catch {
+          skipped++;
+          skipReasons['detail_fetch_failed'] = (skipReasons['detail_fetch_failed'] || 0) + 1;
+          continue;
+        }
+
+        // Check book_state on detail page
+        if (detail.book_state !== 'live') {
           skipped++;
           skipReasons['not_live'] = (skipReasons['not_live'] || 0) + 1;
           continue;
         }
-        if (!item.meta || !item.meta.html_url) {
-          skipped++;
-          skipReasons['no_html_url'] = (skipReasons['no_html_url'] || 0) + 1;
-          continue;
-        }
-        if (!item.license_name || !item.license_url) {
+
+        // Require license_name and license_url
+        if (!detail.license_name || !detail.license_url) {
           skipped++;
           skipReasons['no_license'] = (skipReasons['no_license'] || 0) + 1;
           continue;
         }
 
-        // Fetch detail page for pdf_url
-        const detailUrl = item.meta.detail_url;
-        let pdfUrl = null;
-        try {
-          const dres = await fetch(detailUrl);
-          const djson = await dres.json();
-          pdfUrl = djson.pdf_url || null;
-        } catch {
-          // detail page unavailable, skip PDF
+        const title = detail.title;
+        const authors = extractAuthors(detail.authors);
+        const edition = null; // OpenStax API doesn't provide edition at top level
+        const year = extractYear(detail.publish_date);
+        const description = stripHtml(detail.description);
+        const license = detail.license_name;
+        const licenseUrl = detail.license_url;
+        const officialUrl = detail.meta.html_url;
+        const pdfUrl = detail.pdf_url;
+
+        // Track CS/programming/engineering titles
+        const subjects = (detail.book_subjects || []).map(s => s.subject_name).filter(Boolean);
+        const subjectsLower = subjects.map(s => s.toLowerCase()).join(' ');
+        if (subjectsLower.includes('computer') || subjectsLower.includes('programming') || subjectsLower.includes('software') || subjectsLower.includes('engineering') || subjectsLower.includes('technology')) {
+          csEngineeringTitles.push(title);
         }
 
-        let verifiedPdf = null;
-        if (pdfUrl) {
-          verifiedPdf = await verifyPdf(pdfUrl) ? pdfUrl : null;
-          if (!verifiedPdf) {
-            skipReasons['pdf_not_verified'] = (skipReasons['pdf_not_verified'] || 0) + 1;
-          }
-        }
+        // Verify PDF
+        const verifiedPdf = await verifyPdf(pdfUrl);
 
-        const license = item.license_name;
-        const licenseUrl = item.license_url;
-        const title = item.title;
-        const authors = item.authors || null;
-        const edition = item.edition || null;
-        const year = item.publication_date ? new Date(item.publication_date).getFullYear() : null;
-        const description = item.description || null;
-        const subjects = item.subjects || [];
         const category = subjectToCategory(subjects);
 
         // Check if book exists
@@ -146,11 +181,12 @@ async function importOpenStax() {
 
         if (existing.rowCount) {
           const bookId = existing.rows[0].id;
+          // Only update if we have better data - don't overwrite verified fields with worse values
           await client.query(
-            'UPDATE books SET authors=$2, year=$3, description=$4, cover_url=$5, updated_at=NOW() WHERE id=$1',
-            [bookId, authors, year, description, null]
+            'UPDATE books SET authors=COALESCE($2,authors), year=COALESCE($3,year), description=COALESCE($4,description), updated_at=NOW() WHERE id=$1',
+            [bookId, authors, year, description]
           );
-          // Update sources
+          // Update sources - replace with verified data
           await client.query('DELETE FROM book_sources WHERE book_id=$1', [bookId]);
           await client.query('DELETE FROM book_subjects WHERE book_id=$1', [bookId]);
           await client.query('DELETE FROM book_categories WHERE book_id=$1', [bookId]);
@@ -159,7 +195,7 @@ async function importOpenStax() {
           await client.query(
             `INSERT INTO book_sources (book_id, source_id, official_url, direct_file_url, license, license_url, can_host, link_status, last_checked_at, access_type)
              VALUES ($1,$2,$3,$4,$5,$6,false,'unknown',NOW(),'free')`,
-            [bookId, sourceId, item.meta.html_url, verifiedPdf, license, licenseUrl]
+            [bookId, sourceId, officialUrl, verifiedPdf, license, licenseUrl]
           );
           for (const s of subjects) {
             const sid = await ensureSubject(client, s);
@@ -180,7 +216,7 @@ async function importOpenStax() {
           await client.query(
             `INSERT INTO book_sources (book_id, source_id, official_url, direct_file_url, license, license_url, can_host, link_status, last_checked_at, access_type)
              VALUES ($1,$2,$3,$4,$5,$6,false,'unknown',NOW(),'free')`,
-            [bookId, sourceId, item.meta.html_url, verifiedPdf, license, licenseUrl]
+            [bookId, sourceId, officialUrl, verifiedPdf, license, licenseUrl]
           );
           for (const s of subjects) {
             const sid = await ensureSubject(client, s);
@@ -206,6 +242,11 @@ async function importOpenStax() {
     console.log(`OpenStax import complete: ${added} added, ${updated} updated, ${skipped} skipped`);
     if (Object.keys(skipReasons).length) {
       console.log('Skip reasons:', JSON.stringify(skipReasons, null, 2));
+    }
+    if (csEngineeringTitles.length) {
+      console.log('CS/Programming/Engineering titles found:', JSON.stringify(csEngineeringTitles, null, 2));
+    } else {
+      console.log('CS/Programming/Engineering titles found: none');
     }
   } catch (err) {
     await client.query('ROLLBACK');

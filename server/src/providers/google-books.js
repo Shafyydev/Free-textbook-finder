@@ -85,12 +85,13 @@ export async function search(query, { limit = 10, apiKey } = {}) {
         price: listPrice ? `${listPrice.amount} ${listPrice.currencyCode}` : null
       });
     } else if (viewability === 'PARTIAL') {
-      result.status = 'free';
+      // Limited preview is not free access - treat as unknown
+      result.status = 'unknown';
       result.addOption({
         source: 'Google Books',
         type: OPTION_TYPE.READ,
         url: vi.infoLink || '',
-        license: 'Limited preview',
+        license: 'Limited preview - not free',
         price: null
       });
     } else {

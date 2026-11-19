@@ -68,13 +68,16 @@ export async function search(query, { limit = 10, apiKey } = {}) {
       const authors = doc.authors?.map(a => a.name).filter(Boolean) || [];
       const pubDate = doc.pubdate || null;
 
-      // NCBI Bookshelf books are freely readable (open access)
+      // NCBI Bookshelf books are freely readable, but per SPEC.md only label
+      // "free" when the source explicitly states public domain or open license.
+      // NCBI E-utilities esummary does not return an explicit license field,
+      // so mark as unknown unless we can verify otherwise.
       const resultItem = new SearchResult({
         title,
         authors,
         isbn: null,
         cover_url: null,
-        status: 'free'
+        status: 'unknown'
       });
 
       const bookshelfUrl = `https://www.ncbi.nlm.nih.gov/books/${doc.uid || uid}/`;
@@ -83,7 +86,7 @@ export async function search(query, { limit = 10, apiKey } = {}) {
         source: 'NCBI Bookshelf',
         type: OPTION_TYPE.READ,
         url: bookshelfUrl,
-        license: 'Open access',
+        license: 'Unknown - no explicit license from NCBI E-utilities',
         price: null
       });
 

@@ -46,26 +46,10 @@ export async function search(query, { limit = 10 } = {}) {
       const isBorrowable = availability.status === 'borrowable' || availability.is_borrowable === true;
       const iaIdentifier = iaIds?.[0] || null;
 
-      if (hasFulltext || publicScan) {
-        // Public domain or full text available = free
-        result.status = 'free';
-        result.addOption({
-          source: 'Open Library',
-          type: OPTION_TYPE.READ,
-          url: `https://openlibrary.org${doc.key}`,
-          license: 'Public domain / Open access',
-          price: null
-        });
-        if (coverId) {
-          result.addOption({
-            source: 'Open Library',
-            type: OPTION_TYPE.DOWNLOAD,
-            url: `https://archive.org/download/${iaIdentifier || doc.key.replace('/works/', '')}`,
-            license: 'Public domain / Open access',
-            price: null
-          });
-        }
-      } else if (isBorrowable && iaIdentifier) {
+      // has_fulltext/publicScan indicate availability but NOT explicit public domain/open license.
+      // Per SPEC.md, only label "free" when the source explicitly states public domain or open license.
+      // Open Library search API does not return an explicit license field, so treat as unknown.
+      if (isBorrowable && iaIdentifier) {
         result.status = 'borrow';
         result.addOption({
           source: 'Internet Archive',
@@ -80,7 +64,7 @@ export async function search(query, { limit = 10 } = {}) {
           source: 'Open Library',
           type: OPTION_TYPE.READ,
           url: `https://openlibrary.org${doc.key}`,
-          license: 'Unknown',
+          license: 'Unknown - no explicit license from Open Library API',
           price: null
         });
       }

@@ -40,6 +40,8 @@ export async function search(query, { limit = 10 } = {}) {
       const license = metadata.find(m => m.metadata_key === 'dc.rights')?.metadata_value || 'Unknown';
       const isbn = metadata.find(m => m.metadata_key === 'dc.identifier.isbn')?.metadata_value || null;
 
+      const license = metadata.find(m => m.metadata_key === 'dc.rights')?.metadata_value || null;
+
       // Find download URL from bitstreams
       const downloadUrl = bitstreams.find(b => b.name?.toLowerCase().endsWith('.pdf'))?._links?.self?.href || null;
       const handle = metadata.find(m => m.metadata_key === 'dc.identifier.uri')?.metadata_value || null;
@@ -47,9 +49,23 @@ export async function search(query, { limit = 10 } = {}) {
 
       const result = new SearchResult({ title, authors, isbn, cover_url: null });
 
-      // DOAB is open access, so all are free
-      result.status = 'free';
-      if (downloadUrl) {
+      // DOAB is open access, but per SPEC.md only label "free" when license is explicit
+      const licenseLower = (license || '').toLowerCase();
+      const isOpenLicense = licenseLower.includes('creative commons') ||
+        licenseLower.includes('public domain') ||
+        licenseLower.includes('open access') ||
+        licenseLower.includes('cc by') ||
+        licenseLower.includes('cc0');
+
+      if (isOpenLicense) {
+        result.status = 'free';
+      } else if (license) {
+        result.status = 'paid';
+      } else {
+        result.status = 'unknown';
+      }
+
+      if (downloadUrl && result.status === 'free') {
         result.addOption({
           source: 'DOAB',
           type: OPTION_TYPE.DOWNLOAD,

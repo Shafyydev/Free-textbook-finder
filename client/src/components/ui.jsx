@@ -135,7 +135,8 @@ export function BookCard({ book }) {
   }[book.status] || { label: 'Unknown', bg: '#f3f4f6', text: '#374151', border: '#d1d5db' };
 
   const authorsText = (book.authors || []).slice(0, 3).join(', ') + ((book.authors || []).length > 3 ? ' et al.' : '');
-  const downloadOpt = book.options?.find(o => o.type === 'download');
+  const isFree = book.status === 'free';
+  const downloadOpt = isFree && book.options?.find(o => o.type === 'download');
   const readOpt = book.options?.find(o => o.type === 'read');
   const borrowOpt = book.options?.find(o => o.type === 'borrow');
   const buyOpt = book.options?.find(o => o.type === 'buy');

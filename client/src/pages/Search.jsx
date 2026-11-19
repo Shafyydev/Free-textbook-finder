@@ -92,7 +92,7 @@ export default function Search() {
                 {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
             </div>
-            <div><button type="submit">Apply</button></div>
+            <div style={{ display: 'flex', alignItems: 'end' }}><button type="submit">Apply</button></div>
           </div>
         </form>
         {error && <div className="error">{error}</div>}

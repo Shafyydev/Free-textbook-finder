@@ -27,7 +27,8 @@ export function extractQueryWords(query) {
 }
 
 export function scoreResult(queryWords, title, authors = []) {
-  const text = `${title} ${authors.join(' ')}`.toLowerCase();
+  const authorsArray = Array.isArray(authors) ? authors : [authors];
+  const text = `${title} ${authorsArray.join(' ')}`.toLowerCase();
   const matched = queryWords.filter(w => text.includes(w));
   const score = matched.length / Math.max(1, queryWords.length);
   return { matched: matched.length, total: queryWords.length, score };

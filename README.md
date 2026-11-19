@@ -29,6 +29,8 @@ ADMIN_PASSWORD=your_admin_password
 VITE_API_BASE_URL=http://localhost:3001/api
 ```
 
+Optionally create `client/.env` with `VITE_API_BASE_URL=http://localhost:3001/api` for the frontend.
+
 Environment variable names (set real values yourself):
 - `PORT` — backend server port
 - `DATABASE_URL` — PostgreSQL connection string
@@ -47,13 +49,13 @@ createdb free_textbook_finder
 ```powershell
 cd server && npm run migrate
 ```
-This applies `server/src/db/migrations/001_init.sql`, creating the `books`, `subjects`, `courses`, `book_subjects`, `book_courses`, `sources`, `book_sources`, and `book_requests` tables plus full-text search indexes and triggers.
+This applies `server/src/db/migrations/001_init.sql` and `002_add_featured.sql`, creating the `books`, `subjects`, `courses`, `book_subjects`, `book_courses`, `sources`, `book_sources`, and `book_requests` tables plus full-text search indexes, triggers, and a `featured` column on books.
 
 ### 5. Seed verified book data
 ```powershell
 cd server && npm run seed
 ```
-This loads `server/src/db/seed/books.json` into the database (upserts by title + edition, refreshes search vectors). The seed contains 34 manually verified OpenStax records plus previously verified OER records, each with a confirmed `license` and `official_url` copied from the official source page.
+This loads `server/src/db/seed/books.json` into the database (upserts by title + edition, refreshes search vectors, removes books no longer in the seed, and cleans up orphaned subjects/courses/sources). The seed contains 20 manually verified records for medical, nursing, physiotherapy, biology, chemistry, microbiology, nutrition, physics, and psychology titles, each with a confirmed `license` and `official_url` copied from the official source page.
 
 ### 6. Run the backend
 ```powershell
@@ -65,7 +67,17 @@ The API listens on `PORT` (default 3001). Health check: `GET /api/health`
 ```powershell
 cd client && npm run dev
 ```
-The Vite dev server runs on port 5173 by default and proxies to the API via `VITE_API_BASE_URL`.
+The Vite dev server runs on port 5173 by default and proxies `/api` to the backend via Vite proxy config.
+
+## Features
+- Search books by title, author, description, subject, course, or source
+- Full-text search with relevance ranking; default (no query) lists featured books first, then alphabetically
+- Book detail pages showing license, official source links, subjects, and courses
+- License labels shown on every search result card
+- "Request this book" link on empty search results, prefilled with the search term
+- Book request form with rate limiting (30 requests per 15 minutes)
+- Admin dashboard for managing books, book sources, and request statuses
+- All external links open in a new tab with `rel="noopener noreferrer"`
 
 ## API endpoints
 

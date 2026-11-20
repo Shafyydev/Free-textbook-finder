@@ -13,7 +13,10 @@ export default function Search() {
   const [blockedCount, setBlockedCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [filter, setFilter] = useState('all');
+  
+  // Initialize filter from URL param; default to 'all' for invalid values
+  const validFilters = ['all', 'free', 'paid', 'preview', 'borrow', 'subscription', 'unverified'];
+  const [filter, setFilter] = useState(validFilters.includes(sp.get('type')) ? sp.get('type') : 'all');
 
   useEffect(() => {
     const query = sp.get('q') || '';
@@ -65,6 +68,17 @@ export default function Search() {
     if (q2) navigate(`/search?q=${encodeURIComponent(q2)}`);
   }
 
+  function setFilterWithUrl(filterVal) {
+    setFilter(filterVal);
+    const newSp = new URLSearchParams(window.location.search);
+    if (filterVal === 'all') {
+      newSp.delete('type');
+    } else {
+      newSp.set('type', filterVal);
+    }
+    navigate(`/search?${newSp.toString()}`);
+  }
+
   function providerStatusIcon(status) {
     const s = {
       ok: { color: '#166534', label: 'OK' },
@@ -80,6 +94,10 @@ export default function Search() {
     const license = book.license || '';
     const saleability = book.options?.[0]?.license || '';
 
+    // Scribd is Subscription
+    if (book._provider === 'scribd' || st === 'subscription') {
+      return { label: 'Subscription', color: '#6b21a8', bg: '#faf5ff' };
+    }
     // Retailers show Paid
     if (st === 'retailer') return { label: 'Paid', color: '#b42318', bg: '#fef2f2' };
     // Google Books shows Preview or Paid from saleInfo
@@ -105,27 +123,23 @@ export default function Search() {
     return { label: 'Unverified', color: '#6b7280', bg: '#f3f4f6' };
   }
 
+  // Count results per badge type for filter counts
+  const filterCounts = {
+    all: results.length,
+    free: results.filter(r => badgeFor(r).label === 'Free').length,
+    paid: results.filter(r => badgeFor(r).label === 'Paid').length,
+    preview: results.filter(r => badgeFor(r).label === 'Preview').length,
+    borrow: results.filter(r => badgeFor(r).label === 'Borrow').length,
+    subscription: results.filter(r => badgeFor(r).label === 'Subscription').length,
+    unverified: results.filter(r => badgeFor(r).label === 'Unverified').length,
+  };
+
   const filteredResults = filter === 'all'
     ? results
     : results.filter(r => {
         const badge = badgeFor(r);
         return badge.label.toLowerCase() === filter.toLowerCase();
       });
-
-  // Search elsewhere panel - external site search links
-  const searchElsewhereLinks = [
-    { name: 'Amazon.in', url: `https://www.amazon.in/s?k=${encodeURIComponent(q)}` },
-    { name: 'Flipkart', url: `https://www.flipkart.com/search?q=${encodeURIComponent(q)}` },
-    { name: 'Google Books', url: `https://books.google.com/books?q=${encodeURIComponent(q)}` },
-    { name: 'Scribd', url: `https://www.scribd.com/search?query=${encodeURIComponent(q)}` },
-    { name: 'Open Library', url: `https://openlibrary.org/search?q=${encodeURIComponent(q)}` },
-    { name: 'Internet Archive', url: `https://archive.org/search?query=${encodeURIComponent(q)}` },
-    { name: 'WorldCat', url: `https://search.worldcat.org/search?q=${encodeURIComponent(q)}` },
-    { name: 'DOAB', url: `https://directory.doabooks.org/search?query=${encodeURIComponent(q)}` },
-    { name: 'OAPEN', url: `https://library.oapen.org/search?query=${encodeURIComponent(q)}` },
-    { name: 'OpenStax', url: `https://openstax.org/search?q=${encodeURIComponent(q)}` },
-    { name: 'NCBI Bookshelf', url: `https://www.ncbi.nlm.nih.gov/books/?term=${encodeURIComponent(q)}` }
-  ];
 
   if (!q) {
     return (
@@ -183,16 +197,21 @@ export default function Search() {
       {/* Type filter */}
       <div className="section card" style={{ padding: '.75rem 1rem', marginBottom: '1rem', display: 'flex', gap: '.5rem', alignItems: 'center' }}>
         <span className="muted small" style={{ fontWeight: '600' }}>Filter: </span>
-        {['all', 'free', 'paid', 'borrow', 'preview'].map(f => (
-          <button
-            key={f}
-            onClick={() => setFilter(f)}
-            className={filter === f ? 'btn' : 'btn secondary'}
-            style={{ padding: '.35rem .75rem', fontSize: '.85rem' }}
-          >
-            {f.charAt(0).toUpperCase() + f.slice(1)}
-          </button>
-        ))}
+        {['all', 'free', 'paid', 'preview', 'borrow', 'subscription', 'unverified'].map(f => {
+          const count = filterCounts[f];
+          // Hide options with 0 results (except All)
+          if (filter !== 'all' && count === 0) return null;
+          return (
+            <button
+              key={f}
+              onClick={() => setFilterWithUrl(f)}
+              className={filter === f ? 'btn' : 'btn secondary'}
+              style={{ padding: '.35rem .75rem', fontSize: '.85rem' }}
+            >
+              {f.charAt(0).toUpperCase() + f.slice(1)} ({count})
+            </button>
+          );
+        })}
       </div>
 
       {error && <div className="error">{error}</div>}
@@ -200,21 +219,36 @@ export default function Search() {
       {loading ? (
         <SkeletonList count={6} />
       ) : filteredResults.length === 0 ? (
-        <div className="card" style={{ textAlign: 'center', padding: '3rem 1rem' }}>
-          <h2 style={{ color: 'var(--muted-text)', marginBottom: '.5rem' }}>Not found</h2>
-          <p className="muted" style={{ marginBottom: '.5rem' }}>We couldn&rsquo;t find a legal free copy or a clear listing for <strong>"{q}"</strong>.</p>
-          <form onSubmit={handleRetrySubmit}>
-            <label>Try a different title or author</label>
-            <input name="q" defaultValue={q} />
-            <button type="submit" className="btn">Search again</button>
-          </form>
-          <p className="small muted" style={{ marginTop: '1rem' }}>Want this book added? <Link to="/request">Request it</Link> and we&rsquo;ll look for it.</p>
-          <p className="small muted" style={{ marginTop: '.5rem' }}>
-            Or search the publisher&rsquo;s site:&nbsp;
-            <a href={`https://www.google.com/search?q=${encodeURIComponent(q + ' publisher')}`} target="_blank" rel="noopener noreferrer">Publisher site</a>&nbsp;|&nbsp;
-            <a href={`https://books.google.com/books?q=${encodeURIComponent(q)}`} target="_blank" rel="noopener noreferrer">Google Books</a>
-          </p>
-        </div>
+        results.length === 0 ? (
+          <div className="card" style={{ textAlign: 'center', padding: '3rem 1rem' }}>
+            <h2 style={{ color: 'var(--muted-text)', marginBottom: '.5rem' }}>Not found</h2>
+            <p className="muted" style={{ marginBottom: '.5rem' }}>We couldn&rsquo;t find a legal free copy or a clear listing for <strong>"{q}"</strong>.</p>
+            <form onSubmit={handleRetrySubmit}>
+              <label>Try a different title or author</label>
+              <input name="q" defaultValue={q} />
+              <button type="submit" className="btn">Search again</button>
+            </form>
+            <p className="small muted" style={{ marginTop: '1rem' }}>Want this book added? <Link to="/request">Request it</Link> and we&rsquo;ll look for it.</p>
+            <p className="small muted" style={{ marginTop: '.5rem' }}>
+              Or search the publisher&rsquo;s site:&nbsp;
+              <a href={`https://www.google.com/search?q=${encodeURIComponent(q + ' publisher')}`} target="_blank" rel="noopener noreferrer">Publisher site</a>&nbsp;|&nbsp;
+              <a href={`https://books.google.com/books?q=${encodeURIComponent(q)}`} target="_blank" rel="noopener noreferrer">Google Books</a>
+            </p>
+          </div>
+        ) : (
+          <div className="card" style={{ textAlign: 'center', padding: '3rem 1rem' }}>
+            <h2 style={{ color: 'var(--muted-text)', marginBottom: '.5rem' }}>No results for this filter</h2>
+            <p className="muted" style={{ marginBottom: '.5rem' }}>No books match the <strong>{filter.charAt(0).toUpperCase() + filter.slice(1)}</strong> filter.</p>
+            <button className="btn" onClick={() => setFilterWithUrl('all')}>
+              Reset to All
+            </button>
+            <p className="small muted" style={{ marginTop: '1rem' }}>
+              Or search the publisher&rsquo;s site:&nbsp;
+              <a href={`https://www.google.com/search?q=${encodeURIComponent(q + ' publisher')}`} target="_blank" rel="noopener noreferrer">Publisher site</a>&nbsp;|&nbsp;
+              <a href={`https://books.google.com/books?q=${encodeURIComponent(q)}`} target="_blank" rel="noopener noreferrer">Google Books</a>
+            </p>
+          </div>
+        )
       ) : (
         <>
           <div className="list">
@@ -228,18 +262,116 @@ export default function Search() {
             <h3 style={{ marginTop: 0, marginBottom: '.75rem' }}>Search elsewhere</h3>
             <p className="muted small" style={{ marginBottom: '.5rem' }}>Search for this title on other sites:</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.5rem' }}>
-              {searchElsewhereLinks.map(link => (
-                <a
-                  key={link.name}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn secondary"
-                  style={{ padding: '.35rem .75rem', fontSize: '.85rem', textDecoration: 'none' }}
-                >
-                  Search on {link.name}
-                </a>
-              ))}
+              <a
+                key="Amazon.in"
+                href={`https://www.amazon.in/s?k=${encodeURIComponent(q)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn secondary"
+                style={{ padding: '.35rem .75rem', fontSize: '.85rem', textDecoration: 'none' }}
+              >
+                Search on Amazon.in
+              </a>
+              <a
+                key="Flipkart"
+                href={`https://www.flipkart.com/search?q=${encodeURIComponent(q)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn secondary"
+                style={{ padding: '.35rem .75rem', fontSize: '.85rem', textDecoration: 'none' }}
+              >
+                Search on Flipkart
+              </a>
+              <a
+                key="Google Books"
+                href={`https://books.google.com/books?q=${encodeURIComponent(q)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn secondary"
+                style={{ padding: '.35rem .75rem', fontSize: '.85rem', textDecoration: 'none' }}
+              >
+                Search on Google Books
+              </a>
+              <a
+                key="Scribd"
+                href={`https://www.scribd.com/search?query=${encodeURIComponent(q)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn secondary"
+                style={{ padding: '.35rem .75rem', fontSize: '.85rem', textDecoration: 'none' }}
+              >
+                Search on Scribd
+              </a>
+              <a
+                key="Open Library"
+                href={`https://openlibrary.org/search?q=${encodeURIComponent(q)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn secondary"
+                style={{ padding: '.35rem .75rem', fontSize: '.85rem', textDecoration: 'none' }}
+              >
+                Search on Open Library
+              </a>
+              <a
+                key="Internet Archive"
+                href={`https://archive.org/search?query=${encodeURIComponent(q)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn secondary"
+                style={{ padding: '.35rem .75rem', fontSize: '.85rem', textDecoration: 'none' }}
+              >
+                Search on Internet Archive
+              </a>
+              <a
+                key="WorldCat"
+                href={`https://search.worldcat.org/search?q=${encodeURIComponent(q)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn secondary"
+                style={{ padding: '.35rem .75rem', fontSize: '.85rem', textDecoration: 'none' }}
+              >
+                Search on WorldCat
+              </a>
+              <a
+                key="DOAB"
+                href={`https://directory.doabooks.org/search?query=${encodeURIComponent(q)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn secondary"
+                style={{ padding: '.35rem .75rem', fontSize: '.85rem', textDecoration: 'none' }}
+              >
+                Search on DOAB
+              </a>
+              <a
+                key="OAPEN"
+                href={`https://library.oapen.org/search?query=${encodeURIComponent(q)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn secondary"
+                style={{ padding: '.35rem .75rem', fontSize: '.85rem', textDecoration: 'none' }}
+              >
+                Search on OAPEN
+              </a>
+              <a
+                key="OpenStax"
+                href={`https://openstax.org/search?q=${encodeURIComponent(q)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn secondary"
+                style={{ padding: '.35rem .75rem', fontSize: '.85rem', textDecoration: 'none' }}
+              >
+                Search on OpenStax
+              </a>
+              <a
+                key="NCBI Bookshelf"
+                href={`https://www.ncbi.nlm.nih.gov/books/?term=${encodeURIComponent(q)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn secondary"
+                style={{ padding: '.35rem .75rem', fontSize: '.85rem', textDecoration: 'none' }}
+              >
+                Search on NCBI Bookshelf
+              </a>
             </div>
           </section>
         </>

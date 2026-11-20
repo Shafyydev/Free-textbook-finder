@@ -31,7 +31,7 @@ export const BLOCKED_DOMAIN_SET = new Set(
 );
 
 // Domain type classification: retailer, library, open_repository, retailer_or_unknown
-// Returns one of: 'retailer', 'library', 'open_repository', 'aggregator', 'unknown'
+// Returns one of: 'retailer', 'library', 'open_repository', 'aggregator', 'subscription', 'unknown'
 export function classifyDomain(urlOrHost) {
   const host = (urlOrHost || '')
     .replace(/^https?:\/\//, '')
@@ -41,7 +41,7 @@ export function classifyDomain(urlOrHost) {
 
   // Scribd is a subscription-based document hosting service
   if (host.includes('scribd.com')) {
-    return { badge: 'Subscription', color: '#6b21a8', bg: '#faf5ff' };
+    return 'subscription';
   }
 
   // Retailers (commercial bookstores)
@@ -129,6 +129,11 @@ export function classifyDomain(urlOrHost) {
 // Determine site badge from domain classification + source-specific data
 export function classifyBadge(domainClassification, source, book) {
   const { access_type, license, license_url, saleability, viewability, public_domain } = book;
+
+  // Scribd is Subscription regardless of license
+  if (book._provider === 'scribd' || domainClassification === 'subscription') {
+    return { badge: 'Subscription', color: '#6b21a8', bg: '#faf5ff' };
+  }
 
   // Retailers → Paid
   if (domainClassification === 'retailer') {

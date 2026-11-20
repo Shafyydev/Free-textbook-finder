@@ -11,11 +11,13 @@ export async function search(query, { limit = 10 } = {}) {
     rows: String(Math.min(limit, 50)),
     output: 'json'
   });
-  const url = `${BASE_URL}?${params}`;
 
   let data;
   try {
-    data = await withTimeout(fetch(url, { headers: { Accept: 'application/json' } }), 5000);
+    data = await withTimeout(
+      fetch(`${BASE_URL}?${params}`, { headers: { Accept: 'application/json' } }),
+      5000
+    );
   } catch (err) {
     console.warn(`Internet Archive provider failed: ${err.message}`);
     return [];
@@ -39,13 +41,14 @@ export async function search(query, { limit = 10 } = {}) {
       const description = doc.description || '';
       const accessRestricted = doc['access-restricted-item'] === true;
       const licenseUrl = doc.licenseurl || null;
-      const date = doc.date || '';
 
       const result = new SearchResult({ title, authors: creators, isbn, cover_url: null });
 
-      // Determine access status
+      // Determine access status per SPEC.md:
+      // - Free only when the record states public domain or an open license
+      // - Lending items are Borrow
+      // - Anything else is unknown
       if (accessRestricted === true) {
-        // Lending-only copy
         result.status = 'borrow';
         result.addOption({
           source: 'Internet Archive',
@@ -54,20 +57,21 @@ export async function search(query, { limit = 10 } = {}) {
           license: 'Lending library',
           price: null
         });
-      } else if (licenseUrl && (licenseUrl.toLowerCase().includes('creative commons') || licenseUrl.toLowerCase().includes('public domain'))) {
+      } else if (licenseUrl && (licenseUrl.toLowerCase().includes('creative commons') ||
+        licenseUrl.toLowerCase().includes('public domain'))) {
         result.status = 'free';
         result.addOption({
           source: 'Internet Archive',
           type: OPTION_TYPE.DOWNLOAD,
           url: `https://archive.org/download/${identifier[0] || ''}`,
-          license,
+          license: 'Public domain / Open access',
           price: null
         });
         result.addOption({
           source: 'Internet Archive',
           type: OPTION_TYPE.READ,
           url: `https://archive.org/details/${identifier[0] || ''}`,
-          license,
+          license: 'Public domain / Open access',
           price: null
         });
       } else {
@@ -81,7 +85,7 @@ export async function search(query, { limit = 10 } = {}) {
         });
       }
 
-      // Add site metadata
+      // Add site metadata for UI rendering
       result.site_type = 'library';
       result.favicon = 'https://archive.org/favicon.ico';
       result.snippet = description || `Internet Archive item: "${title}"`;

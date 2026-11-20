@@ -6,7 +6,7 @@ const BASE_URL = 'https://catalog.hathitrust.org/api/volumes/brief';
 
 export async function search(query, { limit = 10 } = {}) {
   // HathiTrust Bibliographic API is identifier-based, not keyword search.
-  // We search by ISBN if the query looks like an ISBN, otherwise return empty.
+  // Extract ISBN from query if present.
   const isbnMatch = query.match(/\b\d{9}[\dX]|\d{13}\b/);
   if (!isbnMatch) {
     return [];
@@ -49,8 +49,16 @@ export async function search(query, { limit = 10 } = {}) {
       const usRightsString = item.usRightsString || '';
       const itemUrl = item.itemURL || `https://catalog.hathitrust.org/Record/${recordNumber}`;
 
-      // Determine access status based on rights code
-      if (rightsCode === 'pd' || rightsCode === 'pd-usr' || usRightsString?.toLowerCase().includes('full view')) {
+      // Determine access status per SPEC.md:
+      // - Free only when the record states public domain or an open license
+      // - Lending items are Borrow
+      // - Anything else is unknown
+      const rightsLower = rightsCode.toLowerCase();
+      const usRightsLower = usRightsString.toLowerCase();
+
+      if (rightsCode === 'pd' || rightsCode === 'pdus' ||
+          usRightsLower.includes('public domain') ||
+          usRightsLower.includes('full view')) {
         result.status = 'free';
         result.addOption({
           source: 'HathiTrust',
@@ -59,7 +67,9 @@ export async function search(query, { limit = 10 } = {}) {
           license: 'Public domain',
           price: null
         });
-      } else if (rightsCode === 'ic' || usRightsString?.toLowerCase().includes('limited')) {
+      } else if (rightsCode === 'icus' || rightsCode === 'ic-world' ||
+                 usRightsLower.includes('limited') ||
+                 usRightsLower.includes('search-only')) {
         result.status = 'borrow';
         result.addOption({
           source: 'HathiTrust',
@@ -68,7 +78,9 @@ export async function search(query, { limit = 10 } = {}) {
           license: 'Limited (search-only)',
           price: null
         });
-      } else if (rightsCode === 'nn' || rightsCode === 'na') {
+      } else if (rightsCode === 'ic' || rightsCode === 'nn' || rightsCode === 'na' ||
+                 usRightsLower.includes('in copyright') ||
+                 usRightsLower.includes('not viewable')) {
         result.status = 'paid';
         result.addOption({
           source: 'HathiTrust',
@@ -88,7 +100,7 @@ export async function search(query, { limit = 10 } = {}) {
         });
       }
 
-      // Add site metadata
+      // Add site metadata for UI rendering
       result.site_type = 'library';
       result.favicon = 'https://catalog.hathitrust.org/favicon.ico';
       result.snippet = `HathiTrust record ${recordNumber}`;

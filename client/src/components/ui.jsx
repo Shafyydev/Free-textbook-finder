@@ -217,6 +217,12 @@ function badgeFor(book) {
   const license = book.license || '';
   const saleability = book.options?.[0]?.license || '';
 
+  // Scribd is Subscription
+  if (book._provider === 'scribd' || st === 'subscription') {
+    return { badge: 'Subscription', color: '#6b21a8', bg: '#faf5ff' };
+  }
+
+  // Retailers show Paid
   if (st === 'retailer') return { label: 'Paid', color: '#b42318', bg: '#fef2f2' };
   if (book._provider === 'Google Books') {
     if (saleability && saleability.includes('Paid') || book.status === 'paid') return { label: 'Paid', color: '#b42318', bg: '#fef2f2' };

@@ -163,7 +163,8 @@ export function BookCard({ book }) {
 function CardInner({ book }) {
   const badge = badgeFor(book);
 
-  const authorsText = (book.authors || []).slice(0, 3).join(', ') + ((book.authors || []).length > 3 ? ' et al.' : '');
+  const authorsArray = Array.isArray(book.authors) ? book.authors : (book.authors ? [String(book.authors)] : []);
+  const authorsText = authorsArray.slice(0, 3).join(', ') + (authorsArray.length > 3 ? ' et al.' : '');
   const downloadOpt = book.status === 'free' && book.options?.find(o => o.type === 'download');
   const readOpt = book.options?.find(o => o.type === 'read');
   const borrowOpt = book.options?.find(o => o.type === 'borrow');

@@ -25,7 +25,7 @@ export default function BookDetail() {
         <p className="small"><Link to="/search">← Back to search</Link></p>
         <div className="card">
           <h1 style={{ marginTop: 0 }}>{book.title}</h1>
-          <div className="meta">{[book.authors, book.edition, book.year].filter(Boolean).join(' · ')}</div>
+          <div className="meta">{(() => { const a = Array.isArray(book.authors) ? book.authors : (book.authors ? [String(book.authors)] : []); return a.join(', '); })()}</div>
           {book.description && <p>{book.description}</p>}
           <div style={{ marginTop: '.5rem' }}>
             <strong>Subjects:</strong>{' '}

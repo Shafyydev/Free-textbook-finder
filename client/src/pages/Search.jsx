@@ -13,6 +13,7 @@ export default function Search() {
   const [blockedCount, setBlockedCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [didYouMean, setDidYouMean] = useState([]);
   
   // Initialize filter from URL param; default to 'all' for invalid values
   const validFilters = ['all', 'free', 'paid', 'preview', 'borrow', 'subscription', 'unverified'];
@@ -48,6 +49,7 @@ export default function Search() {
       setTotal(finalResults.length);
       setProviders(data.providers || []);
       setBlockedCount(data.blockedCount || 0);
+      setDidYouMean(data.didYouMean || []);
     } catch (e) {
       setError(e.message || 'Search failed');
       setResults([]);
@@ -251,6 +253,27 @@ export default function Search() {
         )
       ) : (
         <>
+          {/* Did you mean section */}
+          {didYouMean.length > 0 && (
+            <section className="section card" style={{ marginBottom: '1rem', border: '2px solid #d1d5db', borderRadius: '8px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem', padding: '1rem', background: '#f3f4f6', borderRadius: '6px' }}>
+                <span style={{ fontWeight: '600', color: '#374151' }}>Did you mean?</span>
+                {didYouMean.map((suggested, i) => (
+                  <a
+                    key={i}
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigate(`/search?q=${encodeURIComponent(suggested)}&type=all`);
+                    }}
+                    style={{ color: '#1d4ed8', textDecoration: 'underline', cursor: 'pointer', marginLeft: '.5rem' }}
+                  >
+                    "{suggested}"
+                  </a>
+                ))}
+              </div>
+            </section>
+          )}
           <div className="list">
             {filteredResults.map((book) => (
               <BookCard key={book.isbn || book.title} book={book} />

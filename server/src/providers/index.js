@@ -1,6 +1,6 @@
 import pool from '../db/pool.js';
 import { SearchResult, OPTION_TYPE, mergeResults, withTimeout } from './types.js';
-import { extractQueryWords, scoreResult, passesRelevance } from './relevance.js';
+import { extractQueryWords, scoreResult, passesRelevance, editDistance, normalizeWord } from './relevance.js';
 import { classifyDomain, BLOCKED_DOMAIN_SET } from './domains.js';
 import { search as localSearch, PROVIDER_NAME as LOCAL_NAME } from './local.js';
 import { search as googleBooksSearch, PROVIDER_NAME as GOOGLE_NAME } from './google-books.js';
@@ -29,7 +29,7 @@ const PROVIDER_TIMEOUT_MS = 5000;
 
 export async function searchBooks(query, { limit = 20, userIp } = {}) {
   if (!query || !query.trim()) {
-    return { results: [], total: 0, providers: [] };
+    return { results: [], total: 0, providers: [], didYouMean: [] };
   }
 
   const trimmedQuery = query.trim();
@@ -58,19 +58,38 @@ export async function searchBooks(query, { limit = 20, userIp } = {}) {
   const providerResults = await Promise.all(fetchPromises);
 
   // Build provider status info with before/after relevance counts
-  const providerStatus = providerResults.map(p => {
-    if (p.error) return { name: p.provider, count: p.results.length, status: 'failed', afterRelevance: 0 };
-    if (p.results.length === 0) return { name: p.provider, count: 0, status: 'empty', afterRelevance: 0 };
+  // Include ALL providers (from cache AND freshly fetched)
+  const allProviderResults = new Map();
+  for (const [name, results] of cachedResults) {
+    allProviderResults.set(name, { provider: name, results });
+  }
+  for (const pr of providerResults) {
+    allProviderResults.set(pr.provider, pr);
+  }
 
-    // Count how many pass relevance
-    const passing = p.results.filter(r => passesRelevance(queryWords, r.title, r.authors).pass).length;
-    return {
-      name: p.provider,
-      count: p.results.length,
-      status: p.results.length > 0 ? 'ok' : 'empty',
-      afterRelevance: passing
-    };
-  });
+  const providerStatus = [];
+  for (const p of PROVIDERS) {
+    const pr = allProviderResults.get(p.name);
+    if (!pr) {
+      // Provider not in cache and not fetched - shouldn't happen, but handle gracefully
+      providerStatus.push({ name: p.name, count: 0, status: 'empty', afterRelevance: 0 });
+      continue;
+    }
+    if (pr.error) {
+      providerStatus.push({ name: pr.provider, count: pr.results.length, status: 'failed', afterRelevance: 0 });
+    } else if (pr.results.length === 0) {
+      providerStatus.push({ name: pr.provider, count: 0, status: 'empty', afterRelevance: 0 });
+    } else {
+      // Count how many pass relevance
+      const passing = pr.results.filter(r => passesRelevance(queryWords, r.title, r.authors).pass).length;
+      providerStatus.push({
+        name: pr.provider,
+        count: pr.results.length,
+        status: pr.results.length > 0 ? 'ok' : 'empty',
+        afterRelevance: passing
+      });
+    }
+  }
 
   // Cache the results
   await cacheResults(trimmedQuery, providerResults);
@@ -92,6 +111,8 @@ export async function searchBooks(query, { limit = 20, userIp } = {}) {
                   r._provider === 'DOAB' ? 'directory.doabooks.org' :
                   r._provider === 'Gutenberg' ? 'gutendex.com' :
                   r._provider === 'NCBI' ? 'ncbi.nlm.nih.gov' :
+                  r._provider === 'Internet Archive' ? 'archive.org' :
+                  r._provider === 'HathiTrust' ? 'catalog.hathitrust.org' :
                   r._provider === 'local' ? 'local' : '');
     return !BLOCKED_DOMAIN_SET.has(host);
   });
@@ -123,6 +144,17 @@ export async function searchBooks(query, { limit = 20, userIp } = {}) {
   // Sort by relevance score (best first)
   relevant.sort((a, b) => b._relevanceScore - a._relevanceScore);
 
+  // Build "Did you mean" suggestions: if relevant results are few, show
+  // close matches that didn't quite pass the relevance threshold
+  const didYouMean = [];
+  if (relevant.length < 5) {
+    const nearMisses = withScores
+      .filter(r => !r._relevancePass && r._relevanceScore >= 0.3)
+      .sort((a, b) => b._relevanceScore - a._relevanceScore)
+      .slice(0, 3);
+    didYouMean.push(...nearMisses.map(r => r.title));
+  }
+
   // Limit results
   const limited = relevant.slice(0, limit);
 
@@ -134,7 +166,8 @@ export async function searchBooks(query, { limit = 20, userIp } = {}) {
     results: limited,
     total: relevant.length,
     providers: providerStatus,
-    blockedCount
+    blockedCount,
+    didYouMean
   };
 }
 

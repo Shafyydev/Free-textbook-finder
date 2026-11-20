@@ -28,7 +28,7 @@ export function extractQueryWords(query) {
 }
 
 // Edit distance (Levenshtein) between two strings
-function editDistance(a, b) {
+export function editDistance(a, b) {
   const m = a.length;
   const n = b.length;
   const dp = [];
@@ -54,7 +54,7 @@ function editDistance(a, b) {
 // - Words < 4 letters: exact match only
 // - Words 4-7 letters: edit distance <= 1
 // - Words 8+ letters: edit distance <= 2
-function wordMatches(queryWord, textWord) {
+export function wordMatches(queryWord, textWord) {
   if (queryWord === textWord) return true;
   const qLen = queryWord.length;
   if (qLen < 4) return false; // too short for fuzzy matching
@@ -72,8 +72,8 @@ export function scoreResult(queryWords, title, authors = []) {
       matched++;
     }
   }
-  const score = matched.length / Math.max(1, queryWords.length);
-  return { matched: matched.length, total: queryWords.length, score };
+  const score = matched / Math.max(1, queryWords.length);
+  return { matched, total: queryWords.length, score };
 }
 
 export function passesRelevance(queryWords, title, authors = []) {

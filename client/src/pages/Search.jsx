@@ -14,6 +14,7 @@ export default function Search() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [didYouMean, setDidYouMean] = useState([]);
+  const [relevanceFallback, setRelevanceFallback] = useState(false);
   
   // Initialize filter from URL param; default to 'all' for invalid values
   const validFilters = ['all', 'free', 'paid', 'preview', 'borrow', 'subscription', 'unverified'];
@@ -27,6 +28,7 @@ export default function Search() {
       setTotal(0);
       setProviders([]);
       setBlockedCount(0);
+      setRelevanceFallback(false);
       return;
     }
     doSearch(query);
@@ -50,6 +52,7 @@ export default function Search() {
       setProviders(data.providers || []);
       setBlockedCount(data.blockedCount || 0);
       setDidYouMean(data.didYouMean || []);
+      setRelevanceFallback(!!data.relevanceFallback);
     } catch (e) {
       setError(e.message || 'Search failed');
       setResults([]);
@@ -177,12 +180,15 @@ export default function Search() {
               <span> · </span>
               {providers.map(p => {
                 const st = providerStatusIcon(p.status || 'ok');
-                const afterText = p.afterRelevance !== undefined && p.afterRelevance !== p.count
-                  ? ` → ${p.afterRelevance} relevant`
-                  : '';
+                let detail = '';
+                if (p.status === 'failed') {
+                  detail = `failed${p.error ? ` (${p.error})` : ''}`;
+                } else {
+                  detail = `${p.count} returned, ${p.afterBlocklist} after blocklist, ${p.afterRelevance} relevant`;
+                }
                 return (
-                  <span key={p.name} style={{ marginLeft: '.35rem', color: st.color, fontSize: '.8rem', fontWeight: '600' }}>
-                    {p.name}: {p.count}{afterText} ({st.label})
+                  <span key={p.name} style={{ marginLeft: '.35rem', color: st.color, fontSize: '.8rem', fontWeight: '600', whiteSpace: 'nowrap' }}>
+                    {p.name}: {detail} ({st.label})
                   </span>
                 );
               })}
@@ -273,6 +279,11 @@ export default function Search() {
                 ))}
               </div>
             </section>
+          )}
+          {relevanceFallback && (
+            <h3 style={{ marginBottom: '.5rem', color: '#b45309', fontSize: '1rem' }}>
+              Possible matches (shown with a lower relevance threshold)
+            </h3>
           )}
           <div className="list">
             {filteredResults.map((book) => (

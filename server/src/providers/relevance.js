@@ -16,8 +16,7 @@ export function normalizeWord(word) {
   return word
     .toLowerCase()
     .replace(/['’]s$/, '')  // possessive: Cash's → cash
-    .replace(/[^\w]/g, '')  // remove remaining punctuation
-    .replace(/s$/, '');     // simple plural: physiotherapists → physiotherapist
+    .replace(/[^\w]/g, ''); // remove remaining punctuation
 }
 
 export function extractQueryWords(query) {
@@ -65,7 +64,10 @@ export function wordMatches(queryWord, textWord) {
 export function scoreResult(queryWords, title, authors = []) {
   const authorsArray = Array.isArray(authors) ? authors : [authors];
   const text = `${title} ${authorsArray.join(' ')}`.toLowerCase();
-  const textWords = text.split(/\s+/);
+  const textWords = text
+    .split(/\s+/)
+    .map(w => normalizeWord(w))
+    .filter(w => w.length > 0);
   let matched = 0;
   for (const qw of queryWords) {
     if (textWords.some(tw => wordMatches(qw, tw))) {

@@ -5,11 +5,15 @@ export const PROVIDER_NAME = 'open-library';
 const SEARCH_URL = 'https://openlibrary.org/search.json';
 const IA_SEARCH_URL = 'https://archive.org/advancedsearch.php';
 
-export async function search(query, { limit = 10 } = {}) {
+export async function search(query, { limit = 10, isbn } = {}) {
   let olData;
   try {
+    // If an ISBN was detected, look it up directly for a precise match.
+    const url = isbn
+      ? `${SEARCH_URL}?isbn=${encodeURIComponent(isbn)}&fields=*,availability&limit=5`
+      : `${SEARCH_URL}?q=${encodeURIComponent(query)}&fields=*,availability&limit=${Math.min(limit, 40)}`;
     olData = await withTimeout(
-      fetch(`${SEARCH_URL}?q=${encodeURIComponent(query)}&fields=*,availability&limit=${Math.min(limit, 40)}`, {
+      fetch(url, {
         headers: { Accept: 'application/json' }
       }),
       5000
@@ -72,7 +76,7 @@ export async function search(query, { limit = 10 } = {}) {
       // Add site metadata for UI rendering
       result.site_type = 'library';
       result.favicon = 'https://openlibrary.org/favicon.ico';
-      result.snippet = description || `Search result from Open Library for "${title}"`;
+      result.snippet = `Search result from Open Library for "${title}"`;
 
       results.push(result);
     } catch (err) {

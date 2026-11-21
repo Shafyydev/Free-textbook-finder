@@ -6,6 +6,9 @@ export const PROVIDER_NAME = 'local';
 
 // Fetch local database books matching the query
 export async function search(query, { limit = 20 } = {}) {
+  // An empty query (for example after ISBN stripping) must not match every book.
+  if (!query || !query.trim()) return [];
+
   const client = await pool.connect();
   try {
     // Full-text search on books table using the existing search_vector

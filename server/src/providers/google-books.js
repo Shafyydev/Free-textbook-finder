@@ -4,8 +4,8 @@ export const PROVIDER_NAME = 'google-books';
 
 const BASE_URL = 'https://www.googleapis.com/books/v1/volumes';
 
-export async function search(query, { limit = 10, apiKey } = {}) {
-  const variants = buildQueryVariants(query);
+export async function search(query, { limit = 10, apiKey, isbn } = {}) {
+  const variants = buildQueryVariants(query, isbn);
   const allResults = [];
   const variantStats = [];
 
@@ -146,7 +146,7 @@ async function searchSingleVariant(q, { limit = 10, apiKey } = {}) {
     // Add site metadata for UI rendering
     result.site_type = 'retailer';
     result.favicon = 'https://books.google.com/favicon.ico';
-    result.snippet = description || `Search result from Google Books for "${title}"`;
+    result.snippet = vi.description || `Search result from Google Books for "${title}"`;
 
     results.push(result);
   }
@@ -154,7 +154,7 @@ async function searchSingleVariant(q, { limit = 10, apiKey } = {}) {
   return results;
 }
 
-function buildQueryVariants(query) {
+function buildQueryVariants(query, isbn) {
   const variants = [{ q: query }];
 
   // intitle: variant - all important words in title
@@ -164,13 +164,18 @@ function buildQueryVariants(query) {
     variants.push({ q: intitleQuery });
   }
 
-  // ISBN variant if query looks like an ISBN
-  const isbnMatch = query.match(/\b\d{9}[\dX]|\d{13}\b/);
-  if (isbnMatch) {
-    variants.push({ q: `isbn:${isbnMatch[0]}` });
+  // ISBN variant if an ISBN was detected (or query looks like an ISBN)
+  const isbnQuery = isbn || extractIsbnFromQuery(query);
+  if (isbnQuery) {
+    variants.push({ q: `isbn:${isbnQuery}` });
   }
 
   return variants;
+}
+
+function extractIsbnFromQuery(query) {
+  const match = query.match(/\b\d{9}[\dXx]|\d{13}\b/);
+  return match ? match[0].replace(/[-/\s]/g, '').toUpperCase() : null;
 }
 
 function extractIsbn(industryIdentifiers) {

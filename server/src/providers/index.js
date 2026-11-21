@@ -1,6 +1,7 @@
 import pool from '../db/pool.js';
 import { SearchResult, OPTION_TYPE, mergeResults, withTimeout } from './types.js';
-import { extractQueryWords, scoreResult, passesRelevance, editDistance, normalizeWord } from './relevance.js';
+import { extractQueryWords, scoreResult } from './relevance.js';
+import { cleanQuery, extractIsbn } from './cleaner.js';
 import { classifyDomain, BLOCKED_DOMAIN_SET } from './domains.js';
 import { search as localSearch, PROVIDER_NAME as LOCAL_NAME } from './local.js';
 import { search as googleBooksSearch, PROVIDER_NAME as GOOGLE_NAME } from './google-books.js';
@@ -27,16 +28,21 @@ const PROVIDERS = [
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
 const PROVIDER_TIMEOUT_MS = 5000;
 
+// Relevance thresholds
+const RELEVANCE_THRESHOLD = 0.7;
+const RELEVANCE_FALLBACK_THRESHOLD = 0.5;
+
 export async function searchBooks(query, { limit = 20, userIp } = {}) {
   if (!query || !query.trim()) {
-    return { results: [], total: 0, providers: [], didYouMean: [] };
+    return { results: [], total: 0, providers: [], didYouMean: [], relevanceFallback: false };
   }
 
   const trimmedQuery = query.trim();
-  const queryWords = extractQueryWords(trimmedQuery);
+  const { cleanedQuery, isbn } = cleanQuery(trimmedQuery);
+  const queryWords = extractQueryWords(cleanedQuery);
 
-  // Check cache for each provider
-  const cachedResults = await getCachedResults(trimmedQuery);
+  // Check cache for each provider (keyed by the cleaned query)
+  const cachedResults = await getCachedResults(cleanedQuery);
   const providersToFetch = PROVIDERS.filter(p => !cachedResults.has(p.name));
 
   // Fetch from providers not in cache (in parallel with timeout)
@@ -45,7 +51,7 @@ export async function searchBooks(query, { limit = 20, userIp } = {}) {
       const apiKey = provider.name === GOOGLE_NAME ? process.env.GOOGLE_BOOKS_API_KEY :
                      provider.name === NCBI_NAME ? process.env.NCBI_API_KEY : null;
       const results = await withTimeout(
-        provider.search(trimmedQuery, { limit, apiKey }),
+        provider.search(cleanedQuery, { limit, apiKey, isbn }),
         PROVIDER_TIMEOUT_MS
       );
       return { provider: provider.name, results };
@@ -57,8 +63,7 @@ export async function searchBooks(query, { limit = 20, userIp } = {}) {
 
   const providerResults = await Promise.all(fetchPromises);
 
-  // Build provider status info with before/after relevance counts
-  // Include ALL providers (from cache AND freshly fetched)
+  // Merge cached + freshly fetched results (keyed by provider)
   const allProviderResults = new Map();
   for (const [name, results] of cachedResults) {
     allProviderResults.set(name, { provider: name, results });
@@ -67,60 +72,61 @@ export async function searchBooks(query, { limit = 20, userIp } = {}) {
     allProviderResults.set(pr.provider, pr);
   }
 
+  // Build provider status: raw count, after blocklist, after relevance.
+  // Also keep the after-blocklist results per provider for merging.
   const providerStatus = [];
+  const perProviderAfterBlocklist = new Map();
+  let totalRaw = 0;
+  let totalAfterBlocklist = 0;
+
   for (const p of PROVIDERS) {
     const pr = allProviderResults.get(p.name);
     if (!pr) {
-      // Provider not in cache and not fetched - shouldn't happen, but handle gracefully
-      providerStatus.push({ name: p.name, count: 0, status: 'empty', afterRelevance: 0 });
+      providerStatus.push({ name: p.name, count: 0, afterBlocklist: 0, afterRelevance: 0, status: 'empty' });
+      perProviderAfterBlocklist.set(p.name, []);
       continue;
     }
     if (pr.error) {
-      providerStatus.push({ name: pr.provider, count: pr.results.length, status: 'failed', afterRelevance: 0 });
-    } else if (pr.results.length === 0) {
-      providerStatus.push({ name: pr.provider, count: 0, status: 'empty', afterRelevance: 0 });
-    } else {
-      // Count how many pass relevance
-      const passing = pr.results.filter(r => passesRelevance(queryWords, r.title, r.authors).pass).length;
-      providerStatus.push({
-        name: pr.provider,
-        count: pr.results.length,
-        status: pr.results.length > 0 ? 'ok' : 'empty',
-        afterRelevance: passing
-      });
+      providerStatus.push({ name: pr.provider, count: 0, afterBlocklist: 0, afterRelevance: 0, status: 'failed', error: pr.error });
+      perProviderAfterBlocklist.set(p.name, []);
+      continue;
     }
+
+    const rawCount = pr.results.length;
+    totalRaw += rawCount;
+
+    // Apply blocklist to this provider's results
+    const afterBlocklistResults = pr.results.filter(r => !isBlocked(r, p.name));
+    const afterBlocklist = afterBlocklistResults.length;
+    totalAfterBlocklist += afterBlocklist;
+    perProviderAfterBlocklist.set(p.name, afterBlocklistResults);
+
+    // Count how many pass relevance (scored on raw results)
+    const passing = pr.results.filter(r => scoreResult(queryWords, r.title, r.authors).score >= RELEVANCE_THRESHOLD).length;
+
+    providerStatus.push({
+      name: pr.provider,
+      count: rawCount,
+      afterBlocklist,
+      afterRelevance: passing,
+      status: rawCount > 0 ? 'ok' : 'empty'
+    });
   }
 
   // Cache the results
-  await cacheResults(trimmedQuery, providerResults);
+  await cacheResults(cleanedQuery, providerResults);
 
-  // Merge cached + freshly fetched results
+  // Merge all results (after blocklist) across providers
   const allResults = [];
-  for (const [name, results] of cachedResults) {
-    allResults.push(...results.map(r => ({ ...r, _provider: name })));
-  }
-  for (const { provider, results } of providerResults) {
-    allResults.push(...results.map(r => ({ ...r, _provider: provider })));
+  for (const [name, pr] of allProviderResults) {
+    const filtered = perProviderAfterBlocklist.get(name) || [];
+    allResults.push(...filtered.map(r => ({ ...r, _provider: name })));
   }
 
-  // Filter out blocked domains
-  const filtered = allResults.filter(r => {
-    const host = (r._provider === 'Google Books' ? 'books.google.com' :
-                  r._provider === 'Open Library' ? 'openlibrary.org' :
-                  r._provider === 'OpenStax' ? 'openstax.org' :
-                  r._provider === 'DOAB' ? 'directory.doabooks.org' :
-                  r._provider === 'Gutenberg' ? 'gutendex.com' :
-                  r._provider === 'NCBI' ? 'ncbi.nlm.nih.gov' :
-                  r._provider === 'Internet Archive' ? 'archive.org' :
-                  r._provider === 'HathiTrust' ? 'catalog.hathitrust.org' :
-                  r._provider === 'local' ? 'local' : '');
-    return !BLOCKED_DOMAIN_SET.has(host);
-  });
-
-  const blockedCount = allResults.length - filtered.length;
+  const blockedCount = totalRaw - totalAfterBlocklist;
 
   // Merge duplicates
-  const merged = mergeResults(filtered.map(r => new SearchResult({
+  const merged = mergeResults(allResults.map(r => new SearchResult({
     title: r.title,
     authors: r.authors,
     isbn: r.isbn,
@@ -132,24 +138,40 @@ export async function searchBooks(query, { limit = 20, userIp } = {}) {
     snippet: r.snippet || ''
   })));
 
-  // Apply relevance filtering: keep only results where >= 70% of important
-  // query words appear in title or authors
+  // Apply relevance scoring against the cleaned query. When an ISBN lookup was
+  // performed (cleaned query is empty), treat every result as relevant since the
+  // ISBN is an exact identifier match.
+  const isIsbnLookup = !!isbn && !cleanedQuery;
   const withScores = merged.map(r => {
     const score = scoreResult(queryWords, r.title, r.authors);
-    return { ...r, _relevanceScore: score.score, _relevancePass: score.score >= 0.7 };
+    return {
+      ...r,
+      _relevanceScore: isIsbnLookup ? 1.0 : score.score,
+      _relevancePass70: isIsbnLookup || score.score >= RELEVANCE_THRESHOLD,
+      _relevancePass50: isIsbnLookup || score.score >= RELEVANCE_FALLBACK_THRESHOLD
+    };
   });
 
-  const relevant = withScores.filter(r => r._relevancePass);
+  const relevant70 = withScores.filter(r => r._relevancePass70);
+  const relevant50 = withScores.filter(r => r._relevancePass50);
+
+  let relevanceFallback = false;
+  let relevant = relevant70;
+  // If nothing passes the 70% rule but providers returned results, fall back
+  // to 50% and mark them as possible matches (never show "Not found").
+  if (relevant70.length === 0 && merged.length > 0) {
+    relevant = relevant50;
+    relevanceFallback = true;
+  }
 
   // Sort by relevance score (best first)
   relevant.sort((a, b) => b._relevanceScore - a._relevanceScore);
 
-  // Build "Did you mean" suggestions: if relevant results are few, show
-  // close matches that didn't quite pass the relevance threshold
+  // Build "Did you mean" suggestions from near misses below 70%
   const didYouMean = [];
   if (relevant.length < 5) {
     const nearMisses = withScores
-      .filter(r => !r._relevancePass && r._relevanceScore >= 0.3)
+      .filter(r => !r._relevancePass70 && r._relevanceScore >= 0.3)
       .sort((a, b) => b._relevanceScore - a._relevanceScore)
       .slice(0, 3);
     didYouMean.push(...nearMisses.map(r => r.title));
@@ -160,15 +182,29 @@ export async function searchBooks(query, { limit = 20, userIp } = {}) {
 
   // Log the search
   const hasFreeResult = limited.some(r => r.status === 'free');
-  await logSearch(trimmedQuery, hasFreeResult, limited.length);
+  await logSearch(cleanedQuery, hasFreeResult, limited.length);
 
   return {
     results: limited,
     total: relevant.length,
     providers: providerStatus,
     blockedCount,
-    didYouMean
+    didYouMean,
+    relevanceFallback
   };
+}
+
+function isBlocked(result, providerName) {
+  const host = (providerName === 'Google Books' ? 'books.google.com' :
+                providerName === 'Open Library' ? 'openlibrary.org' :
+                providerName === 'OpenStax' ? 'openstax.org' :
+                providerName === 'DOAB' ? 'directory.doabooks.org' :
+                providerName === 'Gutenberg' ? 'gutendex.com' :
+                providerName === 'NCBI' ? 'ncbi.nlm.nih.gov' :
+                providerName === 'Internet Archive' ? 'archive.org' :
+                providerName === 'HathiTrust' ? 'catalog.hathitrust.org' :
+                providerName === 'local' ? 'local' : '');
+  return BLOCKED_DOMAIN_SET.has(host);
 }
 
 async function getCachedResults(query) {
@@ -240,4 +276,4 @@ async function logSearch(query, hasFreeResult, resultCount) {
   }
 }
 
-export { SearchResult, OPTION_TYPE, mergeResults };
+export { SearchResult, OPTION_TYPE, mergeResults, cleanQuery, extractIsbn };
